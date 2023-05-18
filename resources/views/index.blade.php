@@ -45,9 +45,9 @@
                             <!-- <input type="text" class="form-control mb-1" placeholder="Search options"> -->
                             <div class="suggestions">
                                 <ol>
-                                    <li class="hover"><b>Citizen Kane </b>(46 votes)</li>
-                                    <li class="hover"><b>Vertigo </b>(41 votes)</li>
-                                    <li class="hover"><b>2001: A Space Odyssey </b>(34 votes)</li>
+                                    <li class="hover"><b>Place </b>(46 votes)</li>
+                                    <li class="hover"><b>Place </b>(41 votes)</li>
+                                    <li class="hover"><b>Place </b>(34 votes)</li>
                                 </ol>
                                 <button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                     Show More Answers
@@ -61,9 +61,9 @@
                             <!-- <input type="text" class="form-control mb-1" placeholder="Search options"> -->
                             <div class="suggestions">
                                 <ol>
-                                    <li class="hover"><b>Psycho </b>(26 votes)</li>
-                                    <li class="hover"><b>Shinning, The </b>(24 votes)</li>
-                                    <li class="hover"><b>Jaws </b>(19 votes)</li>
+                                    <li class="hover"><b>Place </b>(26 votes)</li>
+                                    <li class="hover"><b>Place </b>(24 votes)</li>
+                                    <li class="hover"><b>Place </b>(19 votes)</li>
                                 </ol>
                                 <button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                     Show More Answers
@@ -77,9 +77,9 @@
                             <div class="suggestions">
                                 <!-- <input type="text" class="form-control mb-1" placeholder="Search options"> -->
                                 <ol>
-                                    <li class="hover"><b>Rules of the Game, The </b>(34 votes)</li>
-                                    <li class="hover"><b>Signin'in the Rain </b>(32 votes)</li>
-                                    <li class="hover"><b>City Lights </b>(29 votes)</li>
+                                    <li class="hover"><b>Place </b>(34 votes)</li>
+                                    <li class="hover"><b>Place</b>(32 votes)</li>
+                                    <li class="hover"><b>Place</b>(29 votes)</li>
                                 </ol>
                                 <button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                     Show More Answers
@@ -98,9 +98,9 @@
                             <div class="suggestions">
                                 <!-- <input type="text" class="form-control mb-1" placeholder="Search options"> -->
                                 <ol>
-                                    <li class="hover"><b>Citizen Kane </b>(46 votes)</li>
-                                    <li class="hover"><b>Vertigo </b>(41 votes)</li>
-                                    <li class="hover"><b>2001: A Space Odyssey </b>(34 votes)</li>
+                                    <li class="hover"><b>Place </b>(46 votes)</li>
+                                    <li class="hover"><b>Place </b>(41 votes)</li>
+                                    <li class="hover"><b>Place </b>(34 votes)</li>
                                 </ol>
                             </div>
                         </div>
@@ -113,9 +113,9 @@
                             <div class="suggestions">
                                 <!-- <input type="text" class="form-control mb-1" placeholder="Search options"> -->
                                 <ol>
-                                    <li class="hover"><b>Psycho </b>(26 votes)</li>
-                                    <li class="hover"><b>Shinning, The </b>(24 votes)</li>
-                                    <li class="hover"><b>Jaws </b>(19 votes)</li>
+                                    <li class="hover"><b>Place </b>(26 votes)</li>
+                                    <li class="hover"><b>Place </b>(24 votes)</li>
+                                    <li class="hover"><b>Place </b>(19 votes)</li>
                                 </ol>
                             </div>
                         </div>
@@ -128,9 +128,9 @@
                             <div class="suggestions">
                                 <!-- <input type="text" class="form-control mb-1" placeholder="Search options"> -->
                                 <ol>
-                                    <li class="hover"><b>Rules of the Game, The </b>(34 votes)</li>
-                                    <li class="hover"><b>Signin'in the Rain </b>(32 votes)</li>
-                                    <li class="hover"><b>City Lights </b>(29 votes)</li>
+                                    <li class="hover"><b>Place </b>(34 votes)</li>
+                                    <li class="hover"><b>Place </b>(32 votes)</li>
+                                    <li class="hover"><b>Place </b>(29 votes)</li>
                                 </ol>
                             </div>
                         </div>
@@ -155,34 +155,34 @@
                         <div class="modal-suggestions">
                             <input type="text" class="form-control mb-1" placeholder="Search options">
                             <ol>
-                                <li class="hover"><b>Rules of the Game, The </b>(34 votes)</li>
-                                <li class="hover"><b>Signin'in the Rain </b>(32 votes)</li>
-                                <li class="hover"><b>City Lights </b>(29 votes)</li>
-                                <li class="hover"><b>Godfather, The </b>(29 votes)</li>
-                                <li class="hover"><b>Sunrise </b>(29 votes)</li>
-                                <li class="hover"><b>Searchers, The </b>(29 votes)</li>
-                                <li class="hover"><b>Seven Samurai</b>(29 votes)</li>
-                                <li class="hover"><b>Singin' in the Rain </b>(29 votes)</li>
-                                <li class="hover"><b>Jeanne Dielman, 23 Quai du Commerce, 1080 Bruxelles </b>(29 votes)</li>
-                                <li class="hover"><b>Apocalypse Now </b>(29 votes)</li>
-                                <li class="hover"><b>Bicycle Thieves </b>(29 votes)</li>
-                                <li class="hover"><b>Taxi Driver </b>(29 votes)</li>
-                                <li class="hover"><b>Persona </b>(29 votes)</li>
-                                <li class="hover"><b>Passion of Joan of Arc, The </b>(29 votes)</li>
-                                <li class="hover"><b>Breathless</b>(29 votes)</li>
-                                <li class="hover"><b>In the Mood for Love</b>(29 votes)</li>
-                                <li class="hover"><b>Battleship Potemkina </b>(29 votes)</li>
-                                <li class="hover"><b>Atalante, L' </b>(29 votes)</li>
-                                <li class="hover"><b>Man with a Movie Camera, The </b>(29 votes)</li>
-                                <li class="hover"><b>Mirror </b>(29 votes)</li>
-                                <li class="hover"><b>Rashomon</b>(29 votes)</li>
-                                <li class="hover"><b>Psycho</b>(29 votes)</li>
-                                <li class="hover"><b>400 Blows, The</b>(29 votes)</li>
-                                <li class="hover"><b>Andrei Rublev </b>(29 votes)</li>
-                                <li class="hover"><b>Au hasard Balthazar </b>(29 votes)</li>
-                                <li class="hover"><b>Some Like it Hot </b>(29 votes)</li>
-                                <li class="hover"><b>Ordet </b>(29 votes)</li>
-                                <li class="hover"><b>Raging Bull</b>(29 votes)</li>
+                                <li class="hover"><b>Rules of the Game, The </b></li>
+                                <li class="hover"><b>Signin'in the Rain </b></li>
+                                <li class="hover"><b>City Lights </b></li>
+                                <li class="hover"><b>Godfather, The </b></li>
+                                <li class="hover"><b>Sunrise </b></li>
+                                <li class="hover"><b>Searchers, The </b></li>
+                                <li class="hover"><b>Seven Samurai</b></li>
+                                <li class="hover"><b>Singin' in the Rain </b></li>
+                                <li class="hover"><b>Jeanne Dielman, 23 Quai du Commerce, 1080 Bruxelles </b></li>
+                                <li class="hover"><b>Apocalypse Now </b></li>
+                                <li class="hover"><b>Bicycle Thieves </b></li>
+                                <li class="hover"><b>Taxi Driver </b></li>
+                                <li class="hover"><b>Persona </b></li>
+                                <li class="hover"><b>Passion of Joan of Arc, The </b></li>
+                                <li class="hover"><b>Breathless</b></li>
+                                <li class="hover"><b>In the Mood for Love</b></li>
+                                <li class="hover"><b>Battleship Potemkina </b></li>
+                                <li class="hover"><b>Atalante, L' </b></li>
+                                <li class="hover"><b>Man with a Movie Camera, The </b></li>
+                                <li class="hover"><b>Mirror </b></li>
+                                <li class="hover"><b>Rashomon</b></li>
+                                <li class="hover"><b>Psycho</b></li>
+                                <li class="hover"><b>400 Blows, The</b></li>
+                                <li class="hover"><b>Andrei Rublev </b></li>
+                                <li class="hover"><b>Au hasard Balthazar </b></li>
+                                <li class="hover"><b>Some Like it Hot </b></li>
+                                <li class="hover"><b>Ordet </b></li>
+                                <li class="hover"><b>Raging Bull</b></li>
                             </ol>
                         </div>
                     </div>
