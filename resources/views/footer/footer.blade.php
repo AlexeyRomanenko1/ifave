@@ -6,6 +6,7 @@
 
 <!-- jquery cdn -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
 
 <script src="{{ asset('js/components/index.js')}}"></script>
 <!-- Option 2: Separate Popper and Bootstrap JS -->

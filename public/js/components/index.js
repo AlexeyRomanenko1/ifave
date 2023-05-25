@@ -1,3 +1,4 @@
+let user_selected_answers = [];
 $(document).ready(function () {
     // console.log('I am ready');
     // $.ajaxSetup({
@@ -5,16 +6,23 @@ $(document).ready(function () {
     //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     //     }
     // });
+
     $.ajax({
         type: 'GET',
         url: '/indexonloadRequest',
         data: { task: 'get_questions' },
         success: function (data) {
             // alert(data.success);
-            //console.log(data);
+            // console.log(data);
             let obj = JSON.parse(data);
-            // console.group(obj);
+            // console.group(user_selected_answers);
             let html = '';
+
+            let m = 1;
+            for (let j = 0; j < obj.this_user_answers.length; j++) {
+                user_selected_answers.push(obj.this_user_answers[j]['question_id'])
+            }
+            // console.group(user_selected_answers);
             for (let j = 0; j < obj.data.length; j++) {
                 let answers = obj.data[j]['top_answers'];
                 let answersArr = answers.split(',');
@@ -25,9 +33,19 @@ $(document).ready(function () {
                     return votesB - votesA;
                 });
                 //console.log(answersArr)
-                html += '<div class="container border mt-1" ><div class="question"><h6 class="p-3 border-bottom">Q: ' + obj.data[j]['question'] + ' (' + obj.data[j]['question_votes'] + ' votes)</h6><div class="suggestions">';
-                for (let i = 0; i < answersArr.length; i++) {
-                    html += '<div class="hover p-1"><b>' + answersArr[i] + '</b></div>';
+                html += '<div class="container border mt-1" ><div class="question"><h6 class="p-3 border-bottom">Q: ' + obj.data[j]['question'] + ' (' + obj.data[j]['total_votes'] + ' votes)</h6><div class="suggestions">';
+                if (user_selected_answers.includes(obj.data[j]['question_id'])) {
+                    for (let i = 0; i < answersArr.length; i++) {
+                        html += '<div class="hover p-1"><b> ' + m + ' ' + answersArr[i] + '</b></div>';
+                        m++;
+                    }
+
+                } else {
+                    answersArr.map((str, index) => {
+                        let places = `${index + 1} Place (Votes: ${str.match(/\d+/)})`;
+                        html += '<div class="hover p-1"><b> ' + places + '</b></div>';
+                    });
+
                 }
                 html += '<button type="button" class="btn btn-primary mb-1" onclick="questions_modal(' + obj.data[j]['question_id'] + ')" data-bs-toggle="modal" data-bs-target="#exampleModal">Show More Answers</button></div></div></div>';
             }
@@ -49,13 +67,17 @@ function questions_modal(x) {
         data: { task: 'get_question_answers', question_id: x },
         success: function (data) {
             let obj = JSON.parse(data);
-            //console.log(obj.question[0].question)
+            console.log(obj)
             $('.question_modal_heading').empty();
             $('.question_modal_heading').html(obj.question[0].question)
             // let html = '<input type="text" class="form-control mb-1 questions_answer_search" onkeyup="answers_search(this,' + x + ')" placeholder="Search options">';
             let html = '';
             $('.questions_answer_search').attr('data-info', x);
-            for (let j = 0; j < obj.answers.length; j++) {
+            if (user_selected_answers.includes(x)) {
+                for (let j = 0; j < obj.answers.length; j++) {
+                    html += '<div class="hover p-1" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.answers[j]['answer_id'] + ')"><b>' + obj.answers[j]['answers'] + ' (Votes: ' + obj.answers[j]['vote_count'] + ')</b></div>';
+                }
+            } else {
                 html += '<div class="hover p-1" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.answers[j]['answer_id'] + ')"><b>' + obj.answers[j]['answers'] + '</b></div>';
             }
             //html += '</ol>';
@@ -70,7 +92,7 @@ function questions_modal(x) {
 $('.questions_answer_search').on('keyup', function () {
     let search = $(this).val();
     let id = $('.questions_answer_search').data('info');
-    console.log(id);
+    // console.log(id);
     // if (search.length >= 3) {
     $.ajax({
         type: 'GET',
@@ -79,14 +101,17 @@ $('.questions_answer_search').on('keyup', function () {
         success: function (data) {
             // console.log(data)
             let obj = JSON.parse(data);
-            console.log(obj)
+            // console.log(obj)
             // html = '<input type="text" class="form-control mb-1 questions_answer_search" value="' + search + '" onkeyup="answers_search(this,' + id + ')" placeholder="Search options">';
             let html = '';
             if (obj.data.length > 0) {
-                for (let j = 0; j < obj.data.length; j++) {
+                if (user_selected_answers.includes(id)) {
+                    for (let j = 0; j < obj.data.length; j++) {
+                        html += '<div class="hover p-1" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.data[j]['answer_id'] + ')"><b>' + obj.data[j]['answers'] + ' (Votes: '+ obj.data[j]['vote_count'] +')</b></div>';
+                    }
+                } else {
                     html += '<div class="hover p-1" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.data[j]['answer_id'] + ')"><b>' + obj.data[j]['answers'] + '</b></div>';
                 }
-
             } else {
                 html += '<div class="hover p-1" ><b>No answer found</b></div>';
             }
@@ -145,7 +170,14 @@ function add_vote(x) {
         data: { '_token': $('meta[name="csrf-token"]').attr('content'), answer_id: x },
         success: function (data) {
             // $("#msg").html(data.msg);
-            console.log(data)
+            // console.log(data)
+            let obj = JSON.parse(data);
+            if (obj.success == 1) {
+                toastr.success(obj.data)
+                location.reload(true)
+            } else {
+                toastr.error(obj.data)
+            }
         }
     });
 }
