@@ -143,7 +143,6 @@ return [
         'driver' => 'file',
         // 'store'  => 'redis',
     ],
-
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\indexController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,3 +16,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('index');
 });
+
+// Route::post('indexonloadRequest', [indexController::class, 'indexonloadRequest'])->name('indexonload.post');
+Route::get('/indexonloadRequest',[indexController::class, 'indexonloadRequest']);
+Route::get('/getquestionanswers',[indexController::class, 'getquestionanswers']);
+Route::get('/searchAnswers',[indexController::class, 'searchAnswers']);
+Route::post('/entervote',[indexController::class, 'entervote']);
+
