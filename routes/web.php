@@ -22,4 +22,9 @@ Route::get('/indexonloadRequest',[indexController::class, 'indexonloadRequest'])
 Route::get('/getquestionanswers',[indexController::class, 'getquestionanswers']);
 Route::get('/searchAnswers',[indexController::class, 'searchAnswers']);
 Route::post('/entervote',[indexController::class, 'entervote']);
+Route::get('/searchQuestionsTopics',[indexController::class, 'searchQuestionsTopics']);
 
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

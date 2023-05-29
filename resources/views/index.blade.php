@@ -27,12 +27,15 @@
         <div class="col-md-8">
             <div class="search">
                 <i class="fa fa-search"></i>
-                <input type="text" class="form-control" placeholder="Look for a topic or questions">
+                <input type="text" id="search_question_topics" class="form-control" placeholder="Look for a topic or questions">
                 <button class="btn btn-primary">Search</button>
+                <div class="set_suggestion_height mt-3">
+                   
+
+                
+                </div>
             </div>
-
         </div>
-
     </div>
     <div class="container">
         <div class="">
@@ -41,8 +44,8 @@
                     <h5 class="text-center">Popular questions</h5>
                     <div id="display_questions">
                     </div>
-                    
-                        <!-- <div class="question">
+
+                    <!-- <div class="question">
                             <h6 class="p-3 border-bottom">Q: Best movie ever (421 votes)</h6>
                             <div class="suggestions">
                                 <ol>
@@ -89,7 +92,10 @@
                 </div>
                 <div class="col-md-6">
                     <h5 class="text-center">Popular topics</h5>
-                    <div class="container border mt-1">
+                    <div id="popular_topics">
+
+                    </div>
+                    <!-- <div class="container border mt-1">
                         <div class="question">
                             <h6 class="mt-1">Topic 1</h6>
                             <hr>
@@ -109,7 +115,6 @@
                             <hr>
                             <h6 class="p-3 border-bottom">Q: Best horror films (356 votes)</h6>
                             <div class="suggestions">
-                                <!-- <input type="text" class="form-control mb-1" placeholder="Search options"> -->
                                 <ol>
                                     <li class="hover"><b>Place </b>(26 votes)</li>
                                     <li class="hover"><b>Place </b>(24 votes)</li>
@@ -124,7 +129,6 @@
                             <hr>
                             <h6 class="p-3 border-bottom">Q: Best Comedy (289 votes)</h6>
                             <div class="suggestions">
-                                <!-- <input type="text" class="form-control mb-1" placeholder="Search options"> -->
                                 <ol>
                                     <li class="hover"><b>Place </b>(34 votes)</li>
                                     <li class="hover"><b>Place </b>(32 votes)</li>
@@ -132,7 +136,7 @@
                                 </ol>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -150,7 +154,7 @@
                 <div class="container border mt-1">
                     <!-- <h6 class="p-3 border-bottom">Q: Best Comedy (289 votes)</h6> -->
                     <div class="question">
-                    <input type="text" class="form-control mb-1 questions_answer_search"  placeholder="Search options">
+                        <input type="text" class="form-control mb-1 questions_answer_search" placeholder="Search options">
                         <div class="modal-suggestions">
                         </div>
                     </div>

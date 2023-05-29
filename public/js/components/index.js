@@ -17,7 +17,7 @@ $(document).ready(function () {
             let obj = JSON.parse(data);
             // console.group(user_selected_answers);
             let html = '';
-
+            //console.log(obj)
             let m = 1;
             for (let j = 0; j < obj.this_user_answers.length; j++) {
                 user_selected_answers.push(obj.this_user_answers[j]['question_id'])
@@ -47,10 +47,48 @@ $(document).ready(function () {
                     });
 
                 }
+
                 html += '<button type="button" class="btn btn-primary mb-1" onclick="questions_modal(' + obj.data[j]['question_id'] + ')" data-bs-toggle="modal" data-bs-target="#exampleModal">Show More Answers</button></div></div></div>';
             }
+
+            //display popular topics 
+            const { topics } = obj;
+            // console.log(obj.topics)
+            const topic = [];
+            for (let j = 0; j < obj.topics.length; j++) {
+
+                // console.log(obj.topics[j]['topic_name'])
+                if (!topic.includes(obj.topics[j]['topic_name'])) {
+                    topic.push(obj.topics[j]['topic_name'])
+
+                }
+            }
+            // console.log(topic)
+            // const topic = ["movies", "Politics"];
+            let hot_topics_dom = '';
+            om = '';
+            topic.forEach(item => {
+                let filterdArray = topics.filter(objs => objs.topic_name === item);
+                let counts = filterdArray.map(objs => objs.total_sum);
+                let max = Math.max(...counts);
+                let index = counts.indexOf(String(max));
+
+                let hot_topics = filterdArray[index];
+                // Iterate over the properties using for...in loop
+                console.log(hot_topics);
+                // console.log(hot_topics[0]['answers']);
+                if (user_selected_answers.includes(hot_topics['question_id'])) {
+                    hot_topics_dom += '<div class="container border mt-1"> <div class="question"><h6 class="mt-1">' + hot_topics["topic_name"] + '</h6><hr><h6 class="p-3 border-bottom">Q: ' + hot_topics['question'] + ' (' + hot_topics['total_sum'] + ' votes)</h6><div class="suggestions"><ol> <li class="hover"><b>' + hot_topics[0]["answers"] + ' </b>(' + hot_topics[0]["vote_count"] + ' votes)</li> <li class="hover"><b>' + hot_topics[1]["answers"] + ' </b>(' + hot_topics[0]["vote_count"] + ' votes)</li> <li class="hover"><b>' + hot_topics[2]["answers"] + ' </b>(' + hot_topics[2]["vote_count"] + ' votes)</li></ol><button type="button" class="btn btn-primary mb-1" onclick="questions_modal(' + hot_topics['question_id'] + ')" data-bs-toggle="modal" data-bs-target="#exampleModal">Show More Answers</button></div></div></div>';
+                } else {
+                    hot_topics_dom += '<div class="container border mt-1"> <div class="question"><h6 class="mt-1">' + hot_topics["topic_name"] + '</h6><hr><h6 class="p-3 border-bottom">Q: ' + hot_topics['question'] + ' (' + hot_topics['total_sum'] + ' votes)</h6><div class="suggestions"><ol> <li class="hover"><b>Place </b>(' + hot_topics[0]["vote_count"] + ' votes)</li> <li class="hover"><b>Place </b>(' + hot_topics[0]["vote_count"] + ' votes)</li> <li class="hover"><b>Place </b>(' + hot_topics[2]["vote_count"] + ' votes)</li></ol><button type="button" class="btn btn-primary mb-1" onclick="questions_modal(' + hot_topics['question_id'] + ')" data-bs-toggle="modal" data-bs-target="#exampleModal">Show More Answers</button></div></div></div>';
+                }
+            });
+            // console.log(topic_name)
             $('#display_questions').empty()
             $('#display_questions').html(html)
+
+            $('#popular_topics').empty()
+            $('#popular_topics').html(hot_topics_dom)
         }
     });
 })
@@ -78,7 +116,9 @@ function questions_modal(x) {
                     html += '<div class="hover p-1" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.answers[j]['answer_id'] + ')"><b>' + obj.answers[j]['answers'] + ' (Votes: ' + obj.answers[j]['vote_count'] + ')</b></div>';
                 }
             } else {
-                html += '<div class="hover p-1" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.answers[j]['answer_id'] + ')"><b>' + obj.answers[j]['answers'] + '</b></div>';
+                for (let j = 0; j < obj.answers.length; j++) {
+                    html += '<div class="hover p-1" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.answers[j]['answer_id'] + ')"><b>' + obj.answers[j]['answers'] + '</b></div>';
+                }
             }
             //html += '</ol>';
             $('.modal-suggestions').empty();
@@ -107,10 +147,12 @@ $('.questions_answer_search').on('keyup', function () {
             if (obj.data.length > 0) {
                 if (user_selected_answers.includes(id)) {
                     for (let j = 0; j < obj.data.length; j++) {
-                        html += '<div class="hover p-1" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.data[j]['answer_id'] + ')"><b>' + obj.data[j]['answers'] + ' (Votes: '+ obj.data[j]['vote_count'] +')</b></div>';
+                        html += '<div class="hover p-1" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.data[j]['answer_id'] + ')"><b>' + obj.data[j]['answers'] + ' (Votes: ' + obj.data[j]['vote_count'] + ')</b></div>';
                     }
                 } else {
-                    html += '<div class="hover p-1" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.data[j]['answer_id'] + ')"><b>' + obj.data[j]['answers'] + '</b></div>';
+                    for (let j = 0; j < obj.data.length; j++) {
+                        html += '<div class="hover p-1" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.data[j]['answer_id'] + ')"><b>' + obj.data[j]['answers'] + '</b></div>';
+                    }
                 }
             } else {
                 html += '<div class="hover p-1" ><b>No answer found</b></div>';
@@ -181,3 +223,41 @@ function add_vote(x) {
         }
     });
 }
+$('#search_question_topics').on('keyup', function () {
+    let to_search = $(this).val();
+    $.ajax({
+        type: 'GET',
+        url: '/searchQuestionsTopics',
+        data: { task: 'searchQuestionsTopics', search: to_search },
+        success: function (data) {
+            // console.log(data)
+            let obj = JSON.parse(data);
+            console.log(obj)
+            // html = '<input type="text" class="form-control mb-1 questions_answer_search" value="' + search + '" onkeyup="answers_search(this,' + id + ')" placeholder="Search options">';
+            let html = '';
+            if (to_search.length > 0) {
+                if (obj.data.length > 0) {
+                    html += '<div class="p-2"><b>Questions</b></div>';
+                    for (let j = 0; j < obj.data.length; j++) {
+                        html += ' <div class="hover p-1 m-1" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="questions_modal(' + obj.data[j]['id'] + ')" data-bs-toggle="modal" data-bs-target="#exampleModal"">' + obj.data[j]['question'] + '</div>';
+                    }
+                } else {
+                    html += '';
+                }
+                if (obj.topics.length > 0) {
+                    html += '<div class="p-2"><b>Topics</b></div>';
+                    for (let j = 0; j < obj.topics.length; j++) {
+                        html += '<div class="hover p-1 m-1" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)"">' + obj.topics[j]['topic_name'] + '</div>';
+                    }
+                }
+                $('.set_suggestion_height').empty();
+                $('.set_suggestion_height').html(html);
+            } else {
+                $('.set_suggestion_height').empty();
+            }
+        },
+        error: function (error) {
+
+        }
+    })
+})

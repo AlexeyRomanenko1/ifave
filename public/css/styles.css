@@ -40,7 +40,13 @@
     background: blue;
 
 }
+
 .modal-suggestions{
     height: 300px;
     overflow-x: auto;
+}
+
+.set_suggestion_height{
+    height: 150px;
+    overflow-y: auto;
 }
