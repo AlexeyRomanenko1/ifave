@@ -28,3 +28,11 @@ Route::get('/searchQuestionsTopics',[indexController::class, 'searchQuestionsTop
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('/import_questions', [App\Http\Controllers\HomeController::class, 'import_questions'])->name('import_questions');
+Route::post('/import_answer', [App\Http\Controllers\HomeController::class, 'import_answer'])->name('import_answer');
+// Route::get('/login', function () {
+//     return view('auth.login');
+// });
+// Route::post('/login', function () {
+//     return view('auth.login');
+// });

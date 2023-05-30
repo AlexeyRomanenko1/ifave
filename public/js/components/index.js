@@ -66,21 +66,25 @@ $(document).ready(function () {
             // console.log(topic)
             // const topic = ["movies", "Politics"];
             let hot_topics_dom = '';
-            om = '';
+            // om = '';
             topic.forEach(item => {
                 let filterdArray = topics.filter(objs => objs.topic_name === item);
                 let counts = filterdArray.map(objs => objs.total_sum);
+                if (counts[0] == 0) {
+                    counts[0] = '0';
+                }
                 let max = Math.max(...counts);
                 let index = counts.indexOf(String(max));
 
                 let hot_topics = filterdArray[index];
                 // Iterate over the properties using for...in loop
-                console.log(hot_topics);
+                // console.log(typeof counts[0]);
+                // console.log(counts[0]);
                 // console.log(hot_topics[0]['answers']);
                 if (user_selected_answers.includes(hot_topics['question_id'])) {
-                    hot_topics_dom += '<div class="container border mt-1"> <div class="question"><h6 class="mt-1">' + hot_topics["topic_name"] + '</h6><hr><h6 class="p-3 border-bottom">Q: ' + hot_topics['question'] + ' (' + hot_topics['total_sum'] + ' votes)</h6><div class="suggestions"><ol> <li class="hover"><b>' + hot_topics[0]["answers"] + ' </b>(' + hot_topics[0]["vote_count"] + ' votes)</li> <li class="hover"><b>' + hot_topics[1]["answers"] + ' </b>(' + hot_topics[0]["vote_count"] + ' votes)</li> <li class="hover"><b>' + hot_topics[2]["answers"] + ' </b>(' + hot_topics[2]["vote_count"] + ' votes)</li></ol><button type="button" class="btn btn-primary mb-1" onclick="questions_modal(' + hot_topics['question_id'] + ')" data-bs-toggle="modal" data-bs-target="#exampleModal">Show More Answers</button></div></div></div>';
+                    hot_topics_dom += '<div class="container border mt-1"> <div class="question"><h6 class="mt-1">' + hot_topics["topic_name"] + '</h6><hr><h6 class="p-3 border-bottom">Q: ' + hot_topics['question'] + ' (' + hot_topics['total_sum'] + ' votes)</h6><div class="suggestions"><ol> <li class="hover"><b>' + hot_topics[0]["answers"] + ' </b>(' + hot_topics[0]["vote_count"] + ' votes)</li> <li class="hover"><b>' + hot_topics[1]["answers"] + ' </b>(' + hot_topics[1]["vote_count"] + ' votes)</li> <li class="hover"><b>' + hot_topics[2]["answers"] + ' </b>(' + hot_topics[2]["vote_count"] + ' votes)</li></ol><button type="button" class="btn btn-primary mb-1" onclick="questions_modal(' + hot_topics['question_id'] + ')" data-bs-toggle="modal" data-bs-target="#exampleModal">Show More Answers</button></div></div></div>';
                 } else {
-                    hot_topics_dom += '<div class="container border mt-1"> <div class="question"><h6 class="mt-1">' + hot_topics["topic_name"] + '</h6><hr><h6 class="p-3 border-bottom">Q: ' + hot_topics['question'] + ' (' + hot_topics['total_sum'] + ' votes)</h6><div class="suggestions"><ol> <li class="hover"><b>Place </b>(' + hot_topics[0]["vote_count"] + ' votes)</li> <li class="hover"><b>Place </b>(' + hot_topics[0]["vote_count"] + ' votes)</li> <li class="hover"><b>Place </b>(' + hot_topics[2]["vote_count"] + ' votes)</li></ol><button type="button" class="btn btn-primary mb-1" onclick="questions_modal(' + hot_topics['question_id'] + ')" data-bs-toggle="modal" data-bs-target="#exampleModal">Show More Answers</button></div></div></div>';
+                    hot_topics_dom += '<div class="container border mt-1"> <div class="question"><h6 class="mt-1">' + hot_topics["topic_name"] + '</h6><hr><h6 class="p-3 border-bottom">Q: ' + hot_topics['question'] + ' (' + hot_topics['total_sum'] + ' votes)</h6><div class="suggestions"><ol> <li class="hover"><b>Place </b>(' + hot_topics[0]["vote_count"] + ' votes)</li> <li class="hover"><b>Place </b>(' + hot_topics[1]["vote_count"] + ' votes)</li> <li class="hover"><b>Place </b>(' + hot_topics[2]["vote_count"] + ' votes)</li></ol><button type="button" class="btn btn-primary mb-1" onclick="questions_modal(' + hot_topics['question_id'] + ')" data-bs-toggle="modal" data-bs-target="#exampleModal">Show More Answers</button></div></div></div>';
                 }
             });
             // console.log(topic_name)
