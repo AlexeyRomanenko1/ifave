@@ -47,6 +47,9 @@
 }
 
 .set_suggestion_height{
-    height: 150px;
+    height: 250px;
     overflow-y: auto;
+}
+.bd-highlight{
+    background-color: #b2b0b0;
 }

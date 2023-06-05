@@ -23,8 +23,9 @@ Route::get('/getquestionanswers',[indexController::class, 'getquestionanswers'])
 Route::get('/searchAnswers',[indexController::class, 'searchAnswers']);
 Route::post('/entervote',[indexController::class, 'entervote']);
 Route::get('/searchQuestionsTopics',[indexController::class, 'searchQuestionsTopics']);
-
-
+Route::get('/searchQuestions',[indexController::class, 'searchQuestions']);
+Route::get('questions_details/{question}',[indexController::class, 'questions_details'])->name('questions_details');;
+// Route::get('redirect/{id}', 'YourController@redirectToUrlWithId')->name('url.redirect');
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

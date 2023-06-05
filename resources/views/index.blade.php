@@ -1,5 +1,5 @@
-@include('headers.header')
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+@include('layouts.app')
+<!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">LOGO</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,126 +21,58 @@
             </div>
         </div>
     </div>
-</nav>
+</nav> -->
+<input type="hidden" value="1" name="topic_id" id="topic_id">
 <div class="container mt-5">
+    <div class="text-center">
+        <h2 class="mb-3" id="display_topic_name"></h2>
+    </div>
     <div class="row height d-flex justify-content-center align-items-center">
         <div class="col-md-8">
             <div class="search">
                 <i class="fa fa-search"></i>
-                <input type="text" id="search_question_topics" class="form-control" placeholder="Look for a topic or questions">
-                <button class="btn btn-primary">Search</button>
-                <div class="set_suggestion_height mt-3">
-                   
+                <input type="text" id="search_questions" class="form-control" placeholder="look for more questions within this topic">
+                <!-- <button class="btn btn-primary">Search</button> -->
+                <div class="set_suggestion_height mt-3 d-none">
 
-                
+
+
                 </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="container">
+                <table class="table table-bordered">
+                    <thead >
+                        <th>My Votes</th>
+                        @auth
+                        <td><a href="">My Votes Track</a></td>
+                        @else
+                        <td>Register to keep track of your votes</td>
+                        @endauth
+                    </thead>
+                </table>
+            </div>
+            <div class="container border p-2 m-2">
+                <p>Best comments in this topic</p>
+                <ol>
+                    <li>Lena85 (295 upvotes)</li>
+                    <li>Dansky (285 upvotes)</li>
+                    <li>Supermind (275 upvotes)</li>
+                    <li>Quatorze14 (265 upvotes)</li>
+                </ol>
             </div>
         </div>
     </div>
     <div class="container">
         <div class="">
-            <div class="row mt-5">
-                <div class="col-md-6">
-                    <h5 class="text-center">Popular questions</h5>
-                    <div id="display_questions">
-                    </div>
+            <div class="row mt-5" id="display_questions">
 
-                    <!-- <div class="question">
-                            <h6 class="p-3 border-bottom">Q: Best movie ever (421 votes)</h6>
-                            <div class="suggestions">
-                                <ol>
-                                    <li class="hover"><b>Place </b>(46 votes)</li>
-                                    <li class="hover"><b>Place </b>(41 votes)</li>
-                                    <li class="hover"><b>Place </b>(34 votes)</li>
-                                </ol>
-                                <button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                    Show More Answers
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container border mt-1">
-                        <div class="question">
-                            <h6 class="p-3 border-bottom">Q: Best horror films (356 votes)</h6>
-                            <div class="suggestions">
-                                <ol>
-                                    <li class="hover"><b>Place </b>(26 votes)</li>
-                                    <li class="hover"><b>Place </b>(24 votes)</li>
-                                    <li class="hover"><b>Place </b>(19 votes)</li>
-                                </ol>
-                                <button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                    Show More Answers
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container border mt-1">
-                        <h6 class="p-3 border-bottom">Q: Best Comedy (289 votes)</h6>
-                        <div class="question">
-                            <div class="suggestions">
-                                <ol>
-                                    <li class="hover"><b>Place </b>(34 votes)</li>
-                                    <li class="hover"><b>Place</b>(32 votes)</li>
-                                    <li class="hover"><b>Place</b>(29 votes)</li>
-                                </ol>
-                                <button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                    Show More Answers
-                                </button>
-                            </div>
-                        </div>
-                    </div> -->
-                </div>
-                <div class="col-md-6">
-                    <h5 class="text-center">Popular topics</h5>
-                    <div id="popular_topics">
 
-                    </div>
-                    <!-- <div class="container border mt-1">
-                        <div class="question">
-                            <h6 class="mt-1">Topic 1</h6>
-                            <hr>
-                            <h6 class="p-3 border-bottom">Q: Best movie ever (421 votes)</h6>
-                            <div class="suggestions">
-                                <ol>
-                                    <li class="hover"><b>Place </b>(46 votes)</li>
-                                    <li class="hover"><b>Place </b>(41 votes)</li>
-                                    <li class="hover"><b>Place </b>(34 votes)</li>
-                                </ol>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container border mt-1">
-                        <div class="question">
-                            <h6 class="mt-1">Topic 2</h6>
-                            <hr>
-                            <h6 class="p-3 border-bottom">Q: Best horror films (356 votes)</h6>
-                            <div class="suggestions">
-                                <ol>
-                                    <li class="hover"><b>Place </b>(26 votes)</li>
-                                    <li class="hover"><b>Place </b>(24 votes)</li>
-                                    <li class="hover"><b>Place </b>(19 votes)</li>
-                                </ol>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container border mt-1">
-                        <div class="question">
-                            <h6 class="mt-1">Topic 3</h6>
-                            <hr>
-                            <h6 class="p-3 border-bottom">Q: Best Comedy (289 votes)</h6>
-                            <div class="suggestions">
-                                <ol>
-                                    <li class="hover"><b>Place </b>(34 votes)</li>
-                                    <li class="hover"><b>Place </b>(32 votes)</li>
-                                    <li class="hover"><b>Place </b>(29 votes)</li>
-                                </ol>
-                            </div>
-                        </div>
-                    </div> -->
-                </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
