@@ -151,23 +151,31 @@ class indexController extends Controller
         }
         $vote_count = $vote_count + 1;
         $count_answer = UsersAnswer::where('user_ip_address', $clientIP)->where('question_id', $question_id)->count();
-        if ($count_answer == 0) {
-            $update_votes = DB::table('questions_answer')
-                ->where('id', $answer_id)
-                ->update([
-                    'vote_count' => $vote_count
-                ]);
-            if ($update_votes) {
-                $insert_user_vote = DB::table('user_answers')->insert([
-                    'question_id' => $question_id,
-                    'answer_id' => $answer_id,
-                    'user_ip_address' => $clientIP
-                ]);
-                if ($insert_user_vote) {
-                    return json_encode([
-                        'success' => 1,
-                        'data' => 'Vote added successfully!'
+        if ($count_answer < 3) {
+            $if_voted = UsersAnswer::where('user_ip_address', $clientIP)->where('question_id', $question_id)->where('answer_id', $answer_id)->count();
+            if ($if_voted == 0) {
+                $update_votes = DB::table('questions_answer')
+                    ->where('id', $answer_id)
+                    ->update([
+                        'vote_count' => $vote_count
                     ]);
+                if ($update_votes) {
+                    $insert_user_vote = DB::table('user_answers')->insert([
+                        'question_id' => $question_id,
+                        'answer_id' => $answer_id,
+                        'user_ip_address' => $clientIP
+                    ]);
+                    if ($insert_user_vote) {
+                        return json_encode([
+                            'success' => 1,
+                            'data' => 'Vote added successfully!'
+                        ]);
+                    } else {
+                        return json_encode([
+                            'success' => 0,
+                            'data' => 'Something went wrong!'
+                        ]);
+                    }
                 } else {
                     return json_encode([
                         'success' => 0,
@@ -177,7 +185,7 @@ class indexController extends Controller
             } else {
                 return json_encode([
                     'success' => 0,
-                    'data' => 'Something went wrong!'
+                    'data' => 'You can not vote on same answer twice!'
                 ]);
             }
         } else {
@@ -193,11 +201,18 @@ class indexController extends Controller
             $tosearch = $request->search;
             // $question_id = $request->question_id;
             // if(strlen($tosearch) >= 3){
-            $questions = Questionsanswers::select('*')
-                ->where('answers', 'like', '%' . $tosearch . '%')
-                ->where('questions_category', '=', $request->id)
-                ->orderBy('answers', 'desc')
-                ->get();
+            if (strlen($tosearch) > 0) {
+                $questions = Questionsanswers::select('*')
+                    ->where('answers', 'like', '%' . $tosearch . '%')
+                    ->where('questions_category', '=', $request->id)
+                    ->orderBy('answers', 'desc')
+                    ->get();
+            } else {
+                $questions = Questionsanswers::select('*')
+                    ->where('questions_category', '=', $request->id)
+                    ->orderBy('answers', 'desc')
+                    ->get();
+            }
             // $topics = DB::table('topics')
             //     ->join('questions', 'topics.id', '=', 'questions.topic_id')
             //     ->where('questions.question', 'like', '%' . $tosearch . '%')
@@ -294,10 +309,18 @@ class indexController extends Controller
         ]);
     }
 
-    public function questions_details($id)
+    public function questions_details(Request $request, $id)
     {
+        if (Auth::check()) {
+            // User is logged in
+            $clientIP = Auth::id();
+        } else {
+            // User is not logged in
+            $clientIP = $this->getClientIP($request);
+        }
         // return $id;
         $question_id = $id;
+        $get_user_answers = UsersAnswer::select('user_answers.id', 'questions_answer.answers', 'user_answers.answer_id')->join('questions_answer', 'user_answers.answer_id', 'questions_answer.id')->where('user_answers.user_ip_address', '=', $clientIP)->where('user_answers.question_id', '=', $id)->get();
         $question_answers = Questions::select('questions.id', 'questions.question')
             ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
             ->where('questions.id', '=', $question_id)
@@ -315,15 +338,212 @@ class indexController extends Controller
                 ->where('questions.id', '=', $details['id'])
                 ->get();
         }
+        $get_comments = DB::table('comments')->select('*')->where('question_id', $question_id)->get();
         // $data=[
         //     'question_details'=>$question_details,
         //     'question_answers'=>$question_answers
         // ];
-        return view('questions', compact('header_info', 'question_answers'));
+        return view('questions', compact('header_info', 'question_answers', 'get_user_answers', 'get_comments'));
+    }
+    public function delete_vote(Request $request)
+    {
+        $to_delete = $request->user_answer_id;
+        $delete = DB::table('user_answers')->where('id', $to_delete)->delete();
+        if ($delete) {
+            $deduct_vote_count = Questionsanswers::select('*')->where('id', $request->answer_id)->get();
+            foreach ($deduct_vote_count as $result) {
+                $vote_count = $result->vote_count;
+            }
+            $vote_count = $vote_count - 1;
+            $update_votes = DB::table('questions_answer')
+                ->where('id', $request->answer_id)
+                ->update([
+                    'vote_count' => $vote_count
+                ]);
+            return json_encode([
+                'success' => 1,
+                'data' => 'Vote delete successfully'
+            ]);
+        }
+    }
+    public function add_user_answer(Request $request)
+    {
+        $errors = '';
+        $success = 'Your answers are added successfully!';
+        $category = $request->category;
+        // $add_answer = $request->add_answer;
+        if (Auth::check()) {
+            // User is logged in
+            $clientIP = Auth::id();
+        } else {
+            // User is not logged in
+            $clientIP = $this->getClientIP($request);
+        }
+        $userAnswers = $request->input('add_answer');
+        //return redirect()->back()->with('success', $userAnswers);
+        foreach ($userAnswers as $add_user_answer) {
+            if ($add_user_answer != '') {
+                // return redirect()->back()->with('success', $add_user_answer);
+                $check_query = DB::table('questions_answer')->where('added_by', $clientIP)->where('questions_category', $category)->count();
+                if ($check_query < 3) {
+                    $check_answer = DB::table('questions_answer')->where('answers', $add_user_answer)->where('questions_category', $category)->count();
+                    if ($check_answer == 0) {
+                        $query = DB::table('questions_answer')->insert([
+                            'answers' => $add_user_answer,
+                            'vote_count' => 0,
+                            'questions_category' => $category,
+                            'added_by' => $clientIP
+                        ]);
+                        $get_this_query = Questionsanswers::select('*')->where('added_by', $clientIP)->where('questions_category', $category)->where('answers', $add_user_answer)->get();
+                        foreach ($get_this_query as $this_answer) {
+                            $this_answer_id = $this_answer['id'];
+                        }
+                        $query = Questionsanswers::select('questions_answer.id', 'questions_answer.vote_count')
+                            ->join('questions', 'questions_answer.questions_category', '=', 'questions.question_category')
+                            ->where('questions_answer.id', '=', $this_answer_id)
+                            ->select('questions.id as question_id', 'questions_answer.id', 'questions_answer.vote_count')
+                            ->get();
+                        foreach ($query as $result) {
+                            $question_id = $result->question_id;
+                            // $vote_count = $result->vote_count;
+                        }
+                        //return redirect()->back()->with('success', $this_answer_id);
+                        $count_answer = UsersAnswer::where('user_ip_address', $clientIP)->where('question_id', $question_id)->count();
+                        if ($count_answer < 3) {
+
+                            $vote_count = 1;
+                            $update_votes = DB::table('questions_answer')
+                                ->where('id', $this_answer_id)
+                                ->update([
+                                    'vote_count' => $vote_count
+                                ]);
+                            if ($update_votes) {
+                                $insert_user_vote = DB::table('user_answers')->insert([
+                                    'question_id' => $question_id,
+                                    'answer_id' => $this_answer_id,
+                                    'user_ip_address' => $clientIP
+                                ]);
+
+                                // if ($insert_user_vote) {
+                                //     return json_encode([
+                                //         'success' => 1,
+                                //         'data' => 'Vote added successfully!'
+                                //     ]);
+                                // } else {
+                                //     return json_encode([
+                                //         'success' => 0,
+                                //         'data' => 'Something went wrong!'
+                                //     ]);
+                                // }
+                            }
+                        }
+                        // return redirect()->back()->with('success', "Answer added successfully");
+                    } else {
+                        $errors .= 'This <b> ' . $add_user_answer . ' </b> answer is already listed <br>';
+                        //return redirect()->back()->with('error', "This answer is already listed");
+                    }
+                } else {
+                    $errors .= 'You have already added 3 answers for this question <br>';
+                    // return redirect()->back()->with('error', "You have already added one answer for this question");
+                }
+            }
+        }
+        if (strlen($errors) > 0) {
+            return redirect()->back()->with('warning', $success . "<br>" . $errors);
+        } else {
+            return redirect()->back()->with('success', $success);
+        }
+    }
+
+    public function add_user_comments(Request $request)
+    {
+        if (Auth::check()) {
+            // User is logged in
+            $clientIP = Auth::id();
+        } else {
+            // User is not logged in
+            $clientIP = $this->getClientIP($request);
+        }
+        $comments = $request->comments;
+        $question_id = $request->question_id;
+        if ($this->isURLComment($comments) == true) {
+            return redirect()->back()->with('error', 'external website links are not allowed to add!');
+        }
+        $insert_comments = DB::table('comments')->insert([
+            'comments' => $comments,
+            'question_id' => $question_id,
+            'comment_by' => $clientIP
+        ]);
+
+        if ($insert_comments) {
+            return redirect()->back()->with('success', 'Comment added successfully!');
+        } else {
+            return redirect()->back()->with('error', 'Something went wrong!');
+        }
+    }
+
+    public function upvote_comment(Request $request)
+    {
+        if (Auth::check()) {
+            // User is logged in
+            $clientIP = Auth::id();
+        } else {
+            // User is not logged in
+            $clientIP = $this->getClientIP($request);
+        }
+        $check_if_voted = DB::table('comment_votes_history')->select('*')->where('comment_id', $request->comment_id)->where('vote_by', $clientIP)->count();
+        if ($check_if_voted == 0) {
+            $insert_upvote = DB::table('comment_votes_history')->insert([
+                'vote_by' => $clientIP,
+                'vote_type' => 'Upvote',
+                'comment_id' => $request->comment_id
+            ]);
+            if ($insert_upvote) {
+                $vote_count = $request->upvote + 1;
+                $update_votes = DB::table('comments')
+                    ->where('id', $request->comment_id)
+                    ->update([
+                        'upvotes ' => $vote_count
+                    ]);
+                if ($update_votes) {
+                    return json_encode([
+                        'success' => 1,
+                        'data' => 'Comment upvoted successfully'
+                    ]);
+                }else{
+                    return json_encode([
+                        'success' => 0,
+                        'data' => 'Something went wrong'
+                    ]);
+                }
+            }else{
+                return json_encode([
+                    'success' => 0,
+                    'data' => 'Something went wrong'
+                ]);
+            }
+        } else {
+            return json_encode([
+                'success' => 0,
+                'data' => 'You have already voted for this comment'
+            ]);
+        }
     }
     public function getClientIP(Request $request)
     {
         $ip = $request->getClientIp();
         return $ip;
+    }
+    public function isURLComment($comment)
+    {
+        // Regular expression pattern to match a URL
+        $pattern = '/\b(?:https?:\/\/|www\.)\S+\b/i';
+
+        // Check if the comment contains a URL
+        if (preg_match($pattern, $comment)) {
+            return true; // URL found in the comment
+        } else {
+            return false; // No URL found in the comment
+        }
     }
 }

@@ -24,7 +24,11 @@ Route::get('/searchAnswers',[indexController::class, 'searchAnswers']);
 Route::post('/entervote',[indexController::class, 'entervote']);
 Route::get('/searchQuestionsTopics',[indexController::class, 'searchQuestionsTopics']);
 Route::get('/searchQuestions',[indexController::class, 'searchQuestions']);
-Route::get('questions_details/{question}',[indexController::class, 'questions_details'])->name('questions_details');;
+Route::get('questions_details/{question}',[indexController::class, 'questions_details'])->name('questions_details');
+Route::post('/delete_vote',[indexController::class, 'delete_vote']);
+Route::post('/add_user_answer', [App\Http\Controllers\indexController::class, 'add_user_answer'])->name('add_user_answer');
+Route::post('/add_user_comments', [App\Http\Controllers\indexController::class, 'add_user_comments'])->name('add_user_comments');
+Route::post('/upvote_comment',[indexController::class, 'upvote_comment']);
 // Route::get('redirect/{id}', 'YourController@redirectToUrlWithId')->name('url.redirect');
 Auth::routes();
 
