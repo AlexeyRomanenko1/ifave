@@ -39,7 +39,7 @@
                             <a href="" class="nav-link">Home</a>
                         </li> -->
                         <li class="nav-item">
-                            <a href="" class="nav-link">All Topics</a>
+                            <a href="" class="nav-link" data-bs-toggle="modal" data-bs-target="#topics_modal">All Topics</a>
                         </li>
                         <li class="nav-item">
                             <a href="" class="nav-link">About</a>
@@ -91,6 +91,34 @@
         <main class="py-4">
             @yield('content')
         </main>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="topics_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="exampleModalLabel">All Topics</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row height d-flex justify-content-center align-items-center">
+                        <div class="col-md-8">
+                            <div class="search">
+                                <i class="fa fa-search"></i>
+                                <input type="text" id="search_topics" class="form-control" placeholder="look for topics">
+                                <!-- <button class="btn btn-primary">Search</button> -->
+                                <div class="set_suggestion_height_topics mt-3 rounded">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 

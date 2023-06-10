@@ -1,7 +1,4 @@
 let user_selected_answers = [];
-var path = window.location.pathname;
-var page = path.split("/").pop();
-console.log( page );
 document.addEventListener('copy', function (e) {
     e.preventDefault();
     // alert('Copying is not allowed on this page.');
@@ -22,7 +19,7 @@ $(document).ready(function () {
     $.ajax({
         type: 'GET',
         url: '/indexonloadRequest',
-        data: { task: 'get_questions' },
+        data: { task: 'get_questions',topic_name:$('#topic_name').val() },
         success: function (data) {
             // alert(data.success);
             // console.log(data);
@@ -124,6 +121,9 @@ $(document).ready(function () {
 
             $('#popular_topics').empty()
             $('#popular_topics').html(hot_topics_dom)
+        },
+        error:function(e){
+            console.log(e)
         }
     });
 })

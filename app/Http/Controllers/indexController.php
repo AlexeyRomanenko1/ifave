@@ -32,8 +32,11 @@ class indexController extends Controller
                     ->where('user_ip_address', $userIpAddress)
                     ->get();
             }
-
-            $topicName = "movies";
+            if (isset($request->topic_name)) {
+                $topicName=$request->topic_name;
+            } else {
+                $topicName = "movies";
+            }
             $questions = Questions::select('questions.id as question_id', 'questions.question', 'questions.question_category', 'qa.top_answers', 'totqa.total_votes')
                 ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
                 ->leftJoin(DB::raw('
@@ -343,6 +346,7 @@ class indexController extends Controller
 
         $get_comments = DB::table('comments')->select('*')
             ->selectRaw('(upvotes - downvotes) as difference')
+            ->where('question_id', $question_id)
             ->orderBy('difference', 'DESC')
             ->get();
         // $data=[
@@ -614,6 +618,51 @@ class indexController extends Controller
         ]);
     }
 
+    public function get_topics(Request $request)
+    {
+        $query = DB::table('topics')->select('*')->orderBy('topic_name', 'desc')->get();
+        return json_encode([
+            'success' => 1,
+            'data' => $query
+        ]);
+    }
+
+    public function search_topics(Request $request)
+    {
+        $tosearch = $request->to_search;
+        // $question_id = $request->question_id;
+        // if(strlen($tosearch) >= 3){
+        if (strlen($tosearch) > 0) {
+            $topics = DB::table('topics')->select('*')
+                ->where('topic_name', 'like', '%' . $tosearch . '%')
+                ->orderBy('topic_name', 'desc')
+                ->get();
+        } else {
+            $topics = DB::table('topics')->select('*')
+                ->orderBy('topic_name', 'desc')
+                ->get();
+        }
+        // $topics = DB::table('topics')
+        //     ->join('questions', 'topics.id', '=', 'questions.topic_id')
+        //     ->where('questions.question', 'like', '%' . $tosearch . '%')
+        //     ->select('topics.id', 'topics.topic_name')
+        //     ->distinct()
+        //     ->get();
+        return json_encode([
+            'success' => 1,
+            'data' => $topics
+        ]);
+    }
+
+    public function topic_name(Request $request){
+        $header_info= $request->topic_name;
+        $get_topic=DB::table('topics')->select('*')->where('topic_name',$request->topic_name)->first();
+        //$topic_id=$get_topic;
+        // foreach($get_topic as $topic){
+        //     $topic_id=$topic['id'];
+        // }
+        return view("topics",compact('header_info','get_topic'));
+    }
     public function getClientIP(Request $request)
     {
         $ip = $request->getClientIp();

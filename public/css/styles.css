@@ -53,3 +53,8 @@
 .bd-highlight{
     background-color: #b2b0b0;
 }
+
+.set_suggestion_height_topics{
+    height: 250px;
+    overflow-y: auto;
+}

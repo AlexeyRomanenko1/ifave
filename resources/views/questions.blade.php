@@ -8,7 +8,11 @@
         $question_category=$details['question_category'];
         @endphp
         <input type="hidden" id="hidden_question_id" value="{{ $details['question_category'] }}">
+        @if($details["topic_name"] == 'movies')
         <a href="/">Go back to {{ $details["topic_name"] }}</a>
+        @else
+        <a href="/topics/{{$details['topic_name']}}">Go back to {{ $details["topic_name"] }}</a>
+        @endif
         <h3 class="p-2">
             {{ $details["question"] }}
         </h3>
