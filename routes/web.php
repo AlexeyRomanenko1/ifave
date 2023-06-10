@@ -29,6 +29,8 @@ Route::post('/delete_vote',[indexController::class, 'delete_vote']);
 Route::post('/add_user_answer', [App\Http\Controllers\indexController::class, 'add_user_answer'])->name('add_user_answer');
 Route::post('/add_user_comments', [App\Http\Controllers\indexController::class, 'add_user_comments'])->name('add_user_comments');
 Route::post('/upvote_comment',[indexController::class, 'upvote_comment']);
+Route::post('/downvote_comment',[indexController::class, 'downvote_comment']);
+Route::get('/uncover_answers',[indexController::class, 'uncover_answers']);
 // Route::get('redirect/{id}', 'YourController@redirectToUrlWithId')->name('url.redirect');
 Auth::routes();
 

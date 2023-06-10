@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Topics;
 use App\Models\Questions;
-use App\Models\QuestionsAnswers;
+use App\Models\Questionsanswers;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -153,7 +153,7 @@ class HomeController extends Controller
                     $questions_category = $data[2];
 
                     // check if answer exsists
-                    $check_answer = QuestionsAnswers::select('answers')
+                    $check_answer = Questionsanswers::select('answers')
                         ->where('answers', '=', $answers)
                         ->where('questions_category', '=', $questions_category)
                         ->get();

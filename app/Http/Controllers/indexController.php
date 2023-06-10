@@ -10,6 +10,7 @@ use App\Models\Questionsanswers;
 use App\Models\UsersAnswer;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class indexController extends Controller
 {
@@ -63,8 +64,8 @@ class indexController extends Controller
             $hot_topics = array();
             $topics = Topics::select('topics.id as topic_id', 'topics.topic_name', 'questions.id as question_id', 'questions.question', 'questions.question_category')->JOIN('questions', 'topics.id', '=', 'questions.topic_id')->get();
             foreach ($topics as $topic) {
-                $question = QuestionsAnswers::select('*')->where('questions_category', '=', $topic->question_category)->where('answers', '<>', '')->orderby('vote_count', 'DESC')->limit(3)->get();
-                $answers = QuestionsAnswers::where('questions_category', $topic->question_category)->sum('vote_count');
+                $question = Questionsanswers::select('*')->where('questions_category', '=', $topic->question_category)->where('answers', '<>', '')->orderby('vote_count', 'DESC')->limit(3)->get();
+                $answers = Questionsanswers::where('questions_category', $topic->question_category)->sum('vote_count');
                 if (count($question) > 0) {
                     //foreach ($answers as $answer) {
                     $question['total_sum'] = $answers;
@@ -338,7 +339,12 @@ class indexController extends Controller
                 ->where('questions.id', '=', $details['id'])
                 ->get();
         }
-        $get_comments = DB::table('comments')->select('*')->where('question_id', $question_id)->get();
+        //$get_comments = DB::table('comments')->select('*')->where('question_id', $question_id)->get();
+
+        $get_comments = DB::table('comments')->select('*')
+            ->selectRaw('(upvotes - downvotes) as difference')
+            ->orderBy('difference', 'DESC')
+            ->get();
         // $data=[
         //     'question_details'=>$question_details,
         //     'question_answers'=>$question_answers
@@ -392,7 +398,8 @@ class indexController extends Controller
                             'answers' => $add_user_answer,
                             'vote_count' => 0,
                             'questions_category' => $category,
-                            'added_by' => $clientIP
+                            'added_by' => $clientIP,
+                            'added_at' => Date('Y-m-d H:i:s')
                         ]);
                         $get_this_query = Questionsanswers::select('*')->where('added_by', $clientIP)->where('questions_category', $category)->where('answers', $add_user_answer)->get();
                         foreach ($get_this_query as $this_answer) {
@@ -443,7 +450,23 @@ class indexController extends Controller
                         //return redirect()->back()->with('error', "This answer is already listed");
                     }
                 } else {
-                    $errors .= 'You have already added 3 answers for this question <br>';
+                    $get_last_entry = DB::table('questions_answer')->where('questions_category', $category)->where('added_by', $clientIP)->max("added_at");
+                    //foreach($get_last_entry as $last_entry){
+                    $last_entry = Carbon::parse($get_last_entry);
+                    $current_time = Carbon::parse(Date('Y-m-d H:i:s'));
+                    $hourDifference = $current_time->diffInHours($last_entry);
+                    if ($hourDifference >= 24) {
+                        $query = DB::table('questions_answer')->insert([
+                            'answers' => $add_user_answer,
+                            'vote_count' => 0,
+                            'questions_category' => $category,
+                            'added_by' => $clientIP,
+                            'added_at' => Date('Y-m-d H:i:s')
+                        ]);
+                    } else {
+                        // }
+                        $errors .= 'You can not add more than 3 answer for a question with 24 hours<br>';
+                    }
                     // return redirect()->back()->with('error', "You have already added one answer for this question");
                 }
             }
@@ -469,16 +492,20 @@ class indexController extends Controller
         if ($this->isURLComment($comments) == true) {
             return redirect()->back()->with('error', 'external website links are not allowed to add!');
         }
-        $insert_comments = DB::table('comments')->insert([
-            'comments' => $comments,
-            'question_id' => $question_id,
-            'comment_by' => $clientIP
-        ]);
-
-        if ($insert_comments) {
-            return redirect()->back()->with('success', 'Comment added successfully!');
+        if (strlen($comments) > 1000) {
+            return redirect()->back()->with('error', 'You comments length is exceeding the limit of 1000 characters!');
         } else {
-            return redirect()->back()->with('error', 'Something went wrong!');
+            $insert_comments = DB::table('comments')->insert([
+                'comments' => $comments,
+                'question_id' => $question_id,
+                'comment_by' => $clientIP
+            ]);
+
+            if ($insert_comments) {
+                return redirect()->back()->with('success', 'Comment added successfully!');
+            } else {
+                return redirect()->back()->with('error', 'Something went wrong!');
+            }
         }
     }
 
@@ -503,20 +530,20 @@ class indexController extends Controller
                 $update_votes = DB::table('comments')
                     ->where('id', $request->comment_id)
                     ->update([
-                        'upvotes ' => $vote_count
+                        'upvotes' => $vote_count
                     ]);
                 if ($update_votes) {
                     return json_encode([
                         'success' => 1,
                         'data' => 'Comment upvoted successfully'
                     ]);
-                }else{
+                } else {
                     return json_encode([
                         'success' => 0,
                         'data' => 'Something went wrong'
                     ]);
                 }
-            }else{
+            } else {
                 return json_encode([
                     'success' => 0,
                     'data' => 'Something went wrong'
@@ -529,6 +556,64 @@ class indexController extends Controller
             ]);
         }
     }
+
+    public function downvote_comment(Request $request)
+    {
+        if (Auth::check()) {
+            // User is logged in
+            $clientIP = Auth::id();
+        } else {
+            // User is not logged in
+            $clientIP = $this->getClientIP($request);
+        }
+        $check_if_voted = DB::table('comment_votes_history')->select('*')->where('comment_id', $request->comment_id)->where('vote_by', $clientIP)->count();
+        if ($check_if_voted == 0) {
+            $insert_upvote = DB::table('comment_votes_history')->insert([
+                'vote_by' => $clientIP,
+                'vote_type' => 'Downvotevote',
+                'comment_id' => $request->comment_id
+            ]);
+            if ($insert_upvote) {
+                $vote_count = $request->upvote + 1;
+                $update_votes = DB::table('comments')
+                    ->where('id', $request->comment_id)
+                    ->update([
+                        'downvotes' => $vote_count
+                    ]);
+                if ($update_votes) {
+                    return json_encode([
+                        'success' => 1,
+                        'data' => 'Comment down voted successfully'
+                    ]);
+                } else {
+                    return json_encode([
+                        'success' => 0,
+                        'data' => 'Something went wrong'
+                    ]);
+                }
+            } else {
+                return json_encode([
+                    'success' => 0,
+                    'data' => 'Something went wrong'
+                ]);
+            }
+        } else {
+            return json_encode([
+                'success' => 0,
+                'data' => 'You have already voted for this comment'
+            ]);
+        }
+    }
+
+    public function uncover_answers(Request $request)
+    {
+        $query = DB::table('questions_answer')->select('*')->where('questions_category', $request->question_id)->orderby('vote_count', 'DESC')->get();
+        return json_encode([
+            'success' => 1,
+            'data' => $query
+        ]);
+    }
+
     public function getClientIP(Request $request)
     {
         $ip = $request->getClientIp();

@@ -21,7 +21,7 @@
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
 </head>
 
-<body>
+<body onselectstart="return false">
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light back-blue shadow-sm">
             <div class="container">

@@ -4,6 +4,9 @@
 
 
         @foreach($header_info as $details)
+        @php 
+        $question_category=$details['question_category'];
+        @endphp
         <input type="hidden" id="hidden_question_id" value="{{ $details['question_category'] }}">
         <a href="/">Go back to {{ $details["topic_name"] }}</a>
         <h3 class="p-2">
@@ -34,7 +37,7 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="text-nowrap bd-highlight m-3" style="width:12rem">
-                        <button class="btn btn-primary">No idea show me answers.</button>
+                        <button class="btn btn-primary" onclick="un_cover('{{$question_category}}')">No idea show me answers.</button>
                     </div>
                     <div class="text-nowrap bd-highlight m-2" style="width:14rem">
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Not in the list. Add an answer.</button>
@@ -72,14 +75,21 @@
             <div class="row">
                 <div class="col-md-11">
                     <div class="border">
+                        @if(strlen($user_comment->comments) > 150)
+                        <p class="p-2">
+                            {{ substr($user_comment->comments, 0, 150) }}
+                            <a href="#" class="read-more">Read More</a>
+                            <span class="full-comment" style="display: none;">{{ $user_comment->comments }}</span>
+                        </p>
+                        @else
                         <p class="p-2">{{ $user_comment->comments }}</p>
+                        @endif
                     </div>
                 </div>
                 <div class="col-md-1">
                     <small>{{$user_comment->upvotes}} Upvotes</small>
                     <div><i class="fa fa-arrow-up" onclick="upvote_count({{$user_comment->id}},{{$user_comment->upvotes}})" aria-hidden="true"></i></div>
                     <div><i class="fa fa-arrow-down" onclick="downvote_count({{$user_comment->id}},{{$user_comment->downvotes}})" aria-hidden="true"></i></div>
-                    <small>{{$user_comment->downvotes}} Downvotes</small>
                 </div>
             </div>
         </div>
@@ -107,7 +117,7 @@
             <input type="hidden" name="question_id" value="{{$header['id']}}">
             @endforeach
             <div class="add_comments m-2 p-2">
-                <textarea name="comments" class="form-control" id="" cols="30" rows="10" placeholder="Add your comment here"></textarea>
+                <textarea name="comments" onpaste="return false" class="form-control" id="" cols="30" rows="10" placeholder="Add your comment here"></textarea>
             </div>
             <div class="add_comment_button p-2 m-2">
                 <button type="submit" class="btn btn-primary float-end">Add</button>
@@ -161,7 +171,7 @@
                 @csrf
                 <input type="hidden" name="question_id" value="{{$header['id']}}">
                 <div class="modal-body">
-                    <textarea class="form-control" name="comments" id="" cols="30" rows="10" placeholder="Your comments....." required></textarea>
+                    <textarea class="form-control" onpaste="return false" name="comments" id="" cols="30" rows="10" placeholder="Your comments....." required></textarea>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary skip" data-bs-dismiss="modal">Skip</button>

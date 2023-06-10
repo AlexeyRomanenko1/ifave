@@ -1,4 +1,13 @@
 let user_selected_answers = [];
+document.addEventListener('copy', function (e) {
+    e.preventDefault();
+    // alert('Copying is not allowed on this page.');
+});
+$('.read-more').on('click', function (e) {
+    e.preventDefault();
+    $(this).hide();
+    $(this).siblings('.full-comment').show();
+});
 $(document).ready(function () {
     // console.log('I am ready');
     // $.ajaxSetup({
@@ -242,7 +251,7 @@ function add_vote(x) {
                 $('#staticBackdrop').addClass('show');
                 $('#staticBackdrop').fadeIn();
                 //$("exampleModal1").attr("role","dialog");
-               // location.reload(true)
+                // location.reload(true)
             } else {
                 toastr.error(obj.data)
             }
@@ -263,29 +272,29 @@ $('#search_question_topics').on('keyup', function () {
             // html = '<input type="text" class="form-control mb-1 questions_answer_search" value="' + search + '" onkeyup="answers_search(this,' + id + ')" placeholder="Search options">';
             let html = '';
             // if (to_search.length > 0) {
-                if (obj.data.length > 0) {
-                    // html += '<div class="p-2"><b>Questions</b></div>';
-                    if($('#hidden_to_be').val()==1){
+            if (obj.data.length > 0) {
+                // html += '<div class="p-2"><b>Questions</b></div>';
+                if ($('#hidden_to_be').val() == 1) {
                     for (let j = 0; j < obj.data.length; j++) {
                         html += ' <div class="hover p-2 bg-light" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.data[j]['id'] + ')"><b>' + obj.data[j]['answers'] + '</b></div>';
                     }
-                }else{
+                } else {
                     for (let j = 0; j < obj.data.length; j++) {
                         html += ' <div class="hover p-2 bg-light" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.data[j]['id'] + ')"><b>' + obj.data[j]['answers'] + ' (votes: ' + obj.data[j]['vote_count'] + ')</b></div>';
-                    } 
+                    }
                 }
-                } else {
-                    html += '';
-                }
-                // if (obj.topics.length > 0) {
-                //     html += '<div class="p-2"><b>Topics</b></div>';
-                //     for (let j = 0; j < obj.topics.length; j++) {
-                //         html += '<div class="hover p-1 m-1" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)"">' + obj.topics[j]['topic_name'] + '</div>';
-                //     }
-                // }
-                $('.set_suggestion_height').removeClass('d-none');
-                $('.set_suggestion_height').empty();
-                $('.set_suggestion_height').html(html);
+            } else {
+                html += '';
+            }
+            // if (obj.topics.length > 0) {
+            //     html += '<div class="p-2"><b>Topics</b></div>';
+            //     for (let j = 0; j < obj.topics.length; j++) {
+            //         html += '<div class="hover p-1 m-1" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)"">' + obj.topics[j]['topic_name'] + '</div>';
+            //     }
+            // }
+            $('.set_suggestion_height').removeClass('d-none');
+            $('.set_suggestion_height').empty();
+            $('.set_suggestion_height').html(html);
             // } else {
             //     $('.set_suggestion_height').addClass('d-none');
             //     $('.set_suggestion_height').empty();
@@ -451,12 +460,57 @@ function upvote_count(x, y) {
                 toastr.error(obj.data)
             }
         },
-        error: function(e){
+        error: function (e) {
             console.log(e)
         }
     });
 }
 
-$('.skip').on('click',function(){
+function downvote_count(x, y) {
+    $.ajax({
+        type: 'POST',
+        url: '/downvote_comment',
+        data: { '_token': $('meta[name="csrf-token"]').attr('content'), comment_id: x, upvote: y },
+        success: function (data) {
+            // $("#msg").html(data.msg);
+            // console.log(data)
+            let obj = JSON.parse(data);
+            if (obj.success == 1) {
+                toastr.success(obj.data)
+                location.reload(true)
+            } else {
+                toastr.error(obj.data)
+            }
+        },
+        error: function (e) {
+            console.log(e)
+        }
+    });
+}
+$('.skip').on('click', function () {
     location.reload(true)
 })
+
+
+// function to uncover votes 
+function un_cover(x) {
+    $.ajax({
+        type: 'GET',
+        url: '/uncover_answers',
+        data: { task: 'uncover_answers', question_id: x },
+        success: function (data) {
+            // console.log(data);
+            let html = '';
+            let obj = JSON.parse(data);
+            console.log(obj)
+            for (let j = 0; j < obj.data.length; j++) {
+                html += '<div class="hover p-2 bg-light" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.data[j]['id'] + ')"><b>' + obj.data[j]['answers'] + ' (Votes: '+ obj.data[j]['vote_count']+')</b></div>';
+            }
+            $('.set_suggestion_height').empty();
+            $('.set_suggestion_height').html(html);
+        },
+        error: function (e) {
+            console.log(e)
+        }
+    })
+}
