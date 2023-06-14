@@ -7,6 +7,7 @@ use App\Models\Topics;
 use App\Models\Questions;
 use App\Models\Questionsanswers;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -145,24 +146,44 @@ class HomeController extends Controller
             // print_r();
             $row_count = count($rows) - 1;
             $i = 0;
+            $current_date = date('Y-m-d H:i:s');
             foreach ($rows as $row) {
                 if ($i < $row_count) {
+                    // $row = mb_convert_encoding($row, 'UTF-8', 'UTF-8');
+                   // $row = mb_convert_encoding($row, 'UTF-8', 'auto');
+                   $row = iconv('ISO-8859-1', 'UTF-8//IGNORE', $row);
                     $data = str_getcsv($row);
-                    $answers = $data[0];
+                    $answers = strval($data[0]);
                     $vote_count = $data[1];
                     $questions_category = $data[2];
 
                     // check if answer exsists
-                    $check_answer = Questionsanswers::select('answers')
+                    $check_answer = DB::table('questions_answer')->select('answers')
                         ->where('answers', '=', $answers)
                         ->where('questions_category', '=', $questions_category)
                         ->get();
                     if (count($check_answer) == 0) {
+                        // echo $answers .'<br>';
+                        // return;
                         $insert_answer =  DB::table('questions_answer')->insert([
                             'answers' => $answers,
                             'vote_count' => $vote_count,
                             'questions_category' => $questions_category
                         ]);
+                        // echo '<script>sonsole.log(' . $answers  . ')</script>';
+                        // $insert_answer =  DB::table('questions_answer')->insert([
+                        //     'answers' => 'Salò, or the 120 Days of Sodom',
+                        //     'vote_count' => 0,
+                        //     'questions_category' => 'Horror'
+                        // ]);
+                        // return;
+                        // DB::connection()->getPdo()->exec("INSERT INTO questions_answer (`answers`, `vote_count`, `questions_category`) VALUES ('$answers', '$vote_count', '$questions_category')");
+                        //    DB::statement('INSERT INTO questions_answer (answers, vote_count, questions_category) VALUES (:answers, :vote_count, :questions_category)', [
+                        //     'answers' => $answers,
+                        //     'vote_count' => $vote_count,
+                        //     'questions_category' => $questions_category
+                        // ]);
+                        //DB::connection()->getPdo()->exec("INSERT INTO questions_answer ('answers','vote_count','questions_category') VALUES ('$answers','$vote_count','$questions_category' )");
                     }
                 }
                 $i++;

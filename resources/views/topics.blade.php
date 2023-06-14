@@ -47,11 +47,11 @@
             <div class="container">
                 <table class="table table-bordered">
                     <thead >
-                        <th>My Votes</th>
+                        <th>My Faves</th>
                         @auth
-                        <td><a href="">My Votes Track</a></td>
+                        <td><a href="">My Faves Track</a></td>
                         @else
-                        <td>Register to keep track of your votes</td>
+                        <td>Register to keep track of your faves</td>
                         @endauth
                     </thead>
                 </table>

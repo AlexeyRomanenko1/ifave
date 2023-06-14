@@ -40,7 +40,7 @@
                 <h5 class="modal-title" id="exampleModalLabel">Import Questions</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form method="POST" action="{{url('import_questions')}}" class="form-control" enctype="multipart/form-data">
+            <form method="POST" action="{{url('import_questions')}}" class="form-control" accept-charset="UTF-8" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="input-group mb-3">

@@ -10,3 +10,25 @@
 .navbar-light .navbar-brand {
     color: #fff !important;
 }
+
+.calb {
+    font-family: "Calibri", "Candara", "Segoe", "Segoe UI", "Optima", Arial, sans-serif;
+    font-size: 36px;
+    font-style: italic;
+    font-variant: normal;
+    font-weight: 700;
+    line-height: 39.6px;
+    letter-spacing: 0.1em;
+}
+.small-calb{
+    font-family: "Calibri", "Candara", "Segoe", "Segoe UI", "Optima", Arial, sans-serif;
+    font-size: 15px;
+    font-style: italic;
+    font-variant: normal;
+    font-weight: 700;
+    line-height: 39.6px;
+    letter-spacing: 0.1em; 
+}
+.light-purple{
+    color: #DD9EFF;
+}

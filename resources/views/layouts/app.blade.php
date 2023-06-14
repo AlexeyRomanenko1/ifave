@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" integrity="sha256-h20CPZ0QyXlBuAw7A+KluUYx/3pK+c7lYEpqLTlxjYQ=" crossorigin="anonymous">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.css">
+    <link href="//db.onlinewebfonts.com/c/3e14931180b08416dd7c967a7163f8ea?family=Calibri" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('css/header.css') }}" rel="stylesheet">
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
 </head>
@@ -26,7 +27,7 @@
         <nav class="navbar navbar-expand-md navbar-light back-blue shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    LOGO
+                    <h3 class="calb">i<b class="light-purple">fave</b><small class="small-calb">.com</small></h3>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -39,7 +40,10 @@
                             <a href="" class="nav-link">Home</a>
                         </li> -->
                         <li class="nav-item">
-                            <a href="" class="nav-link" data-bs-toggle="modal" data-bs-target="#topics_modal">All Topics</a>
+                            <a href="{{ url('/') }}" class="nav-link">The World</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link" data-bs-toggle="modal" data-bs-target="#topics_modal">All Locations</a>
                         </li>
                         <li class="nav-item">
                             <a href="" class="nav-link">About</a>

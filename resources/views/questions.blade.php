@@ -1,15 +1,13 @@
 @include('layouts.app')
 <div class="container">
     <div class="text-center">
-
-
         @foreach($header_info as $details)
         @php 
         $question_category=$details['question_category'];
         @endphp
         <input type="hidden" id="hidden_question_id" value="{{ $details['question_category'] }}">
         @if($details["topic_name"] == 'movies')
-        <a href="/">Go back to {{ $details["topic_name"] }}</a>
+        <a href="/">Go back to best in the {{ $details["topic_name"] }}</a>
         @else
         <a href="/topics/{{$details['topic_name']}}">Go back to {{ $details["topic_name"] }}</a>
         @endif
@@ -27,8 +25,11 @@
                 <div class="set_suggestion_height mt-3 rounded">
                     @if(count($get_user_answers) > 0)
                     <input type="hidden" id="hidden_to_be" value="0">
+                    @php 
+                    $question_answers = $question_answers->sortByDesc('vote_count');
+                    @endphp
                     @foreach($question_answers as $answers)
-                    <div class="hover p-2 bg-light" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote({{ $answers['answer_id'] }})"><b>{{ $answers['answers'] }} (Votes: {{$answers['vote_count']}})</b></div>
+                    <div class="hover p-2 bg-light" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote({{ $answers['answer_id'] }})"><b>{{ $answers['answers'] }} (Faves: {{$answers['vote_count']}})</b></div>
                     @endforeach
                     @else
                     @foreach($question_answers as $answers)
@@ -41,17 +42,17 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="text-nowrap bd-highlight m-3" style="width:12rem">
-                        <button class="btn btn-primary" onclick="un_cover('{{$question_category}}')">No idea show me answers.</button>
+                        <button class="btn btn-grey" onclick="un_cover('{{$question_category}}')">No idea show me answers</button>
                     </div>
                     <div class="text-nowrap bd-highlight m-2" style="width:14rem">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Not in the list. Add an answer.</button>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Not in the list. Add an answer</button>
                     </div>
                 </div>
                 <div class="col-md-4">
                     @if(count($get_user_answers) > 0)
                     <table class="table">
                         <thead>
-                            <th>My Votes</th>
+                            <th>My Faves</th>
                             <th>Actions</th>
                         </thead>
                         <tbody>
@@ -135,22 +136,20 @@
         <div class="modal-content">
             @foreach($header_info as $header)
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add answer for {{$header["question"]}}</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Add your fave for Best action movies for {{$header["question"]}}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <small class="p-2">Note: <ul>
-                    <li>Please make sure that the answer you are adding is not already in the list.(Try different spelling).</li>
-                    <li>You can add up to 3 answers per question</li>
+                    <li>Please make sure that the entry you are adding is not already in the list with a different spelling. Double entry is a lost entry</li>
+                    <li>You can add up to 3 entries per category in one day </li>
                     <li>Please ensure that your spelling is correct or other visitors will not be able to find and upvote your entry. Do not add contact info</li>
-                    <li>The answer will be added to the list with 1 vote.</li>
+                    <li>The fave will be added to the list with 1 vote</li>
                 </ul></small>
             <form method="POST" action="{{url('add_user_answer')}}" class="form-control">
                 @csrf
                 <div class="modal-body">
                     <input type="hidden" name="category" value="{{$header['question_category']}}">
                     <input type="text" class="form-control m-1" name="add_answer[]" id="" placeholder="Add your answer here" required>
-                    <input type="text" class="form-control m-1" name="add_answer[]" id="" placeholder="Add your answer here">
-                    <input type="text" class="form-control m-1" name="add_answer[]" id="" placeholder="Add your answer here">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

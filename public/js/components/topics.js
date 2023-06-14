@@ -28,7 +28,8 @@ $(document).ready(function () {
             let html = '';
             //console.log(obj)
             $('#display_topic_name').empty()
-            $('#display_topic_name').text(obj.topic_name.toUpperCase())
+            // $('#display_topic_name').text(obj.topic_name.toUpperCase())
+            $('#display_topic_name').text('Best In The ' + obj.topic_name.charAt(0).toUpperCase() + obj.topic_name.slice(1))
             let m = 1;
             for (let j = 0; j < obj.this_user_answers.length; j++) {
                 user_selected_answers.push(obj.this_user_answers[j]['question_id'])
@@ -36,7 +37,7 @@ $(document).ready(function () {
             // console.group(user_selected_answers);
             for (let j = 0; j < obj.data.length; j++) {
                 let answers = obj.data[j]['top_answers'];
-                let answersArr = answers.split(',');
+                let answersArr = answers.split('}');
                 // answersArr = answersArr.sort();
                 answersArr = answersArr.sort((a, b) => {
                     const votesA = parseInt(a.match(/\d+/));
@@ -44,33 +45,34 @@ $(document).ready(function () {
                     return votesB - votesA;
                 });
                 //console.log(answersArr)
-                html += '  <div class="col-md-4"><div class="container border mt-1" ><div class="question"><h6 class="p-3 border-bottom">Q: ' + obj.data[j]['question'] + ' (' + obj.data[j]['total_votes'] + ' votes)</h6><div class="suggestions"></div>';
+                html += '  <div class="col-md-4"><div class="container border mt-1" ><div class="question"><h5 class="p-3 border-bottom"> ' + obj.data[j]['question'] + ' (' + obj.data[j]['total_votes'] + ' Faves)</h5><div class="suggestions"></div>';
                 if (user_selected_answers.includes(obj.data[j]['question_id'])) {
+                    let p = 1;
                     for (let i = 0; i < answersArr.length; i++) {
                         // html += '<div class="hover p-1"><b> ' + m + ' ' + answersArr[i] + '</b></div>';
                         // m++;
                         if (i == 0) {
-                            html += '<div class="hover p-1"><b> ' + m + ' ' + answersArr[i] + '</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-clone" onclick="copy_url(\'' + 'http://127.0.0.1:8000//questions_details/' + obj.data[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
+                            html += '<div class="hover p-1"> ' + p + ' ' + answersArr[i] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-clone" onclick="copy_url(\'' + 'http://127.0.0.1:8000//questions_details/' + obj.data[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
                         } else if (i == 1) {
-                            html += '<div class="hover p-1"><b> ' + m + ' ' + answersArr[i] + '</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-share" aria-hidden="true"></i></div>';
+                            html += '<div class="hover p-1"> ' + p + ' ' + answersArr[i] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-share" aria-hidden="true"></i></div>';
                         } else if (i == 2) {
-                            html += '<div class="hover p-1"><b> ' + m + ' ' + answersArr[i] + '</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-code" aria-hidden="true"></i></div>';
+                            html += '<div class="hover p-1"> ' + p + ' ' + answersArr[i] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-code" aria-hidden="true"></i></div>';
                         }
 
-                        m++;
+                        p++;
                     }
 
                 } else {
                     answersArr.map((str, index) => {
-                        let places = `${index + 1} Place (Votes: ${str.match(/\d+/)})`;
+                        let places = `${index + 1} Place (Faves: ${str.match(/\d+/)})`;
                         //  html += '<div class="hover p-1"><b> ' + places + '</b></div>';
                         if (index == 0) {
-                            html += '<div class="hover p-1"><b> ' + places + '</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone" onclick="copy_url(\'' + 'http://127.0.0.1:8000//questions_details/' + obj.data[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
+                            html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone" onclick="copy_url(\'' + 'http://127.0.0.1:8000//questions_details/' + obj.data[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
                         } else if (index == 1) {
-                            html += '<div class="hover p-1"><b> ' + places + '</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share" aria-hidden="true"></i></div>';
+                            html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share" aria-hidden="true"></i></div>';
                         }
                         else if (index == 2) {
-                            html += '<div class="hover p-1"><b> ' + places + '</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code" aria-hidden="true"></i></div>';
+                            html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code" aria-hidden="true"></i></div>';
                         }
                     });
 

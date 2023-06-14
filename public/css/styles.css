@@ -58,3 +58,21 @@
     height: 250px;
     overflow-y: auto;
 }
+.btn-primary{
+    background-color: rgb(142, 169, 219);
+    color: #000;
+    font-weight: bold;
+    border-color: rgb(142, 169, 219);
+}
+.btn-grey{
+    background-color: grey;
+    border-color: grey;
+    font-weight: bold;
+}
+
+.btn-primary:hover{
+    background-color: rgb(142, 169, 219);
+    color: #000;
+    font-weight: bold;
+    border-color: rgb(142, 169, 219);
+}

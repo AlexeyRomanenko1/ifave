@@ -1,7 +1,7 @@
 let user_selected_answers = [];
 var path = window.location.pathname;
 var page = path.split("/").pop();
-console.log( page );
+console.log(page);
 document.addEventListener('copy', function (e) {
     e.preventDefault();
     // alert('Copying is not allowed on this page.');
@@ -29,9 +29,10 @@ $(document).ready(function () {
             let obj = JSON.parse(data);
             // console.group(user_selected_answers);
             let html = '';
-            //console.log(obj)
+            // console.log(obj)
             $('#display_topic_name').empty()
-            $('#display_topic_name').text(obj.topic_name.toUpperCase())
+            // $('#display_topic_name').text('Best In The ' + obj.topic_name.toUpperCase())str.charAt(0).toUpperCase() + str.slice(1)
+            $('#display_topic_name').text('Best In The ' + obj.topic_name.charAt(0).toUpperCase() + obj.topic_name.slice(1))
             let m = 1;
             for (let j = 0; j < obj.this_user_answers.length; j++) {
                 user_selected_answers.push(obj.this_user_answers[j]['question_id'])
@@ -39,41 +40,42 @@ $(document).ready(function () {
             // console.group(user_selected_answers);
             for (let j = 0; j < obj.data.length; j++) {
                 let answers = obj.data[j]['top_answers'];
-                let answersArr = answers.split(',');
+                let answersArr = answers.split('}');
                 // answersArr = answersArr.sort();
                 answersArr = answersArr.sort((a, b) => {
                     const votesA = parseInt(a.match(/\d+/));
                     const votesB = parseInt(b.match(/\d+/));
                     return votesB - votesA;
                 });
-                //console.log(answersArr)
-                html += '  <div class="col-md-4"><div class="container border mt-1" ><div class="question"><h6 class="p-3 border-bottom">Q: ' + obj.data[j]['question'] + ' (' + obj.data[j]['total_votes'] + ' votes)</h6><div class="suggestions"></div>';
+                console.log(answers)
+                html += '  <div class="col-md-4"><div class="container border mt-1" ><div class="question"><h5 class="p-3 border-bottom">' + obj.data[j]['question'] + ' (' + obj.data[j]['total_votes'] + ' Faves)</h5><div class="suggestions"></div>';
                 if (user_selected_answers.includes(obj.data[j]['question_id'])) {
+                    let p = 1;
                     for (let i = 0; i < answersArr.length; i++) {
                         // html += '<div class="hover p-1"><b> ' + m + ' ' + answersArr[i] + '</b></div>';
                         // m++;
                         if (i == 0) {
-                            html += '<div class="hover p-1"><b> ' + m + ' ' + answersArr[i] + '</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-clone" onclick="copy_url(\'' + 'http://127.0.0.1:8000//questions_details/' + obj.data[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
+                            html += '<div class="hover p-1"> ' + p + ' ' + answersArr[i] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-clone" onclick="copy_url(\'' + 'http://127.0.0.1:8000//questions_details/' + obj.data[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
                         } else if (i == 1) {
-                            html += '<div class="hover p-1"><b> ' + m + ' ' + answersArr[i] + '</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-share" aria-hidden="true"></i></div>';
+                            html += '<div class="hover p-1"> ' + p + ' ' + answersArr[i] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-share" aria-hidden="true"></i></div>';
                         } else if (i == 2) {
-                            html += '<div class="hover p-1"><b> ' + m + ' ' + answersArr[i] + '</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-code" aria-hidden="true"></i></div>';
+                            html += '<div class="hover p-1"> ' + p + ' ' + answersArr[i] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-code" aria-hidden="true"></i></div>';
                         }
 
-                        m++;
+                        p++;
                     }
 
                 } else {
                     answersArr.map((str, index) => {
-                        let places = `${index + 1} Place (Votes: ${str.match(/\d+/)})`;
+                        let places = `${index + 1} Place (Faves: ${str.match(/\d+/)})`;
                         //  html += '<div class="hover p-1"><b> ' + places + '</b></div>';
                         if (index == 0) {
-                            html += '<div class="hover p-1"><b> ' + places + '</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone" onclick="copy_url(\'' + 'http://127.0.0.1:8000//questions_details/' + obj.data[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
+                            html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone" onclick="copy_url(\'' + 'http://127.0.0.1:8000//questions_details/' + obj.data[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
                         } else if (index == 1) {
-                            html += '<div class="hover p-1"><b> ' + places + '</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share" aria-hidden="true"></i></div>';
+                            html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share" aria-hidden="true"></i></div>';
                         }
                         else if (index == 2) {
-                            html += '<div class="hover p-1"><b> ' + places + '</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code" aria-hidden="true"></i></div>';
+                            html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code" aria-hidden="true"></i></div>';
                         }
                     });
 
@@ -113,9 +115,9 @@ $(document).ready(function () {
                 // console.log(counts[0]);
                 // console.log(hot_topics[0]['answers']);
                 if (user_selected_answers.includes(hot_topics['question_id'])) {
-                    hot_topics_dom += '<div class="container border mt-1"> <div class="question"><h6 class="mt-1">' + hot_topics["topic_name"] + '</h6><hr><h6 class="p-3 border-bottom">Q: ' + hot_topics['question'] + ' (' + hot_topics['total_sum'] + ' votes)</h6><div class="suggestions"><ol> <li class="hover"><b>' + hot_topics[0]["answers"] + ' </b>(' + hot_topics[0]["vote_count"] + ' votes)</li> <li class="hover"><b>' + hot_topics[1]["answers"] + ' </b>(' + hot_topics[1]["vote_count"] + ' votes)</li> <li class="hover"><b>' + hot_topics[2]["answers"] + ' </b>(' + hot_topics[2]["vote_count"] + ' votes)</li></ol><button type="button" class="btn btn-primary mb-1" onclick="questions_modal(' + hot_topics['question_id'] + ')" data-bs-toggle="modal" data-bs-target="#exampleModal">Show More Answers</button></div></div></div>';
+                    hot_topics_dom += '<div class="container border mt-1"> <div class="question"><h6 class="mt-1">' + hot_topics["topic_name"] + '</h6><hr><h6 class="p-3 border-bottom">Q: ' + hot_topics['question'] + ' (' + hot_topics['total_sum'] + ' Faves)</h6><div class="suggestions"><ol> <li class="hover"><b>' + hot_topics[0]["answers"] + ' </b>(' + hot_topics[0]["vote_count"] + ' Faves)</li> <li class="hover"><b>' + hot_topics[1]["answers"] + ' </b>(' + hot_topics[1]["vote_count"] + ' Faves)</li> <li class="hover"><b>' + hot_topics[2]["answers"] + ' </b>(' + hot_topics[2]["vote_count"] + ' Faves)</li></ol><button type="button" class="btn btn-primary mb-1" onclick="questions_modal(' + hot_topics['question_id'] + ')" data-bs-toggle="modal" data-bs-target="#exampleModal">Show More Answers</button></div></div></div>';
                 } else {
-                    hot_topics_dom += '<div class="container border mt-1"> <div class="question"><h6 class="mt-1">' + hot_topics["topic_name"] + '</h6><hr><h6 class="p-3 border-bottom">Q: ' + hot_topics['question'] + ' (' + hot_topics['total_sum'] + ' votes)</h6><div class="suggestions"><ol> <li class="hover"><b>Place </b>(' + hot_topics[0]["vote_count"] + ' votes)</li> <li class="hover"><b>Place </b>(' + hot_topics[1]["vote_count"] + ' votes)</li> <li class="hover"><b>Place </b>(' + hot_topics[2]["vote_count"] + ' votes)</li></ol><button type="button" class="btn btn-primary mb-1" onclick="questions_modal(' + hot_topics['question_id'] + ')" data-bs-toggle="modal" data-bs-target="#exampleModal">Show More Answers</button></div></div></div>';
+                    hot_topics_dom += '<div class="container border mt-1"> <div class="question"><h6 class="mt-1">' + hot_topics["topic_name"] + '</h6><hr><h6 class="p-3 border-bottom">Q: ' + hot_topics['question'] + ' (' + hot_topics['total_sum'] + ' Faves)</h6><div class="suggestions"><ol> <li class="hover"><b>Place </b>(' + hot_topics[0]["vote_count"] + ' Faves)</li> <li class="hover"><b>Place </b>(' + hot_topics[1]["vote_count"] + ' Faves)</li> <li class="hover"><b>Place </b>(' + hot_topics[2]["vote_count"] + ' Faves)</li></ol><button type="button" class="btn btn-primary mb-1" onclick="questions_modal(' + hot_topics['question_id'] + ')" data-bs-toggle="modal" data-bs-target="#exampleModal">Show More Answers</button></div></div></div>';
                 }
             });
             // console.log(topic_name)
@@ -148,7 +150,7 @@ function questions_modal(x) {
             $('.questions_answer_search').attr('data-info', x);
             if (user_selected_answers.includes(x)) {
                 for (let j = 0; j < obj.answers.length; j++) {
-                    html += '<div class="hover p-1" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.answers[j]['answer_id'] + ')"><b>' + obj.answers[j]['answers'] + ' (Votes: ' + obj.answers[j]['vote_count'] + ')</b></div>';
+                    html += '<div class="hover p-1" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.answers[j]['answer_id'] + ')"><b>' + obj.answers[j]['answers'] + ' (Faves: ' + obj.answers[j]['vote_count'] + ')</b></div>';
                 }
             } else {
                 for (let j = 0; j < obj.answers.length; j++) {
@@ -182,7 +184,7 @@ $('.questions_answer_search').on('keyup', function () {
             if (obj.data.length > 0) {
                 if (user_selected_answers.includes(id)) {
                     for (let j = 0; j < obj.data.length; j++) {
-                        html += '<div class="hover p-1" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.data[j]['answer_id'] + ')"><b>' + obj.data[j]['answers'] + ' (Votes: ' + obj.data[j]['vote_count'] + ')</b></div>';
+                        html += '<div class="hover p-1" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.data[j]['answer_id'] + ')"><b>' + obj.data[j]['answers'] + ' (Faves: ' + obj.data[j]['vote_count'] + ')</b></div>';
                     }
                 } else {
                     for (let j = 0; j < obj.data.length; j++) {
@@ -228,7 +230,7 @@ function add_vote(x) {
                 //$("exampleModal1").attr("role","dialog");
                 // location.reload(true)
             } else {
-                toastr.error(obj.data)
+                toastr.warning(obj.data)
             }
         }
     });
@@ -255,7 +257,7 @@ $('#search_question_topics').on('keyup', function () {
                     }
                 } else {
                     for (let j = 0; j < obj.data.length; j++) {
-                        html += ' <div class="hover p-2 bg-light" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.data[j]['id'] + ')"><b>' + obj.data[j]['answers'] + ' (votes: ' + obj.data[j]['vote_count'] + ')</b></div>';
+                        html += ' <div class="hover p-2 bg-light" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.data[j]['id'] + ')"><b>' + obj.data[j]['answers'] + ' (Faves: ' + obj.data[j]['vote_count'] + ')</b></div>';
                     }
                 }
             } else {
@@ -312,7 +314,7 @@ $('#search_questions').on('keyup', function () {
                     return votesB - votesA;
                 });
                 //console.log(answersArr)
-                html += '  <div class="col-md-4"><div class="container border mt-1" ><div class="question"><h6 class="p-3 border-bottom">Q: ' + obj.data[j]['question'] + ' (' + obj.data[j]['total_votes'] + ' votes)</h6><div class="suggestions"></div>';
+                html += '  <div class="col-md-4"><div class="container border mt-1" ><div class="question"><h6 class="p-3 border-bottom">Q: ' + obj.data[j]['question'] + ' (' + obj.data[j]['total_votes'] + ' Faves)</h6><div class="suggestions"></div>';
                 if (user_selected_answers.includes(obj.data[j]['question_id'])) {
                     for (let i = 0; i < answersArr.length; i++) {
                         if (i == 0) {
@@ -328,7 +330,7 @@ $('#search_questions').on('keyup', function () {
 
                 } else {
                     answersArr.map((str, index) => {
-                        let places = `${index + 1} Place (Votes: ${str.match(/\d+/)})`;
+                        let places = `${index + 1} Place (Faves: ${str.match(/\d+/)})`;
                         if (index == 0) {
                             html += '<div class="hover p-1"><b> ' + places + '</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone" onclick="copy_url(\'' + 'http://127.0.0.1:8000//questions_details/' + obj.data[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
                         } else if (index == 1) {
@@ -479,7 +481,7 @@ function un_cover(x) {
             let obj = JSON.parse(data);
             console.log(obj)
             for (let j = 0; j < obj.data.length; j++) {
-                html += '<div class="hover p-2 bg-light" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.data[j]['id'] + ')"><b>' + obj.data[j]['answers'] + ' (Votes: '+ obj.data[j]['vote_count']+')</b></div>';
+                html += '<div class="hover p-2 bg-light" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.data[j]['id'] + ')"><b>' + obj.data[j]['answers'] + ' (Faves: ' + obj.data[j]['vote_count'] + ')</b></div>';
             }
             $('.set_suggestion_height').empty();
             $('.set_suggestion_height').html(html);
