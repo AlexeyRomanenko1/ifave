@@ -1,35 +1,106 @@
 let user_selected_answers = [];
-var path = window.location.pathname;
-var page = path.split("/").pop();
-console.log(page);
+// var path = window.location.pathname;
+// var page = path.split("/").pop();
 document.addEventListener('copy', function (e) {
     e.preventDefault();
-    // alert('Copying is not allowed on this page.');
 });
+var currentPage = 1;
+var questionsPerPage = 40;
+var allQuestions = []; // Variable to store all the questions retrieved from the API
 $('.read-more').on('click', function (e) {
     e.preventDefault();
     $(this).hide();
     $(this).siblings('.full-comment').show();
 });
 $(document).ready(function () {
-    // console.log('I am ready');
-    // $.ajaxSetup({
-    //     headers: {
-    //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //     }
-    // });
+    // Function to display questions for the current page
+    function displayQuestions(page) {
+        var startIndex = (page - 1) * questionsPerPage;
+        var endIndex = startIndex + questionsPerPage;
+        var questionsToDisplay = allQuestions.slice(startIndex, endIndex);
+        var html = '';
 
+        for (var j = 0; j < questionsToDisplay.length; j++) {
+            let answers = questionsToDisplay[j]['top_answers'];
+            let answersArr = answers.split('}');
+            // answersArr = answersArr.sort();
+            answersArr = answersArr.sort((a, b) => {
+                const votesA = parseInt(a.match(/\d+/));
+                const votesB = parseInt(b.match(/\d+/));
+                return votesB - votesA;
+            });
+            if (j == 2) {
+                html += '<div class="col-md-4"><div class="container border border-blue mt-1 p-2 m-2"><p><b>Best comments in this topic</b></p><ol><li>Lena85 (295 upvotes)</li><li>Dansky (285 upvotes)</li><li>Supermind (275 upvotes)</li><li>Quatorze14 (265 upvotes)</li><li>Supermind (265 upvotes)</li></ol></div></div>';
+            }
+            html += '  <div class="col-md-4 mb-4"><div class="container border border-blue mt-1" ><div class="question"><div class="h-fixed-30 border-bottom"><h5 class="p-3 ">' + questionsToDisplay[j]['question'] + ' (' + questionsToDisplay[j]['total_votes'] + ' Faves)</h5></div><div class="suggestions p-1"></div>';
+            if (user_selected_answers.includes(questionsToDisplay[j]['question_id'])) {
+                let p = 1;
+                for (let i = 0; i < answersArr.length; i++) {
+                    let votes_split = answersArr[i].split('( Votes: ');
+                    if (votes_split[0].length > 12) {
+                        votes_split[0] = votes_split[0].slice(0, 12) + '... ';
+                    }
+                    if (i == 0) {
+                        html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-clone float-end" onclick="copy_url(\'' + 'http://127.0.0.1:8000//questions_details/' + questionsToDisplay[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
+                    } else if (i == 1) {
+                        html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-share float-end" aria-hidden="true"></i></div>';
+                    } else if (i == 2) {
+                        html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-code float-end" aria-hidden="true"></i></div>';
+                    }
+
+                    p++;
+                }
+
+            } else {
+                answersArr.map((str, index) => {
+                    let places = `${index + 1} Place (Faves: ${str.match(/\d+/)})`;
+                    //  html += '<div class="hover p-1"><b> ' + places + '</b></div>';
+                    if (index == 0) {
+                        html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone float-end" onclick="copy_url(\'' + 'http://127.0.0.1:8000//questions_details/' + questionsToDisplay[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
+                    } else if (index == 1) {
+                        html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share float-end" aria-hidden="true"></i></div>';
+                    }
+                    else if (index == 2) {
+                        html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code float-end" aria-hidden="true"></i></div>';
+                    }
+                });
+
+            }
+
+            html += '<div class="text-center"><a target="_blank" href="/questions_details/' + questionsToDisplay[j]['question_id'] + '" class="btn btn-primary m-2">Show me more</a></div></div></div></div>';
+        }
+
+        $('#display_questions').html(html);
+    }
+    // Function to generate pagination links
+    function generatePaginationLinks(totalPages) {
+        var html = '';
+
+        for (var i = 1; i <= totalPages; i++) {
+            html += '<span class="pagination-link btn btn-small btn-primary m-1 custom-page" data-page="' + i + '">' + i + '</span>';
+        }
+
+        $('#pagination').html(html);
+    }
+
+    // Event handler for pagination links
+    $(document).on('click', '.pagination-link', function () {
+        var page = parseInt($(this).data('page'));
+        $('.custom-page').removeClass('active-page');
+        $(this).addClass('active-page');
+        if (page !== currentPage) {
+            currentPage = page;
+            displayQuestions(currentPage);
+        }
+    });
     $.ajax({
         type: 'GET',
         url: '/indexonloadRequest',
         data: { task: 'get_questions' },
         success: function (data) {
-            // alert(data.success);
-            // console.log(data);
             let obj = JSON.parse(data);
-            // console.group(user_selected_answers);
             let html = '';
-            // console.log(obj)
+            let questions_slider = '';
             $('#display_topic_name').empty()
             // $('#display_topic_name').text('Best In The ' + obj.topic_name.toUpperCase())str.charAt(0).toUpperCase() + str.slice(1)
             $('#display_topic_name').text('Best In The ' + obj.topic_name.charAt(0).toUpperCase() + obj.topic_name.slice(1))
@@ -37,95 +108,26 @@ $(document).ready(function () {
             for (let j = 0; j < obj.this_user_answers.length; j++) {
                 user_selected_answers.push(obj.this_user_answers[j]['question_id'])
             }
-            // console.group(user_selected_answers);
-            for (let j = 0; j < obj.data.length; j++) {
-                let answers = obj.data[j]['top_answers'];
-                let answersArr = answers.split('}');
-                // answersArr = answersArr.sort();
-                answersArr = answersArr.sort((a, b) => {
-                    const votesA = parseInt(a.match(/\d+/));
-                    const votesB = parseInt(b.match(/\d+/));
-                    return votesB - votesA;
-                });
-                console.log(answers)
-                html += '  <div class="col-md-4"><div class="container border mt-1" ><div class="question"><h5 class="p-3 border-bottom">' + obj.data[j]['question'] + ' (' + obj.data[j]['total_votes'] + ' Faves)</h5><div class="suggestions"></div>';
-                if (user_selected_answers.includes(obj.data[j]['question_id'])) {
-                    let p = 1;
-                    for (let i = 0; i < answersArr.length; i++) {
-                        // html += '<div class="hover p-1"><b> ' + m + ' ' + answersArr[i] + '</b></div>';
-                        // m++;
-                        if (i == 0) {
-                            html += '<div class="hover p-1"> ' + p + ' ' + answersArr[i] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-clone" onclick="copy_url(\'' + 'http://127.0.0.1:8000//questions_details/' + obj.data[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
-                        } else if (i == 1) {
-                            html += '<div class="hover p-1"> ' + p + ' ' + answersArr[i] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-share" aria-hidden="true"></i></div>';
-                        } else if (i == 2) {
-                            html += '<div class="hover p-1"> ' + p + ' ' + answersArr[i] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-code" aria-hidden="true"></i></div>';
-                        }
-
-                        p++;
-                    }
-
+            for (let j = 0; j < obj.questions_slider.length; j++) {
+                let m = j;
+                if (m + 1 < obj.questions_slider.length) {
+                    questions_slider += '<div class="inner-content d-flex flex-column me-2"><div class="line mb-2 me-2"><a href="/questions_details/' + obj.questions_slider[j]['id'] + '" class="text-decoration-none">' + obj.questions_slider[j]['question'] + '</a></div><div class="line me-2 mb-2"><a href="/questions_details/' + obj.questions_slider[j + 1]['id'] + '" class="text-decoration-none">' + obj.questions_slider[j + 1]['question'] + '</a></div></div>';
                 } else {
-                    answersArr.map((str, index) => {
-                        let places = `${index + 1} Place (Faves: ${str.match(/\d+/)})`;
-                        //  html += '<div class="hover p-1"><b> ' + places + '</b></div>';
-                        if (index == 0) {
-                            html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone" onclick="copy_url(\'' + 'http://127.0.0.1:8000//questions_details/' + obj.data[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
-                        } else if (index == 1) {
-                            html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share" aria-hidden="true"></i></div>';
-                        }
-                        else if (index == 2) {
-                            html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code" aria-hidden="true"></i></div>';
-                        }
-                    });
-
+                    questions_slider += '<div class="inner-content d-flex flex-column me-2"><div class="line mb-2 me-2"><a href="/questions_details/' + obj.questions_slider[j]['id'] + '" class="text-decoration-none">' + obj.questions_slider[j]['question'] + '</a></div></div>';
                 }
-
-                html += '<a target="_blank" href="/questions_details/' + obj.data[j]['question_id'] + '" class="btn btn-primary m-2">Show More Answers</a></div></div></div>';
+                j = j + 1;
             }
+            $('#scrollContainer').empty();
+            $('#scrollContainer').html(questions_slider);
+            allQuestions = obj.data; // Store all questions in the variable
 
-            //display popular topics 
-            const { topics } = obj;
-            // console.log(obj.topics)
-            const topic = [];
-            for (let j = 0; j < obj.topics.length; j++) {
+            var totalPages = Math.ceil(allQuestions.length / questionsPerPage);
+            generatePaginationLinks(totalPages);
 
-                // console.log(obj.topics[j]['topic_name'])
-                if (!topic.includes(obj.topics[j]['topic_name'])) {
-                    topic.push(obj.topics[j]['topic_name'])
+            displayQuestions(currentPage);
 
-                }
-            }
-            // console.log(topic)
-            // const topic = ["movies", "Politics"];
-            let hot_topics_dom = '';
-            // om = '';
-            topic.forEach(item => {
-                let filterdArray = topics.filter(objs => objs.topic_name === item);
-                let counts = filterdArray.map(objs => objs.total_sum);
-                if (counts[0] == 0) {
-                    counts[0] = '0';
-                }
-                let max = Math.max(...counts);
-                let index = counts.indexOf(String(max));
-
-                let hot_topics = filterdArray[index];
-                // Iterate over the properties using for...in loop
-                // console.log(typeof counts[0]);
-                // console.log(counts[0]);
-                // console.log(hot_topics[0]['answers']);
-                if (user_selected_answers.includes(hot_topics['question_id'])) {
-                    hot_topics_dom += '<div class="container border mt-1"> <div class="question"><h6 class="mt-1">' + hot_topics["topic_name"] + '</h6><hr><h6 class="p-3 border-bottom">Q: ' + hot_topics['question'] + ' (' + hot_topics['total_sum'] + ' Faves)</h6><div class="suggestions"><ol> <li class="hover"><b>' + hot_topics[0]["answers"] + ' </b>(' + hot_topics[0]["vote_count"] + ' Faves)</li> <li class="hover"><b>' + hot_topics[1]["answers"] + ' </b>(' + hot_topics[1]["vote_count"] + ' Faves)</li> <li class="hover"><b>' + hot_topics[2]["answers"] + ' </b>(' + hot_topics[2]["vote_count"] + ' Faves)</li></ol><button type="button" class="btn btn-primary mb-1" onclick="questions_modal(' + hot_topics['question_id'] + ')" data-bs-toggle="modal" data-bs-target="#exampleModal">Show More Answers</button></div></div></div>';
-                } else {
-                    hot_topics_dom += '<div class="container border mt-1"> <div class="question"><h6 class="mt-1">' + hot_topics["topic_name"] + '</h6><hr><h6 class="p-3 border-bottom">Q: ' + hot_topics['question'] + ' (' + hot_topics['total_sum'] + ' Faves)</h6><div class="suggestions"><ol> <li class="hover"><b>Place </b>(' + hot_topics[0]["vote_count"] + ' Faves)</li> <li class="hover"><b>Place </b>(' + hot_topics[1]["vote_count"] + ' Faves)</li> <li class="hover"><b>Place </b>(' + hot_topics[2]["vote_count"] + ' Faves)</li></ol><button type="button" class="btn btn-primary mb-1" onclick="questions_modal(' + hot_topics['question_id'] + ')" data-bs-toggle="modal" data-bs-target="#exampleModal">Show More Answers</button></div></div></div>';
-                }
-            });
-            // console.log(topic_name)
-            $('#display_questions').empty()
-            $('#display_questions').html(html)
-
-            $('#popular_topics').empty()
-            $('#popular_topics').html(hot_topics_dom)
+            // $('#display_questions').empty()
+            // $('#display_questions').html(html)
         }
     });
 })
@@ -344,7 +346,7 @@ $('#search_questions').on('keyup', function () {
 
                 }
 
-                html += '<a target="_blank" href="/questions_details/' + obj.data[j]['question_id'] + '" class="btn btn-primary m-2">Show More Answers</a></div></div></div>';
+                html += '<a target="_blank" href="/questions_details/' + obj.data[j]['question_id'] + '" class="btn btn-primary m-2">Show me more</a></div></div></div>';
             }
 
             //display popular topics 
@@ -491,3 +493,19 @@ function un_cover(x) {
         }
     })
 }
+
+function scrollRight() {
+    const scrollContainer = document.getElementById("scrollContainer");
+    scrollContainer.scrollBy({ left: 100, behavior: "smooth" });
+}
+
+function scrollLeftcont() {
+    const scrollContainer = document.getElementById("scrollContainer");
+    scrollContainer.scrollBy({ left: -100, behavior: "smooth" });
+}
+
+
+
+
+
+

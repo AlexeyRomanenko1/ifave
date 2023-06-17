@@ -47,8 +47,12 @@
                     <div class="text-nowrap bd-highlight m-2" style="width:14rem">
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Not in the list. Add an answer</button>
                     </div>
+                    <p class="">
+                    <i class="fa fa-2x fa-clone float-center p-2 m-2" aria-hidden="true"></i> <i class="fa fa-2x fa-share float-center p-2 m-2" aria-hidden="true"></i> <i class="fa fa-2x fa-code float-center p-2 m-2" aria-hidden="true"></i>
+                    </p>
                 </div>
                 <div class="col-md-4">
+                    <p class="p-1 mt-2"> <b>Click to fave</b></p>
                     @if(count($get_user_answers) > 0)
                     <table class="table">
                         <thead>
@@ -62,6 +66,17 @@
                                 <td><i class="fa fa-times text-center" onclick="delete_answer({{$user_answer_list['id']}},{{$user_answer_list['answer_id']}})" aria-hidden="true"></i></td>
                             </tr>
                             @endforeach
+                        </tbody>
+                        @else
+                        <table class="table">
+                        <thead>
+                            <th>My Faves</th>
+                            <th>Actions</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>No faves yet</td>
+                            </tr>
                         </tbody>
                         @endif
                     </table>
@@ -122,7 +137,8 @@
             <input type="hidden" name="question_id" value="{{$header['id']}}">
             @endforeach
             <div class="add_comments m-2 p-2">
-                <textarea name="comments" onpaste="return false" class="form-control" id="" cols="30" rows="10" placeholder="Add your comment here"></textarea>
+                <textarea name="comments" onpaste="return false" class="form-control comment-text" id="" cols="30" rows="10" placeholder="Add your comment here" maxlength="2000" required></textarea>
+                <small class="text-primary comment-warn">0/2000</small>
             </div>
             <div class="add_comment_button p-2 m-2">
                 <button type="submit" class="btn btn-primary float-end">Add</button>
@@ -149,7 +165,7 @@
                 @csrf
                 <div class="modal-body">
                     <input type="hidden" name="category" value="{{$header['question_category']}}">
-                    <input type="text" class="form-control m-1" name="add_answer[]" id="" placeholder="Add your answer here" required>
+                    <input type="text" class="form-control m-1" name="add_answer[]" id="" placeholder="Add your fave here" required>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -174,7 +190,8 @@
                 @csrf
                 <input type="hidden" name="question_id" value="{{$header['id']}}">
                 <div class="modal-body">
-                    <textarea class="form-control" onpaste="return false" name="comments" id="" cols="30" rows="10" placeholder="Your comments....." required></textarea>
+                    <textarea class="form-control modal-text" onpaste="return false" name="comments" id="" cols="30" rows="10" placeholder="Your comments....."  maxlength="2000" required></textarea>
+                    <small class="text-primary modal-warn text-center">0/2000</small>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary skip" data-bs-dismiss="modal">Skip</button>
@@ -186,3 +203,11 @@
     </div>
 </div>
 @include('footer.footer')
+<script>
+ $('.modal-text').on('keyup',function(){
+    $('.modal-warn').html($(this).val().length+'/2000 character')
+ })
+ $('.comment-text').on('keyup',function(){
+    $('.comment-warn').html($(this).val().length+'/2000 character')
+ })
+</script>

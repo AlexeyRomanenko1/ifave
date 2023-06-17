@@ -7,6 +7,7 @@ use App\Models\Topics;
 use App\Models\Questions;
 use App\Models\Questionsanswers;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class HomeController extends Controller
@@ -28,7 +29,17 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $userId = Auth::id();
+        $this_user=DB::table('users')->select('*')->where('id',$userId)->get();
+        foreach($this_user as $user_details){
+            //print_r($user_details);
+            $user_type=$user_details->user_type;
+        }
+        if($user_type == 1){
         return view('home');
+        }else{
+            return view('index');
+        }
     }
     public function import_questions(Request $request)
     {

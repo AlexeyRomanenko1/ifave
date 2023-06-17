@@ -33,7 +33,7 @@ class indexController extends Controller
                     ->get();
             }
             if (isset($request->topic_name)) {
-                $topicName=$request->topic_name;
+                $topicName = $request->topic_name;
             } else {
                 $topicName = "movies";
             }
@@ -79,8 +79,12 @@ class indexController extends Controller
                     $hot_topics[] = $question;
                 }
             }
-
-            return json_encode(['success' => 1, 'data' => $questions, 'this_user_answers' => $subQuery, 'topics' => $hot_topics, 'topic_name' => $topicName]);
+            $get_topic_details=Topics::select('*')->where('topic_name',$topicName)->get();
+            foreach($get_topic_details as $get_topic_detail){
+                $topic_id=$get_topic_detail['id'];
+            }
+            $questions_slider = Questions::select('*')->where('topic_id',$topic_id)->get();
+            return json_encode(['success' => 1, 'data' => $questions, 'this_user_answers' => $subQuery, 'topics' => $hot_topics, 'topic_name' => $topicName, 'questions_slider' => $questions_slider]);
         }
         // return response()->json(['sucess' => 'hello']);
     }
@@ -496,7 +500,7 @@ class indexController extends Controller
         if ($this->isURLComment($comments) == true) {
             return redirect()->back()->with('error', 'external website links are not allowed to add!');
         }
-        if (strlen($comments) > 1000) {
+        if (strlen($comments) > 2000) {
             return redirect()->back()->with('error', 'You comments length is exceeding the limit of 1000 characters!');
         } else {
             $insert_comments = DB::table('comments')->insert([
@@ -654,14 +658,15 @@ class indexController extends Controller
         ]);
     }
 
-    public function topic_name(Request $request){
-        $header_info= $request->topic_name;
-        $get_topic=DB::table('topics')->select('*')->where('topic_name',$request->topic_name)->first();
+    public function topic_name(Request $request)
+    {
+        $header_info = $request->topic_name;
+        $get_topic = DB::table('topics')->select('*')->where('topic_name', $request->topic_name)->first();
         //$topic_id=$get_topic;
         // foreach($get_topic as $topic){
         //     $topic_id=$topic['id'];
         // }
-        return view("topics",compact('header_info','get_topic'));
+        return view("topics", compact('header_info', 'get_topic'));
     }
     public function getClientIP(Request $request)
     {

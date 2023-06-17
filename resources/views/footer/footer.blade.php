@@ -1,7 +1,9 @@
 <!-- Optional JavaScript; choose one of the two! -->
 
 <!-- Option 1: Bootstrap Bundle with Popper -->
-
+<footer class="text-center">
+   <p class="p-5 m-2"></p> 
+</footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
 <!-- jquery cdn -->
@@ -9,7 +11,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
 
 @if(Route::currentRouteName()!='topic_name')
-    <script src="{{ asset('js/components/index.js')}}"></script>
+<script src="{{ asset('js/components/index.js')}}"></script>
 @else
 <script src="{{ asset('js/components/topics.js')}}"></script>
 @endif
