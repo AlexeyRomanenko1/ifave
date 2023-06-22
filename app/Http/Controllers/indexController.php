@@ -35,7 +35,7 @@ class indexController extends Controller
             if (isset($request->topic_name)) {
                 $topicName = $request->topic_name;
             } else {
-                $topicName = "movies";
+                $topicName = "The World";
             }
             $questions = Questions::select('questions.id as question_id', 'questions.question', 'questions.question_category', 'qa.top_answers', 'totqa.total_votes')
                 ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
