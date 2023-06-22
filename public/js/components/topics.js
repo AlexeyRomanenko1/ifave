@@ -126,6 +126,7 @@ $(document).ready(function () {
             }
             $('#scrollContainer').empty();
             $('#scrollContainer').html(questions_slider);
+            obj.data = obj.data.sort((a, b) => parseInt(b.total_votes) - parseInt(a.total_votes));
             allQuestions = obj.data; // Store all questions in the variable
 
             var totalPages = Math.ceil(allQuestions.length / questionsPerPage);
@@ -376,6 +377,7 @@ $('#search_questions').on('keyup', function () {
                 $('#pagination').html(html);
             }
             allQuestions = [];
+            obj.data = obj.data.sort((a, b) => parseInt(b.total_votes) - parseInt(a.total_votes));
             allQuestions = obj.data;
             console.log(allQuestions)
             var totalPages = Math.ceil(allQuestions.length / questionsPerPage);

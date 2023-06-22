@@ -123,7 +123,9 @@ $(document).ready(function () {
             }
             $('#scrollContainer').empty();
             $('#scrollContainer').html(questions_slider);
+            obj.data = obj.data.sort((a, b) => parseInt(b.total_votes) - parseInt(a.total_votes));
             allQuestions = obj.data; // Store all questions in the variable
+            // console.log(obj.data)
             var totalPages = Math.ceil(allQuestions.length / questionsPerPage);
             generatePaginationLinks(totalPages);
 
@@ -372,7 +374,9 @@ $('#search_questions').on('keyup', function () {
                 $('#pagination').html(html);
             }
             allQuestions = [];
+            obj.data = obj.data.sort((a, b) => parseInt(b.total_votes) - parseInt(a.total_votes));
             allQuestions = obj.data;
+            
             console.log(allQuestions)
             var totalPages = Math.ceil(allQuestions.length / questionsPerPage);
             generatePaginationLinks(totalPages);
@@ -468,10 +472,10 @@ function un_cover(x) {
             let html = '';
             let obj = JSON.parse(data);
             // console.log(obj)
-            let counter=1;
+            let counter = 1;
             for (let j = 0; j < obj.data.length; j++) {
-                html += '<div class="hover p-2 bg-light" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.data[j]['id'] + ')"><b> '+ counter +' '+ obj.data[j]['answers'] + ' (Faves: ' + obj.data[j]['vote_count'] + ')</b></div>';
-                counter=counter+1;
+                html += '<div class="hover p-2 bg-light" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.data[j]['id'] + ')"><b> ' + counter + ' ' + obj.data[j]['answers'] + ' (Faves: ' + obj.data[j]['vote_count'] + ')</b></div>';
+                counter = counter + 1;
             }
             $('.set_suggestion_height').empty();
             $('.set_suggestion_height').html(html);
