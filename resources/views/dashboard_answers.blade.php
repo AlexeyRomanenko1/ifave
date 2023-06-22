@@ -41,20 +41,31 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Question</th>
-                <th>Topic</th>
+                <th>Answers</th>
                 <th>Category</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody id="questions_table_body">
-
+            @php
+            $i=1;
+            @endphp
+            @foreach($query as $answers)
+            <tr>
+                <td>{{$i}}</td>
+                <td>{{$answers->answers}}</td>
+                <td>{{$answers->questions_category}}</td>
+                <td><i class="fa fa-bars text-success m-1 p-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#edit_question_modal" onclick="edit_modal_form({{ $answers->id }})"></i><i class="fa fa-trash m-1 text-danger p-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#delete_question_modal" onclick="delete_modal_form({{ $answers->id }})"></i></td>
+            </tr>
+            @php
+            $i=$i+1;
+            @endphp
+            @endforeach
         </tbody>
         <tfoot>
             <tr>
                 <th>#</th>
-                <th>Question</th>
-                <th>Topic</th>
+                <th>Answers</th>
                 <th>Category</th>
                 <th>Actions</th>
             </tr>
@@ -115,27 +126,21 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Edit Question</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Edit Answer</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{url('update_dashboard_question')}}" method="POST">
+            <form action="{{url('update_dashboard_answer')}}" method="POST">
                 @csrf
                 <div class="modal-body">
-                    <input type="hidden" name="dashboard_question_id" id="dashboard_question_id">
+                    <input type="hidden" name="dashboard_answer_id" id="dashboard_answer_id">
                     <div class="mb-3">
-                        <label for="question" class="form-label">Question</label>
-                        <input type="text" class="form-control" name="question" id="question">
-                    </div>
-                    <div class="mb-3">
-                        <label for="topic_name" class="form-label">Topic</label>
-                        <select class="form-select" id="topic_name" name="topic_id" aria-label="Default select example">
-
-                        </select>
+                        <label for="question" class="form-label">Answer</label>
+                        <input type="text" class="form-control" name="answer" id="answer">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Update Question</button>
+                    <button type="submit" class="btn btn-primary">Update Answer</button>
                 </div>
             </form>
         </div>
@@ -146,18 +151,18 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Delete Question</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Delete Answer</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{url('delete_dashboard_question')}}" method="POST">
+            <form action="{{url('delete_dashboard_answer')}}" method="POST">
                 @csrf
                 <div class="modal-body">
-                    <h5 class="text-center">Are you sure you want to delete this question?</h5>
-                    <input type="hidden" name="delete_question_id" id="delete_question_id">
+                    <h5 class="text-center">Are you sure you want to delete this answer?</h5>
+                    <input type="hidden" name="delete_answer_id" id="delete_answer_id">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-danger">Delete Question</button>
+                    <button type="submit" class="btn btn-danger">Delete Answer</button>
                 </div>
             </form>
         </div>
@@ -165,4 +170,4 @@
 </div>
 @endsection
 @include('layouts.footer')
-<script src="{{ asset('js/components/dashboard.js')}}"></script>
+<script src="{{ asset('js/components/dashboard_answers.js')}}"></script>

@@ -7,9 +7,9 @@
         @endphp
         <input type="hidden" id="hidden_question_id" value="{{ $details['question_category'] }}">
         @if($details["topic_name"] == 'movies')
-        <a href="/">Go back to best in the {{ $details["topic_name"] }}</a>
+        <a href="/">Go back to best in {{ $details["topic_name"] }}</a>
         @else
-        <a href="/topics/{{$details['topic_name']}}">Go back to {{ $details["topic_name"] }}</a>
+        <a href="/topics/{{$details['topic_name']}}">Go back to best in {{ $details["topic_name"] }}</a>
         @endif
         <h3 class="p-2">
             {{ $details["question"] }}
@@ -20,16 +20,20 @@
         <div class="col-md-8">
             <div class="search">
                 <i class="fa fa-search"></i>
-                <input type="text" id="search_question_topics" class="form-control" placeholder="look for more questions within this topic">
+                <input type="text" id="search_question_topics" class="form-control" placeholder="Search">
                 <!-- <button class="btn btn-primary">Search</button> -->
                 <div class="set_suggestion_height mt-3 rounded">
                     @if(count($get_user_answers) > 0)
                     <input type="hidden" id="hidden_to_be" value="0">
                     @php 
                     $question_answers = $question_answers->sortByDesc('vote_count');
+                    $places=1;
                     @endphp
                     @foreach($question_answers as $answers)
-                    <div class="hover p-2 bg-light" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote({{ $answers['answer_id'] }})"><b>{{ $answers['answers'] }} (Faves: {{$answers['vote_count']}})</b></div>
+                    <div class="hover p-2 bg-light" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote({{ $answers['answer_id'] }})"><b>{{ $places }} {{ $answers['answers'] }} (Faves: {{$answers['vote_count']}})</b></div>
+                    @php
+                    $places=$places+1;
+                    @endphp
                     @endforeach
                     @else
                     @foreach($question_answers as $answers)
@@ -42,10 +46,10 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="text-nowrap bd-highlight m-3" style="width:12rem">
-                        <button class="btn btn-grey" onclick="un_cover('{{$question_category}}')">No idea show me answers</button>
+                        <button class="btn btn-grey" onclick="un_cover('{{$question_category}}')">No idea. show me faves</button>
                     </div>
                     <div class="text-nowrap bd-highlight m-2" style="width:14rem">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Not in the list. Add an answer</button>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Not in the list. Add my fave</button>
                     </div>
                     <p class="">
                     <i class="fa fa-2x fa-clone float-center p-2 m-2" aria-hidden="true"></i> <i class="fa fa-2x fa-share float-center p-2 m-2" aria-hidden="true"></i> <i class="fa fa-2x fa-code float-center p-2 m-2" aria-hidden="true"></i>
@@ -87,7 +91,7 @@
     <div class="container">
         <div class="text-center">
             <h4>Comments</h4>
-            <small><b>Please upvote detailed, well argumented and presented comments and downvote irrelevant onces.</b></small>
+            <small><b>Please upvote detailed, well argumented and well presented comments and downvote irrelevant ones.</b></small>
         </div>
         @if(count($get_comments) > 0)
         @foreach($get_comments as $user_comment)
@@ -152,7 +156,7 @@
         <div class="modal-content">
             @foreach($header_info as $header)
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add your fave for Best action movies for {{$header["question"]}}</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Add your fave for {{$header["question"]}}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <small class="p-2">Note: <ul>

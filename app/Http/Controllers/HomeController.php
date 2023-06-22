@@ -30,14 +30,14 @@ class HomeController extends Controller
     public function index()
     {
         $userId = Auth::id();
-        $this_user=DB::table('users')->select('*')->where('id',$userId)->get();
-        foreach($this_user as $user_details){
+        $this_user = DB::table('users')->select('*')->where('id', $userId)->get();
+        foreach ($this_user as $user_details) {
             //print_r($user_details);
-            $user_type=$user_details->user_type;
+            $user_type = $user_details->user_type;
         }
-        if($user_type == 1){
-        return view('home');
-        }else{
+        if ($user_type == 1) {
+            return view('home');
+        } else {
             return view('index');
         }
     }
@@ -161,8 +161,8 @@ class HomeController extends Controller
             foreach ($rows as $row) {
                 if ($i < $row_count) {
                     // $row = mb_convert_encoding($row, 'UTF-8', 'UTF-8');
-                   // $row = mb_convert_encoding($row, 'UTF-8', 'auto');
-                   $row = iconv('ISO-8859-1', 'UTF-8//IGNORE', $row);
+                    // $row = mb_convert_encoding($row, 'UTF-8', 'auto');
+                    $row = iconv('ISO-8859-1', 'UTF-8//IGNORE', $row);
                     $data = str_getcsv($row);
                     $answers = strval($data[0]);
                     $vote_count = $data[1];
@@ -203,5 +203,130 @@ class HomeController extends Controller
         } else {
             return redirect()->back()->with('error', "Error!");
         }
+    }
+
+    public function dashboard_questions(Request $request)
+    {
+        $query = DB::table('questions')->select('questions.id', 'questions.question', 'questions.question_category', 'topics.topic_name')->join('topics', 'questions.topic_id', 'topics.id')->get();
+        return json_encode([
+            'success' => 1,
+            'data' => $query
+        ]);
+    }
+
+    public function dashboard_question_details(Request $request)
+    {
+        $question_id = $request->question;
+        //$query = DB::table('questions')->select('questions.id', 'topics.id as topic_id', 'questions.question_category', 'topics.topic_name', 'questions.question')->join('topics', 'topics.id', '=','questions.id')->where('questions.id', $question_id)->get();
+
+        $query = DB::table('questions')->select('questions.id', 'topics.id as topic_id', 'questions.question_category', 'topics.topic_name', 'questions.question')->join('topics', 'questions.topic_id', 'topics.id')->where('questions.id', $question_id)->get();
+        //$query = DB::table('questions')->select('*')->where('id', $question_id)->get();
+        $topics = Topics::select('*')->get();
+        return json_encode([
+            'success' => 1,
+            'data' => $query,
+            'topics' => $topics
+        ]);
+    }
+
+    public function update_dashboard_question(Request $request)
+    {
+        $question = $request->question;
+        $topic_id = $request->topic_id;
+        $question_id = $request->dashboard_question_id;
+
+        $update_question = DB::table('questions')
+            ->where('id', $question_id)
+            ->update([
+                'question' => $question,
+                'topic_id' => $topic_id
+            ]);
+        if ($update_question) {
+            return redirect()->back()->with('success', "Question updated successfully!");
+        } else {
+            return redirect()->back()->with('error', "Something went wrong!");
+        }
+    }
+    public function delete_dashboard_question(Request $request)
+    {
+        $question_id = $request->delete_question_id;
+
+        $delete_question =   DB::table('questions')->where('id', $question_id)->delete();
+        if ($delete_question) {
+            return redirect()->back()->with('success', "Question deleted successfully!");
+        } else {
+            return redirect()->back()->with('error', "Something went wrong!");
+        }
+    }
+
+    public function question_answers($category)
+    {
+        $query = DB::table('questions_answer')->select('*')->where('questions_category', $category)->get();
+        return view('dashboard_answers', compact('query'));
+    }
+
+    public function dashboard_answer_details(Request $request)
+    {
+        $query = DB::table('questions_answer')->select('*')->where('id', $request->answer)->get();
+        return json_encode([
+            'success' => 1,
+            'data' => $query
+        ]);
+    }
+    public function update_dashboard_answer(Request $request)
+    {
+        $answer = $request->answer;
+        $answer_id = $request->dashboard_answer_id;
+
+        $update_answer = DB::table('questions_answer')
+            ->where('id', $answer_id)
+            ->update([
+                'answers' => $answer
+            ]);
+        if ($update_answer) {
+            return redirect()->back()->with('success', "Answer updated successfully!");
+        } else {
+            return redirect()->back()->with('error', "Something went wrong!");
+        }
+    }
+    public function delete_dashboard_answer(Request $request)
+    {
+        $answer_id = $request->delete_answer_id;
+
+        $delete_question =   DB::table('questions_answer')->where('id', $answer_id)->delete();
+        if ($delete_question) {
+            return redirect()->back()->with('success', "Answer deleted successfully!");
+        } else {
+            return redirect()->back()->with('error', "Something went wrong!");
+        }
+    }
+
+    public function export_users(Request $request)
+    {
+        $query = DB::table('users')->select('*')->get();
+        $delimiter = ",";
+        $filename = "users-data_" . date('Y-m-d') . ".csv";
+
+        // Create a file pointer 
+        $f = fopen('php://memory', 'w');
+
+        // Set column headers 
+        $fields = array('#','USER NAME', 'USER EMAIL');
+        fputcsv($f, $fields, $delimiter);
+        $j=1;
+        foreach ($query as $users) {
+            $lineData = array($j,$users->name, $users->email);
+            fputcsv($f, $lineData, $delimiter);
+            $j++;
+        }
+        // Move back to beginning of file 
+        fseek($f, 0);
+         // Set headers to download file rather than displayed 
+         header('Content-Type: text/csv');
+         header('Content-Disposition: attachment; filename="' . $filename . '";');
+ 
+         //output all remaining data on a file pointer 
+         fpassthru($f);
+         //return redirect()->back()->with('success', "Importing Users data!");
     }
 }

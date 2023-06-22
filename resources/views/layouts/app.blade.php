@@ -18,6 +18,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.css">
     <link href="//db.onlinewebfonts.com/c/3e14931180b08416dd7c967a7163f8ea?family=Calibri" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     <link href="{{ asset('css/header.css') }}" rel="stylesheet">
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
 </head>
@@ -109,7 +110,7 @@
                         <div class="col-md-8">
                             <div class="search">
                                 <i class="fa fa-search"></i>
-                                <input type="text" id="search_topics" class="form-control" placeholder="look for topics">
+                                <input type="text" id="search_topics" class="form-control" placeholder="Search">
                                 <!-- <button class="btn btn-primary">Search</button> -->
                                 <div class="set_suggestion_height_topics mt-3 rounded">
 

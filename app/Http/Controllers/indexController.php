@@ -40,7 +40,7 @@ class indexController extends Controller
             $questions = Questions::select('questions.id as question_id', 'questions.question', 'questions.question_category', 'qa.top_answers', 'totqa.total_votes')
                 ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
                 ->leftJoin(DB::raw('
-                (SELECT questions_category, GROUP_CONCAT(answers, " ( Votes: ",vote_count,")" SEPARATOR "}") AS top_answers, SUM(vote_count) AS total_votes
+                (SELECT questions_category, GROUP_CONCAT(answers, " ( Faves: ",vote_count,")" SEPARATOR "}") AS top_answers, SUM(vote_count) AS total_votes
                 FROM (
                     SELECT questions_category, answers, vote_count,     
                     ROW_NUMBER() OVER (PARTITION BY questions_category ORDER BY vote_count DESC) AS row_num
@@ -50,7 +50,7 @@ class indexController extends Controller
                 GROUP BY questions_category) AS qa
             '), 'questions.question_category', '=', 'qa.questions_category')
                 ->leftJoin(DB::raw('
-                (SELECT questions_category, GROUP_CONCAT(answers, " ( Votes: ",vote_count,")" SEPARATOR ", ") AS top_answers, SUM(vote_count) AS total_votes
+                (SELECT questions_category, GROUP_CONCAT(answers, " ( Faves: ",vote_count,")" SEPARATOR "}") AS top_answers, SUM(vote_count) AS total_votes
                 FROM (
                     SELECT questions_category, answers, vote_count,     
                     ROW_NUMBER() OVER (PARTITION BY questions_category ORDER BY vote_count DESC) AS row_num
@@ -250,7 +250,7 @@ class indexController extends Controller
                 $questions = Questions::select('questions.id as question_id', 'questions.question', 'questions.question_category', 'qa.top_answers', 'totqa.total_votes')
                     ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
                     ->leftJoin(DB::raw('
-                    (SELECT questions_category, GROUP_CONCAT(answers, " ( Votes: ",vote_count,")" SEPARATOR ", ") AS top_answers, SUM(vote_count) AS total_votes
+                    (SELECT questions_category, GROUP_CONCAT(answers, " ( Faves: ",vote_count,")" SEPARATOR "} ") AS top_answers, SUM(vote_count) AS total_votes
                     FROM (
                         SELECT questions_category, answers, vote_count,     
                         ROW_NUMBER() OVER (PARTITION BY questions_category ORDER BY vote_count DESC) AS row_num
@@ -260,7 +260,7 @@ class indexController extends Controller
                     GROUP BY questions_category) AS qa
                 '), 'questions.question_category', '=', 'qa.questions_category')
                     ->leftJoin(DB::raw('
-                    (SELECT questions_category, GROUP_CONCAT(answers, " ( Votes: ",vote_count,")" SEPARATOR ", ") AS top_answers, SUM(vote_count) AS total_votes
+                    (SELECT questions_category, GROUP_CONCAT(answers, " ( Faves: ",vote_count,")" SEPARATOR "} ") AS top_answers, SUM(vote_count) AS total_votes
                     FROM (
                         SELECT questions_category, answers, vote_count,     
                         ROW_NUMBER() OVER (PARTITION BY questions_category ORDER BY vote_count DESC) AS row_num
@@ -282,7 +282,7 @@ class indexController extends Controller
                 $questions = Questions::select('questions.id as question_id', 'questions.question', 'questions.question_category', 'qa.top_answers', 'totqa.total_votes')
                     ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
                     ->leftJoin(DB::raw('
-                    (SELECT questions_category, GROUP_CONCAT(answers, " ( Votes: ",vote_count,")" SEPARATOR ", ") AS top_answers, SUM(vote_count) AS total_votes
+                    (SELECT questions_category, GROUP_CONCAT(answers, " ( Faves: ",vote_count,")" SEPARATOR "} ") AS top_answers, SUM(vote_count) AS total_votes
                     FROM (
                         SELECT questions_category, answers, vote_count,     
                         ROW_NUMBER() OVER (PARTITION BY questions_category ORDER BY vote_count DESC) AS row_num
@@ -292,7 +292,7 @@ class indexController extends Controller
                     GROUP BY questions_category) AS qa
                 '), 'questions.question_category', '=', 'qa.questions_category')
                     ->leftJoin(DB::raw('
-                    (SELECT questions_category, GROUP_CONCAT(answers, " ( Votes: ",vote_count,")" SEPARATOR ", ") AS top_answers, SUM(vote_count) AS total_votes
+                    (SELECT questions_category, GROUP_CONCAT(answers, " ( Faves: ",vote_count,")" SEPARATOR ", ") AS top_answers, SUM(vote_count) AS total_votes
                     FROM (
                         SELECT questions_category, answers, vote_count,     
                         ROW_NUMBER() OVER (PARTITION BY questions_category ORDER BY vote_count DESC) AS row_num
@@ -499,6 +499,12 @@ class indexController extends Controller
         $question_id = $request->question_id;
         if ($this->isURLComment($comments) == true) {
             return redirect()->back()->with('error', 'external website links are not allowed to add!');
+        }
+        $pattern = '/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/';
+
+        if (preg_match($pattern, $comments)) {
+            // Email address found in textarea, handle the error
+            return redirect()->back()->with('error', 'You can not add email addresses in comments.');
         }
         if (strlen($comments) > 2000) {
             return redirect()->back()->with('error', 'You comments length is exceeding the limit of 1000 characters!');
