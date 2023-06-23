@@ -105,7 +105,7 @@ class indexController extends Controller
                 ->join('users', 'comments.comment_by', '=', 'users.id')
                 ->join('questions', 'comments.question_id', '=', 'questions.id')
                 ->where('questions.topic_id', '=', $topic_id)
-                ->orderBy('upvotes')
+                ->orderByDesc('upvotes')
                 ->limit(5)
                 ->groupBy('users.name')
                 ->get();
