@@ -15,7 +15,7 @@
                         <thead>
                             <th>My faves</th>
                             @auth
-                            <td><a href="" data-bs-toggle="modal" data-bs-target="#myfavetrack">My faves Track</a></td>
+                            <td><a href="" data-bs-toggle="modal" data-bs-target="#myfavetrack">All my faves</a></td>
                             @else
                             <td>Register to keep track of your faves</td>
                             @endauth

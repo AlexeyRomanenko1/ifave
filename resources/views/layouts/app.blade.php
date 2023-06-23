@@ -139,7 +139,7 @@
                         <thead>
                             <tr>
                                 <!-- <th scope="col">#</th> -->
-                                <th scope="col">Question</th>
+                                <th scope="col">Category</th>
                                 <th scope="col">My Fave</th>
                             </tr>
                         </thead>

@@ -120,9 +120,11 @@
     right: 0;
     left: 100;
     top: 1;
-    bottom: 0;
+    bottom: 25px;
     /* margin:auto; */
     height: 60px;
+    width: 400px;
+    font-size: x-large;
 }
 
 .active-page {
