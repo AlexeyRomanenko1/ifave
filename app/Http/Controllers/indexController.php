@@ -92,13 +92,22 @@ class indexController extends Controller
             }
 
             // query to get top comments 
+            // $comments = DB::table('comments')
+            //     ->select('users.name', 'comments.upvotes')
+            //     ->join('users', 'comments.comment_by', '=', 'users.id')
+            //     ->join('questions', 'comments.question_id', '=', 'questions.id')
+            //     ->where('questions.topic_id', '=', $topic_id)
+            //     ->orderBy('comments.upvotes')
+            //     ->limit(5)
+            //     ->get();
             $comments = DB::table('comments')
-                ->select('users.name', 'comments.upvotes')
+                ->select('users.name', DB::raw('SUM(comments.upvotes) as upvotes'))
                 ->join('users', 'comments.comment_by', '=', 'users.id')
                 ->join('questions', 'comments.question_id', '=', 'questions.id')
                 ->where('questions.topic_id', '=', $topic_id)
-                ->orderBy('comments.upvotes')
+                ->orderBy('upvotes')
                 ->limit(5)
+                ->groupBy('users.name')
                 ->get();
             $questions_slider = Questions::select('*')->where('topic_id', $topic_id)->get();
             return json_encode(['success' => 1, 'data' => $questions, 'this_user_answers' => $subQuery, 'topics' => $hot_topics, 'topic_name' => $topicName, 'questions_slider' => $questions_slider, 'myfaves' => $get_this_user_votes, 'top_comments' => $comments]);
