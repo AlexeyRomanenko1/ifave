@@ -26,16 +26,23 @@ class indexController extends Controller
                 $subQuery = UsersAnswer::select('question_id')
                     ->where('user_ip_address', $userId)
                     ->get();
+
+                $get_this_user_votes = DB::table('user_answers')->select('questions.question', 'questions_answer.answers')
+                    ->join('questions', 'user_answers.question_id', 'questions.id')
+                    ->join('questions_answer', 'user_answers.answer_id', 'questions_answer.id')
+                    ->where('user_answers.user_ip_address', $userId)
+                    ->get();
             } else {
                 // User is not logged in
                 $subQuery = UsersAnswer::select('question_id')
                     ->where('user_ip_address', $userIpAddress)
                     ->get();
+                $get_this_user_votes = '';
             }
             if (isset($request->topic_name)) {
                 $topicName = $request->topic_name;
             } else {
-                $topicName = "movies";
+                $topicName = "The World";
             }
             $questions = Questions::select('questions.id as question_id', 'questions.question', 'questions.question_category', 'qa.top_answers', 'totqa.total_votes')
                 ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
@@ -79,12 +86,22 @@ class indexController extends Controller
                     $hot_topics[] = $question;
                 }
             }
-            $get_topic_details=Topics::select('*')->where('topic_name',$topicName)->get();
-            foreach($get_topic_details as $get_topic_detail){
-                $topic_id=$get_topic_detail['id'];
+            $get_topic_details = Topics::select('*')->where('topic_name', $topicName)->get();
+            foreach ($get_topic_details as $get_topic_detail) {
+                $topic_id = $get_topic_detail['id'];
             }
-            $questions_slider = Questions::select('*')->where('topic_id',$topic_id)->get();
-            return json_encode(['success' => 1, 'data' => $questions, 'this_user_answers' => $subQuery, 'topics' => $hot_topics, 'topic_name' => $topicName, 'questions_slider' => $questions_slider]);
+
+            // query to get top comments 
+            $comments = DB::table('comments')
+                ->select('users.name', 'comments.upvotes')
+                ->join('users', 'comments.comment_by', '=', 'users.id')
+                ->join('questions', 'comments.question_id', '=', 'questions.id')
+                ->where('questions.topic_id', '=', $topic_id)
+                ->orderBy('comments.upvotes')
+                ->limit(5)
+                ->get();
+            $questions_slider = Questions::select('*')->where('topic_id', $topic_id)->get();
+            return json_encode(['success' => 1, 'data' => $questions, 'this_user_answers' => $subQuery, 'topics' => $hot_topics, 'topic_name' => $topicName, 'questions_slider' => $questions_slider, 'myfaves' => $get_this_user_votes, 'top_comments' => $comments]);
         }
         // return response()->json(['sucess' => 'hello']);
     }

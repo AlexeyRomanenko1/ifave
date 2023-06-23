@@ -5,6 +5,7 @@ document.addEventListener('copy', function (e) {
 var currentPage = 1;
 var questionsPerPage = 40;
 var allQuestions = []; // Variable to store all the questions retrieved from the API
+let top_comments = [];
 $('.read-more').on('click', function (e) {
     e.preventDefault();
     $(this).hide();
@@ -28,7 +29,10 @@ $(document).ready(function () {
                 return votesB - votesA;
             });
             if (j == 2) {
-                html += '<div class="col-md-4"><div class="container border border-blue mt-1 p-2 m-2"><p><b>Best comments in this topic</b></p><ol><li>Lena85 (295 upvotes)</li><li>Dansky (285 upvotes)</li><li>Supermind (275 upvotes)</li><li>Quatorze14 (265 upvotes)</li><li>Supermind (265 upvotes)</li></ol></div></div>';
+               // html += '<div class="col-md-4"><div class="container border border-blue mt-1 p-2 m-2"><p><b>Best comments in this topic</b></p><ol><li>Lena85 (295 upvotes)</li><li>Dansky (285 upvotes)</li><li>Supermind (275 upvotes)</li><li>Quatorze14 (265 upvotes)</li><li>Supermind (265 upvotes)</li></ol></div></div>';
+               if (top_comments.length > 0) {
+                html += top_comments;
+            }
             }
             html += '  <div class="col-md-4 mb-4"><div class="container border border-blue mt-1" ><div class="question"><div class="h-fixed-30 border-bottom"><h5 class="p-3 ">' + questionsToDisplay[j]['question'] + ' (' + questionsToDisplay[j]['total_votes'] + ' Faves)</h5></div><div class="suggestions p-1"></div>';
             if (user_selected_answers.includes(questionsToDisplay[j]['question_id'])) {
@@ -105,7 +109,23 @@ $(document).ready(function () {
             let html = '';
             let questions_slider = '';
             //console.log(obj)
-            $('#display_topic_name').empty()
+            if (obj.top_comments.length > 0) {
+                top_comments += '<div class="col-md-4"><div class="container border border-blue mt-1 p-2 m-2"><p><b>Best comments in this topic</b></p><ol>';
+                for (let j = 0; j < obj.top_comments.length; j++) {
+                    top_comments += '<li>' + obj.top_comments[j]['name'] + ' (' + obj.top_comments[j]['upvotes'] + ' upvotes)</li>';
+                }
+                top_comments += '</ol></div></div>';
+            }
+            if (obj.myfaves.length > 0) {
+                for (let k = 0; k < obj.myfaves.length; k++) {
+                    html += '<tr><td>' + obj.myfaves[k]['question'] + '</td><td>' + obj.myfaves[k]['answers'] + '</td></tr>';
+                    // faves_index = faves_index + 1;
+                }
+            }
+            $('#faves_table_body').empty();
+            $('#faves_table_body').html(html);
+            $('#faves_table').DataTable();
+            $('#display_topic_name').empty();
             // $('#display_topic_name').text(obj.topic_name.toUpperCase())
             $('#display_topic_name').text('Best in ' + obj.topic_name.charAt(0).toUpperCase() + obj.topic_name.slice(1))
             let m = 1;
@@ -322,7 +342,10 @@ $('#search_questions').on('keyup', function () {
                         return votesB - votesA;
                     });
                     if (j == 2) {
-                        html += '<div class="col-md-4"><div class="container border border-blue mt-1 p-2 m-2"><p><b>Best comments in this topic</b></p><ol><li>Lena85 (295 upvotes)</li><li>Dansky (285 upvotes)</li><li>Supermind (275 upvotes)</li><li>Quatorze14 (265 upvotes)</li><li>Supermind (265 upvotes)</li></ol></div></div>';
+                       // html += '<div class="col-md-4"><div class="container border border-blue mt-1 p-2 m-2"><p><b>Best comments in this topic</b></p><ol><li>Lena85 (295 upvotes)</li><li>Dansky (285 upvotes)</li><li>Supermind (275 upvotes)</li><li>Quatorze14 (265 upvotes)</li><li>Supermind (265 upvotes)</li></ol></div></div>';
+                       if (top_comments.length > 0) {
+                        html += top_comments;
+                    }
                     }
                     html += '  <div class="col-md-4 mb-4"><div class="container border border-blue mt-1" ><div class="question"><div class="h-fixed-30 border-bottom"><h5 class="p-3 ">' + questionsToDisplay[j]['question'] + ' (' + questionsToDisplay[j]['total_votes'] + ' Faves)</h5></div><div class="suggestions p-1"></div>';
                     if (user_selected_answers.includes(questionsToDisplay[j]['question_id'])) {
