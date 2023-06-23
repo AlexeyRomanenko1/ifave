@@ -46,9 +46,9 @@
                         <li class="nav-item">
                             <a href="" class="nav-link" data-bs-toggle="modal" data-bs-target="#topics_modal">All Locations</a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a href="" class="nav-link">About</a>
-                        </li>
+                        </li> -->
                         <li class="nav-item">
                             <a href="" class="nav-link">Contact</a>
                         </li>
