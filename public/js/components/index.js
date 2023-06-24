@@ -52,7 +52,7 @@ $(document).ready(function () {
                     } else if (i == 1) {
                         html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-share float-end" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\')"></i></div>';
                     } else if (i == 2) {
-                        html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-code float-end" aria-hidden="true"></i></div>';
+                        html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-code float-end" aria-hidden="true" onclick="generate_embeded_code(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\',\'' + questionsToDisplay[j]['question'] + '\')"></i></div>';
                     }
 
                     p++;
@@ -70,7 +70,7 @@ $(document).ready(function () {
                         html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share float-end" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\')"></i></div>';
                     }
                     else if (index == 2) {
-                        html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code float-end" aria-hidden="true"></i></div>';
+                        html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code float-end" aria-hidden="true" onclick="generate_embeded_code(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\',\'' + questionsToDisplay[j]['question'] + '\')"></i></div>';
                     }
                 });
 
@@ -363,7 +363,7 @@ $('#search_questions').on('keyup', function () {
                             } else if (i == 1) {
                                 html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-share float-end" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\')"></i></div>';
                             } else if (i == 2) {
-                                html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-code float-end" aria-hidden="true"></i></div>';
+                                html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-code float-end" aria-hidden="true" onclick="generate_embeded_code(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\',\'' + questionsToDisplay[j]['question'] + '\')"></i></div>';
                             }
 
                             p++;
@@ -381,7 +381,7 @@ $('#search_questions').on('keyup', function () {
                                 html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share float-end" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\')"></i></div>';
                             }
                             else if (index == 2) {
-                                html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code float-end" aria-hidden="true"></i></div>';
+                                html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code float-end" aria-hidden="true" onclick="generate_embeded_code(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\',\'' + questionsToDisplay[j]['question'] + '\')"></i></div>';
                             }
                         });
 
@@ -531,7 +531,14 @@ function scrollLeftcont() {
     scrollContainer.scrollBy({ left: -100, behavior: "smooth" });
 }
 
-
+function generate_embeded_code(url, questionName) {
+    // Customize the embedded code template with the question link and name
+    var embeddedCode = '<a href="' + url + '">' + questionName + '</a>';
+    navigator.clipboard.writeText(embeddedCode);
+    toastr.success('Embeded code copied!')
+    // Display or use the generated embed code as needed
+    // console.log(embeddedCode);
+}
 
 
 
