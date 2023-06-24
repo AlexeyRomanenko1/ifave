@@ -48,9 +48,9 @@ $(document).ready(function () {
                         votes_split[0] = votes_split[0].slice(0, 12) + '... ';
                     }
                     if (i == 0) {
-                        html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-clone float-end" onclick="copy_url(\'' + 'http://127.0.0.1:8000//questions_details/' + questionsToDisplay[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
+                        html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-clone float-end" onclick="copy_url(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
                     } else if (i == 1) {
-                        html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-share float-end" aria-hidden="true"></i></div>';
+                        html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-share float-end" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\')"></i></div>';
                     } else if (i == 2) {
                         html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-code float-end" aria-hidden="true"></i></div>';
                     }
@@ -65,9 +65,9 @@ $(document).ready(function () {
                     let places = 'Place (Faves:' + new_spl[1];
                     //  html += '<div class="hover p-1"><b> ' + places + '</b></div>';
                     if (index == 0) {
-                        html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone float-end" onclick="copy_url(\'' + 'http://127.0.0.1:8000//questions_details/' + questionsToDisplay[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
+                        html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone float-end" onclick="copy_url(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
                     } else if (index == 1) {
-                        html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share float-end" aria-hidden="true"></i></div>';
+                        html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share float-end" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\')"></i></div>';
                     }
                     else if (index == 2) {
                         html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code float-end" aria-hidden="true"></i></div>';
@@ -76,7 +76,7 @@ $(document).ready(function () {
 
             }
 
-            html += '<div class="text-center"><a target="_blank" href="/questions_details/' + questionsToDisplay[j]['question_id'] + '" class="btn btn-primary m-2">Show me more</a></div></div></div></div>';
+            html += '<div class="text-center"><a href="/questions_details/' + questionsToDisplay[j]['question_id'] + '" class="btn btn-primary m-2">Show me more</a></div></div></div></div>';
         }
 
         $('#display_questions').html(html);
@@ -108,7 +108,7 @@ $(document).ready(function () {
         data: { task: 'get_questions' },
         success: function (data) {
             let obj = JSON.parse(data);
-           // console.log(obj.top_comments)
+            // console.log(obj.top_comments)
             let html = '';
             let questions_slider = '';
             // let faves_index = 1;
@@ -359,9 +359,9 @@ $('#search_questions').on('keyup', function () {
                                 votes_split[0] = votes_split[0].slice(0, 12) + '... ';
                             }
                             if (i == 0) {
-                                html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-clone float-end" onclick="copy_url(\'' + 'http://127.0.0.1:8000//questions_details/' + questionsToDisplay[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
+                                html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-clone float-end" onclick="copy_url(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
                             } else if (i == 1) {
-                                html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-share float-end" aria-hidden="true"></i></div>';
+                                html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-share float-end" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\')"></i></div>';
                             } else if (i == 2) {
                                 html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-code float-end" aria-hidden="true"></i></div>';
                             }
@@ -376,9 +376,9 @@ $('#search_questions').on('keyup', function () {
                             let new_spl = str.split('( Faves: ')
                             let places = 'Place (Faves:' + new_spl[1];
                             if (index == 0) {
-                                html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone float-end" onclick="copy_url(\'' + 'http://127.0.0.1:8000//questions_details/' + questionsToDisplay[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
+                                html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone float-end" onclick="copy_url(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
                             } else if (index == 1) {
-                                html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share float-end" aria-hidden="true"></i></div>';
+                                html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share float-end" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\')"></i></div>';
                             }
                             else if (index == 2) {
                                 html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code float-end" aria-hidden="true"></i></div>';
@@ -387,7 +387,7 @@ $('#search_questions').on('keyup', function () {
 
                     }
 
-                    html += '<div class="text-center"><a target="_blank" href="/questions_details/' + questionsToDisplay[j]['question_id'] + '" class="btn btn-primary m-2">Show me more</a></div></div></div></div>';
+                    html += '<div class="text-center"><a href="/questions_details/' + questionsToDisplay[j]['question_id'] + '" class="btn btn-primary m-2">Show me more</a></div></div></div></div>';
                 }
 
                 $('#display_questions').html(html);
@@ -513,6 +513,12 @@ function un_cover(x) {
             console.log(e)
         }
     })
+}
+
+function share_url(url) {
+    let text = "Check this question on ifave";
+    $("#facebook_share").attr("href", "https://www.facebook.com/sharer/sharer.php?u=" + encodeURI(url));
+    $("#twitter_share").attr("href", "https://twitter.com/intent/tweet?text=" + encodeURI(text) + "&url=" + encodeURI(url));
 }
 
 function scrollRight() {
