@@ -2,8 +2,9 @@
 <div class="container">
     <div class="text-center">
         @foreach($header_info as $details)
-        @php 
+        @php
         $question_category=$details['question_category'];
+        $question_id=$details['id'];
         @endphp
         <input type="hidden" id="hidden_question_id" value="{{ $details['question_category'] }}">
         @if($details["topic_name"] == 'movies')
@@ -25,7 +26,7 @@
                 <div class="set_suggestion_height mt-3 rounded">
                     @if(count($get_user_answers) > 0)
                     <input type="hidden" id="hidden_to_be" value="0">
-                    @php 
+                    @php
                     $question_answers = $question_answers->sortByDesc('vote_count');
                     $places=1;
                     @endphp
@@ -52,7 +53,7 @@
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Not in the list. Add my fave</button>
                     </div>
                     <p class="">
-                    <i class="fa fa-2x fa-clone float-center p-2 m-2" aria-hidden="true"></i> <i class="fa fa-2x fa-share float-center p-2 m-2" aria-hidden="true"></i> <i class="fa fa-2x fa-code float-center p-2 m-2" aria-hidden="true"></i>
+                        <i class="fa fa-2x fa-clone float-center p-2 m-2" aria-hidden="true" onclick="copy_url('https://ifave.com/questions_details/'+{{ $question_id }})"></i> <i class="fa fa-2x fa-share float-center p-2 m-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url('https://ifave.com/questions_details/' + {{$question_id}})"></i> <i class="fa fa-2x fa-code float-center p-2 m-2" aria-hidden="true"></i>
                     </p>
                 </div>
                 <div class="col-md-4">
@@ -73,17 +74,17 @@
                         </tbody>
                         @else
                         <table class="table">
-                        <thead>
-                            <th>My Faves</th>
-                            <th>Actions</th>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>No faves yet</td>
-                            </tr>
-                        </tbody>
-                        @endif
-                    </table>
+                            <thead>
+                                <th>My Faves</th>
+                                <th>Actions</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>No faves yet</td>
+                                </tr>
+                            </tbody>
+                            @endif
+                        </table>
                 </div>
             </div>
         </div>
@@ -194,7 +195,7 @@
                 @csrf
                 <input type="hidden" name="question_id" value="{{$header['id']}}">
                 <div class="modal-body">
-                    <textarea class="form-control modal-text" onpaste="return false" name="comments" id="" cols="30" rows="10" placeholder="Your comments....."  maxlength="2000" required></textarea>
+                    <textarea class="form-control modal-text" onpaste="return false" name="comments" id="" cols="30" rows="10" placeholder="Your comments....." maxlength="2000" required></textarea>
                     <small class="text-primary modal-warn text-center">0/2000</small>
                 </div>
                 <div class="modal-footer">
@@ -208,10 +209,10 @@
 </div>
 @include('footer.footer')
 <script>
- $('.modal-text').on('keyup',function(){
-    $('.modal-warn').html($(this).val().length+'/2000 character')
- })
- $('.comment-text').on('keyup',function(){
-    $('.comment-warn').html($(this).val().length+'/2000 character')
- })
+    $('.modal-text').on('keyup', function() {
+        $('.modal-warn').html($(this).val().length + '/2000 character')
+    })
+    $('.comment-text').on('keyup', function() {
+        $('.comment-warn').html($(this).val().length + '/2000 character')
+    })
 </script>
