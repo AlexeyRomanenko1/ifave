@@ -34,6 +34,8 @@ Route::get('/uncover_answers', [indexController::class, 'uncover_answers']);
 Route::get('/get_topics', [indexController::class, 'get_topics']);
 Route::get('/search_topics', [indexController::class, 'search_topics']);
 Route::get('topics/{topic_name}', [indexController::class, 'topic_name'])->name('topic_name');
+Route::get('/get_comments_list', [indexController::class, 'get_comments_list'])->name('get_comments_list');
+
 // Route::get('redirect/{id}', 'YourController@redirectToUrlWithId')->name('url.redirect');
 Auth::routes();
 

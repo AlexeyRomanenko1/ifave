@@ -110,7 +110,7 @@ class indexController extends Controller
                 ->groupBy('users.name')
                 ->get();
             $questions_slider = Questions::select('*')->where('topic_id', $topic_id)->get();
-            return json_encode(['success' => 1, 'data' => $questions, 'this_user_answers' => $subQuery, 'topics' => $hot_topics, 'topic_name' => $topicName, 'questions_slider' => $questions_slider, 'myfaves' => $get_this_user_votes, 'top_comments' => $comments]);
+            return json_encode(['success' => 1, 'data' => $questions, 'this_user_answers' => $subQuery, 'topics' => $hot_topics, 'topic_name' => $topicName, 'questions_slider' => $questions_slider, 'myfaves' => $get_this_user_votes, 'top_comments' => $comments, 'topic_id' => $topic_id]);
         }
         // return response()->json(['sucess' => 'hello']);
     }
@@ -716,5 +716,20 @@ class indexController extends Controller
         } else {
             return false; // No URL found in the comment
         }
+    }
+    public function get_comments_list(Request $request)
+    {
+        $topic_id = $request->topic_id;
+
+        $comments = DB::table('comments')
+            ->select('users.name', DB::raw('SUM(comments.upvotes) as upvotes'))
+            ->join('users', 'comments.comment_by', '=', 'users.id')
+            ->join('questions', 'comments.question_id', '=', 'questions.id')
+            ->where('questions.topic_id', '=', $topic_id)
+            ->orderByDesc('upvotes')
+            ->groupBy('users.name')
+            ->get();
+
+        return json_encode(['success' => 1, 'data' => $comments]);
     }
 }

@@ -29,10 +29,10 @@ $(document).ready(function () {
                 return votesB - votesA;
             });
             if (j == 2) {
-               // html += '<div class="col-md-4"><div class="container border border-blue mt-1 p-2 m-2"><p><b>Best comments in this topic</b></p><ol><li>Lena85 (295 upvotes)</li><li>Dansky (285 upvotes)</li><li>Supermind (275 upvotes)</li><li>Quatorze14 (265 upvotes)</li><li>Supermind (265 upvotes)</li></ol></div></div>';
-               if (top_comments.length > 0) {
-                html += top_comments;
-            }
+                // html += '<div class="col-md-4"><div class="container border border-blue mt-1 p-2 m-2"><p><b>Best comments in this topic</b></p><ol><li>Lena85 (295 upvotes)</li><li>Dansky (285 upvotes)</li><li>Supermind (275 upvotes)</li><li>Quatorze14 (265 upvotes)</li><li>Supermind (265 upvotes)</li></ol></div></div>';
+                if (top_comments.length > 0) {
+                    html += top_comments;
+                }
             }
             html += '  <div class="col-md-4 mb-4"><div class="container border border-blue mt-1" ><div class="question"><div class="h-fixed-30 border-bottom"><h5 class="p-3 ">' + questionsToDisplay[j]['question'] + ' (' + questionsToDisplay[j]['total_votes'] + ' Faves)</h5></div><div class="suggestions p-1"></div>';
             if (user_selected_answers.includes(questionsToDisplay[j]['question_id'])) {
@@ -114,7 +114,12 @@ $(document).ready(function () {
                 for (let j = 0; j < obj.top_comments.length; j++) {
                     top_comments += '<li>' + obj.top_comments[j]['name'] + ' (' + obj.top_comments[j]['upvotes'] + ' upvotes)</li>';
                 }
-                top_comments += '</ol></div></div>';
+                if (obj.top_comments.length == 5) {
+                    top_comments += '</ol><div class="text-center"><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#top_comments_modal" onclick="top_comments_modal(' + obj.topic_id + ')">Show me more</button></div></div></div>';
+                } else {
+                    top_comments += '</ol></div></div>';
+                }
+                // top_comments += '</ol></div></div>';
             }
             if (obj.myfaves.length > 0) {
                 for (let k = 0; k < obj.myfaves.length; k++) {
@@ -342,10 +347,10 @@ $('#search_questions').on('keyup', function () {
                         return votesB - votesA;
                     });
                     if (j == 2) {
-                       // html += '<div class="col-md-4"><div class="container border border-blue mt-1 p-2 m-2"><p><b>Best comments in this topic</b></p><ol><li>Lena85 (295 upvotes)</li><li>Dansky (285 upvotes)</li><li>Supermind (275 upvotes)</li><li>Quatorze14 (265 upvotes)</li><li>Supermind (265 upvotes)</li></ol></div></div>';
-                       if (top_comments.length > 0) {
-                        html += top_comments;
-                    }
+                        // html += '<div class="col-md-4"><div class="container border border-blue mt-1 p-2 m-2"><p><b>Best comments in this topic</b></p><ol><li>Lena85 (295 upvotes)</li><li>Dansky (285 upvotes)</li><li>Supermind (275 upvotes)</li><li>Quatorze14 (265 upvotes)</li><li>Supermind (265 upvotes)</li></ol></div></div>';
+                        if (top_comments.length > 0) {
+                            html += top_comments;
+                        }
                     }
                     html += '  <div class="col-md-4 mb-4"><div class="container border border-blue mt-1" ><div class="question"><div class="h-fixed-30 border-bottom"><h5 class="p-3 ">' + questionsToDisplay[j]['question'] + ' (' + questionsToDisplay[j]['total_votes'] + ' Faves)</h5></div><div class="suggestions p-1"></div>';
                     if (user_selected_answers.includes(questionsToDisplay[j]['question_id'])) {
@@ -509,9 +514,32 @@ function un_cover(x) {
 }
 
 function share_url(url) {
-    let text="Check this question on ifave";
+    let text = "Check this question on ifave";
     $("#facebook_share").attr("href", "https://www.facebook.com/sharer/sharer.php?u=" + encodeURI(url));
     $("#twitter_share").attr("href", "https://twitter.com/intent/tweet?text=" + encodeURI(text) + "&url=" + encodeURI(url));
+}
+
+function top_comments_modal(x) {
+    $.ajax({
+        type: 'GET',
+        url: '/get_comments_list',
+        data: { task: 'comments_list', topic_id: x },
+        success: function (data) {
+            // console.log(data);
+            let html = '<ol>';
+            let obj = JSON.parse(data);
+            for (let j = 0; j < obj.data.length; j++) {
+                html += '<li>' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</li>';
+            }
+            html += '</ol>';
+            $('#top_comments_modal_body').empty();
+            $('#top_comments_modal_body').html(html);
+
+        },
+        error: function (e) {
+            console.log(e)
+        }
+    })
 }
 
 function scrollRight() {

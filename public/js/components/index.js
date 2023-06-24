@@ -117,7 +117,12 @@ $(document).ready(function () {
                 for (let j = 0; j < obj.top_comments.length; j++) {
                     top_comments += '<li>' + obj.top_comments[j]['name'] + ' (' + obj.top_comments[j]['upvotes'] + ' upvotes)</li>';
                 }
-                top_comments += '</ol></div></div>';
+                if (obj.top_comments.length == 5) {
+                    top_comments += '</ol><div class="text-center"><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#top_comments_modal" onclick="top_comments_modal(' + obj.topic_id + ')">Show me more</button></div></div></div>';
+                } else {
+                    top_comments += '</ol></div></div>';
+                }
+
             }
             if (obj.myfaves.length > 0) {
                 for (let k = 0; k < obj.myfaves.length; k++) {
@@ -508,6 +513,29 @@ function un_cover(x) {
             }
             $('.set_suggestion_height').empty();
             $('.set_suggestion_height').html(html);
+        },
+        error: function (e) {
+            console.log(e)
+        }
+    })
+}
+
+function top_comments_modal(x) {
+    $.ajax({
+        type: 'GET',
+        url: '/get_comments_list',
+        data: { task: 'comments_list', topic_id: x },
+        success: function (data) {
+            // console.log(data);
+            let html = '<ol>';
+            let obj = JSON.parse(data);
+            for (let j = 0; j < obj.data.length; j++) {
+                html += '<li>' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</li>';
+            }
+            html += '</ol>';
+            $('#top_comments_modal_body').empty();
+            $('#top_comments_modal_body').html(html);
+
         },
         error: function (e) {
             console.log(e)
