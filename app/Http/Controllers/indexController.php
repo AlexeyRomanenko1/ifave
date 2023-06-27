@@ -19,7 +19,7 @@ class indexController extends Controller
     public function index(Request $request)
     {
         $topicName = "The World";
-        $perPage = 15; // Number of items per page
+        $perPage = 14; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
         $userIpAddress = $this->getClientIP($request);
         if (Auth::check()) {
@@ -54,8 +54,23 @@ class indexController extends Controller
             ->groupBy('questions.id', 'questions.question', 'questions.question_category')
             ->orderBy('total_votes', 'desc') // Sort by total_votes in descending order
             ->paginate($perPage, ['*'], 'page', $page);
-         
-        return view('index', compact('questions','subQuery'));
+
+        $get_topic_details = Topics::select('*')->where('topic_name', $topicName)->get();
+        foreach ($get_topic_details as $get_topic_detail) {
+            $topic_id = $get_topic_detail['id'];
+        }
+
+        $comments = DB::table('comments')
+            ->select('users.name', DB::raw('SUM(comments.upvotes) as upvotes'))
+            ->join('users', 'comments.comment_by', '=', 'users.id')
+            ->join('questions', 'comments.question_id', '=', 'questions.id')
+            ->where('questions.topic_id', '=', $topic_id)
+            ->orderByDesc('upvotes')
+            ->limit(5)
+            ->groupBy('users.name')
+            ->get();
+
+        return view('index', compact('questions', 'subQuery', 'comments', 'topic_id'));
     }
     public function indexonloadRequest(Request $request)
     {
@@ -65,20 +80,12 @@ class indexController extends Controller
             if (Auth::check()) {
                 // User is logged in
                 $userId = Auth::id();
-                $subQuery = UsersAnswer::select('question_id')
-                    ->where('user_ip_address', $userId)
-                    ->get();
-
                 $get_this_user_votes = DB::table('user_answers')->select('questions.question', 'questions_answer.answers')
                     ->join('questions', 'user_answers.question_id', 'questions.id')
                     ->join('questions_answer', 'user_answers.answer_id', 'questions_answer.id')
                     ->where('user_answers.user_ip_address', $userId)
                     ->get();
             } else {
-                // User is not logged in
-                $subQuery = UsersAnswer::select('question_id')
-                    ->where('user_ip_address', $userIpAddress)
-                    ->get();
                 $get_this_user_votes = '';
             }
             if (isset($request->topic_name)) {
@@ -86,37 +93,14 @@ class indexController extends Controller
             } else {
                 $topicName = "The World";
             }
-            
-            $questions = Questions::select(
-                'questions.id AS question_id',
-                'questions.question',
-                'questions.question_category',
-                DB::raw('SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, " ( Faves: ", vote_count, ")") ORDER BY vote_count DESC SEPARATOR "}"), "}", 3) AS top_answers'),
-                DB::raw('SUM(vote_count) AS total_votes')
-            )
-                ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
-                ->join('topics', 'questions.topic_id', '=', 'topics.id')
-                ->where('topics.topic_name', $topicName)
-                ->groupBy('questions.id', 'questions.question', 'questions.question_category')
-                ->orderBy('questions.id')
-                ->limit(20)
-                ->get();
+
             $get_topic_details = Topics::select('*')->where('topic_name', $topicName)->get();
             foreach ($get_topic_details as $get_topic_detail) {
                 $topic_id = $get_topic_detail['id'];
             }
 
-            $comments = DB::table('comments')
-                ->select('users.name', DB::raw('SUM(comments.upvotes) as upvotes'))
-                ->join('users', 'comments.comment_by', '=', 'users.id')
-                ->join('questions', 'comments.question_id', '=', 'questions.id')
-                ->where('questions.topic_id', '=', $topic_id)
-                ->orderByDesc('upvotes')
-                ->limit(5)
-                ->groupBy('users.name')
-                ->get();
             $questions_slider = Questions::select('*')->where('topic_id', $topic_id)->get();
-            return json_encode(['success' => 1, 'data' => $questions, 'this_user_answers' => $subQuery, 'topic_name' => $topicName, 'questions_slider' => $questions_slider, 'myfaves' => $get_this_user_votes, 'top_comments' => $comments, 'topic_id' => $topic_id]);
+            return json_encode(['success' => 1, 'topic_name' => $topicName, 'questions_slider' => $questions_slider, 'myfaves' => $get_this_user_votes, 'topic_id' => $topic_id]);
         }
         // return response()->json(['sucess' => 'hello']);
     }
@@ -275,72 +259,117 @@ class indexController extends Controller
         if ($request->task == 'searchQuestions') {
             $tosearch = $request->search;
             $topicName = $request->id;
+            //    $topicName='The World';
+            $perPage = 14; // Number of items per page
+            $page = request()->get('page', 1); // Get the current page from the request
+            $userIpAddress = $this->getClientIP($request);
+            if (Auth::check()) {
+                // User is logged in
+                $userId = Auth::id();
+                $subQuery = UsersAnswer::select('question_id')
+                    ->where('user_ip_address', $userId)
+                    ->get();
+
+                $get_this_user_votes = DB::table('user_answers')->select('questions.question', 'questions_answer.answers')
+                    ->join('questions', 'user_answers.question_id', 'questions.id')
+                    ->join('questions_answer', 'user_answers.answer_id', 'questions_answer.id')
+                    ->where('user_answers.user_ip_address', $userId)
+                    ->get();
+            } else {
+                // User is not logged in
+                $subQuery = UsersAnswer::select('question_id')
+                    ->where('user_ip_address', $userIpAddress)
+                    ->get();
+                $get_this_user_votes = '';
+            }
             if (strlen($tosearch) > 0) {
                 // $question_id = $request->question_id;
                 // if(strlen($tosearch) >= 3){
 
-                $questions = Questions::select('questions.id as question_id', 'questions.question', 'questions.question_category', 'qa.top_answers', 'totqa.total_votes')
+                // $questions = Questions::select('questions.id as question_id', 'questions.question', 'questions.question_category', 'qa.top_answers', 'totqa.total_votes')
+                //     ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+                //     ->leftJoin(DB::raw('
+                //     (SELECT questions_category, GROUP_CONCAT(answers, " ( Faves: ",vote_count,")" SEPARATOR "} ") AS top_answers, SUM(vote_count) AS total_votes
+                //     FROM (
+                //         SELECT questions_category, answers, vote_count,     
+                //         ROW_NUMBER() OVER (PARTITION BY questions_category ORDER BY vote_count DESC) AS row_num
+                //         FROM questions_answer
+                //     ) AS qa
+                //     WHERE row_num <= 3
+                //     GROUP BY questions_category) AS qa
+                // '), 'questions.question_category', '=', 'qa.questions_category')
+                //     ->leftJoin(DB::raw('
+                //     (SELECT questions_category, GROUP_CONCAT(answers, " ( Faves: ",vote_count,")" SEPARATOR "} ") AS top_answers, SUM(vote_count) AS total_votes
+                //     FROM (
+                //         SELECT questions_category, answers, vote_count,     
+                //         ROW_NUMBER() OVER (PARTITION BY questions_category ORDER BY vote_count DESC) AS row_num
+                //         FROM questions_answer
+                //     ) AS totqa
+                //     GROUP BY questions_category) AS totqa
+                // '), 'questions.question_category', '=', 'totqa.questions_category')
+                //     ->join('topics', 'questions.topic_id', '=', 'topics.id')
+                //     ->where('topics.id', $topicName)
+                //     ->where('questions.question', 'like', '%' . $tosearch . '%')
+                //     ->groupBy('questions.id', 'questions.question', 'questions.question_category', 'qa.top_answers', 'qa.total_votes')
+                //     ->get();
+                $questions = Questions::select(
+                    'questions.id AS question_id',
+                    'questions.question',
+                    'questions.question_category',
+                    DB::raw('SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, " ( Faves: ", vote_count, ")") ORDER BY vote_count DESC SEPARATOR "}"), "}", 3) AS top_answers'),
+                    DB::raw('SUM(vote_count) AS total_votes')
+                )
                     ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
-                    ->leftJoin(DB::raw('
-                    (SELECT questions_category, GROUP_CONCAT(answers, " ( Faves: ",vote_count,")" SEPARATOR "} ") AS top_answers, SUM(vote_count) AS total_votes
-                    FROM (
-                        SELECT questions_category, answers, vote_count,     
-                        ROW_NUMBER() OVER (PARTITION BY questions_category ORDER BY vote_count DESC) AS row_num
-                        FROM questions_answer
-                    ) AS qa
-                    WHERE row_num <= 3
-                    GROUP BY questions_category) AS qa
-                '), 'questions.question_category', '=', 'qa.questions_category')
-                    ->leftJoin(DB::raw('
-                    (SELECT questions_category, GROUP_CONCAT(answers, " ( Faves: ",vote_count,")" SEPARATOR "} ") AS top_answers, SUM(vote_count) AS total_votes
-                    FROM (
-                        SELECT questions_category, answers, vote_count,     
-                        ROW_NUMBER() OVER (PARTITION BY questions_category ORDER BY vote_count DESC) AS row_num
-                        FROM questions_answer
-                    ) AS totqa
-                    GROUP BY questions_category) AS totqa
-                '), 'questions.question_category', '=', 'totqa.questions_category')
                     ->join('topics', 'questions.topic_id', '=', 'topics.id')
                     ->where('topics.id', $topicName)
                     ->where('questions.question', 'like', '%' . $tosearch . '%')
-                    ->groupBy('questions.id', 'questions.question', 'questions.question_category', 'qa.top_answers', 'qa.total_votes')
+                    ->groupBy('questions.id', 'questions.question', 'questions.question_category')
+                    ->orderBy('total_votes', 'desc') // Sort by total_votes in descending order
+                    ->paginate($perPage);
+
+                // $get_topic_details = Topics::select('*')->where('topic_name', $topicName)->get();
+                // foreach ($get_topic_details as $get_topic_detail) {
+                //     $topic_id = $get_topic_detail['id'];
+                // }
+                $topic_id = $topicName;
+                $comments = DB::table('comments')
+                    ->select('users.name', DB::raw('SUM(comments.upvotes) as upvotes'))
+                    ->join('users', 'comments.comment_by', '=', 'users.id')
+                    ->join('questions', 'comments.question_id', '=', 'questions.id')
+                    ->where('questions.topic_id', '=', $topicName)
+                    ->orderByDesc('upvotes')
+                    ->limit(5)
+                    ->groupBy('users.name')
                     ->get();
-                return json_encode([
-                    'success' => 1,
-                    'data' => $questions
-                ]);
+
+                return view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id'));
             } else {
                 // $topicName = $request->id;
-                $questions = Questions::select('questions.id as question_id', 'questions.question', 'questions.question_category', 'qa.top_answers', 'totqa.total_votes')
+                $questions = Questions::select(
+                    'questions.id AS question_id',
+                    'questions.question',
+                    'questions.question_category',
+                    DB::raw('SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, " ( Faves: ", vote_count, ")") ORDER BY vote_count DESC SEPARATOR "}"), "}", 3) AS top_answers'),
+                    DB::raw('SUM(vote_count) AS total_votes')
+                )
                     ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
-                    ->leftJoin(DB::raw('
-                    (SELECT questions_category, GROUP_CONCAT(answers, " ( Faves: ",vote_count,")" SEPARATOR "} ") AS top_answers, SUM(vote_count) AS total_votes
-                    FROM (
-                        SELECT questions_category, answers, vote_count,     
-                        ROW_NUMBER() OVER (PARTITION BY questions_category ORDER BY vote_count DESC) AS row_num
-                        FROM questions_answer
-                    ) AS qa
-                    WHERE row_num <= 3
-                    GROUP BY questions_category) AS qa
-                '), 'questions.question_category', '=', 'qa.questions_category')
-                    ->leftJoin(DB::raw('
-                    (SELECT questions_category, GROUP_CONCAT(answers, " ( Faves: ",vote_count,")" SEPARATOR ", ") AS top_answers, SUM(vote_count) AS total_votes
-                    FROM (
-                        SELECT questions_category, answers, vote_count,     
-                        ROW_NUMBER() OVER (PARTITION BY questions_category ORDER BY vote_count DESC) AS row_num
-                        FROM questions_answer
-                    ) AS totqa
-                    GROUP BY questions_category) AS totqa
-                '), 'questions.question_category', '=', 'totqa.questions_category')
                     ->join('topics', 'questions.topic_id', '=', 'topics.id')
                     ->where('topics.id', $topicName)
-
-                    ->groupBy('questions.id', 'questions.question', 'questions.question_category', 'qa.top_answers', 'qa.total_votes')
+                    ->groupBy('questions.id', 'questions.question', 'questions.question_category')
+                    ->orderBy('total_votes', 'desc') // Sort by total_votes in descending order
+                    ->paginate($perPage);
+                $topic_id = $topicName;
+                $comments = DB::table('comments')
+                    ->select('users.name', DB::raw('SUM(comments.upvotes) as upvotes'))
+                    ->join('users', 'comments.comment_by', '=', 'users.id')
+                    ->join('questions', 'comments.question_id', '=', 'questions.id')
+                    ->where('questions.topic_id', '=', $topicName)
+                    ->orderByDesc('upvotes')
+                    ->limit(5)
+                    ->groupBy('users.name')
                     ->get();
-                return json_encode([
-                    'success' => 1,
-                    'data' => $questions
-                ]);
+
+                return view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id'));
             }
         }
         return json_encode([
@@ -700,11 +729,59 @@ class indexController extends Controller
     {
         $header_info = $request->topic_name;
         $get_topic = DB::table('topics')->select('*')->where('topic_name', $request->topic_name)->first();
-        //$topic_id=$get_topic;
-        // foreach($get_topic as $topic){
-        //     $topic_id=$topic['id'];
-        // }
-        return view("topics", compact('header_info', 'get_topic'));
+        $topicName = $request->topic_name;
+        $perPage = 14; // Number of items per page
+        $page = request()->get('page', 1); // Get the current page from the request
+        $userIpAddress = $this->getClientIP($request);
+        if (Auth::check()) {
+            // User is logged in
+            $userId = Auth::id();
+            $subQuery = UsersAnswer::select('question_id')
+                ->where('user_ip_address', $userId)
+                ->get();
+
+            $get_this_user_votes = DB::table('user_answers')->select('questions.question', 'questions_answer.answers')
+                ->join('questions', 'user_answers.question_id', 'questions.id')
+                ->join('questions_answer', 'user_answers.answer_id', 'questions_answer.id')
+                ->where('user_answers.user_ip_address', $userId)
+                ->get();
+        } else {
+            // User is not logged in
+            $subQuery = UsersAnswer::select('question_id')
+                ->where('user_ip_address', $userIpAddress)
+                ->get();
+            $get_this_user_votes = '';
+        }
+        $questions = Questions::select(
+            'questions.id AS question_id',
+            'questions.question',
+            'questions.question_category',
+            DB::raw('SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, " ( Faves: ", vote_count, ")") ORDER BY vote_count DESC SEPARATOR "}"), "}", 3) AS top_answers'),
+            DB::raw('SUM(vote_count) AS total_votes')
+        )
+            ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+            ->join('topics', 'questions.topic_id', '=', 'topics.id')
+            ->where('topics.topic_name', $topicName)
+            ->groupBy('questions.id', 'questions.question', 'questions.question_category')
+            ->orderBy('total_votes', 'desc') // Sort by total_votes in descending order
+            ->paginate($perPage, ['*'], 'page', $page);
+
+        $get_topic_details = Topics::select('*')->where('topic_name', $topicName)->get();
+        foreach ($get_topic_details as $get_topic_detail) {
+            $topic_id = $get_topic_detail['id'];
+        }
+
+        $comments = DB::table('comments')
+            ->select('users.name', DB::raw('SUM(comments.upvotes) as upvotes'))
+            ->join('users', 'comments.comment_by', '=', 'users.id')
+            ->join('questions', 'comments.question_id', '=', 'questions.id')
+            ->where('questions.topic_id', '=', $topic_id)
+            ->orderByDesc('upvotes')
+            ->limit(5)
+            ->groupBy('users.name')
+            ->get();
+
+        return view("topics", compact('header_info', 'get_topic', 'questions', 'comments', 'subQuery'));
     }
     public function getClientIP(Request $request)
     {

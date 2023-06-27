@@ -1,126 +1,22 @@
-let user_selected_answers = [];
 document.addEventListener('copy', function (e) {
     e.preventDefault();
 });
-var currentPage = 1;
-var questionsPerPage = 40;
-var allQuestions = []; // Variable to store all the questions retrieved from the API
-let top_comments = [];
 $('.read-more').on('click', function (e) {
     e.preventDefault();
     $(this).hide();
     $(this).siblings('.full-comment').show();
 });
 $(document).ready(function () {
-    // Function to display questions for the current page
-    function displayQuestions(page) {
-        var startIndex = (page - 1) * questionsPerPage;
-        var endIndex = startIndex + questionsPerPage;
-        var questionsToDisplay = allQuestions.slice(startIndex, endIndex);
-        var html = '';
 
-        for (var j = 0; j < questionsToDisplay.length; j++) {
-            let answers = questionsToDisplay[j]['top_answers'];
-            let answersArr = answers.split('}');
-            // answersArr = answersArr.sort();
-            answersArr = answersArr.sort((a, b) => {
-                const votesA = parseInt(a.match(/\d+/));
-                const votesB = parseInt(b.match(/\d+/));
-                return votesB - votesA;
-            });
-            if (j == 2) {
-                // html += '<div class="col-md-4"><div class="container border border-blue mt-1 p-2 m-2"><p><b>Best comments in this topic</b></p><ol><li>Lena85 (295 upvotes)</li><li>Dansky (285 upvotes)</li><li>Supermind (275 upvotes)</li><li>Quatorze14 (265 upvotes)</li><li>Supermind (265 upvotes)</li></ol></div></div>';
-                if (top_comments.length > 0) {
-                    html += top_comments;
-                }
-            }
-            html += '  <div class="col-md-4 mb-4"><div class="container border border-blue mt-1" ><div class="question"><div class="h-fixed-30 border-bottom"><h5 class="p-3 ">' + questionsToDisplay[j]['question'] + ' (' + questionsToDisplay[j]['total_votes'] + ' Faves)</h5></div><div class="suggestions p-1"></div>';
-            if (user_selected_answers.includes(questionsToDisplay[j]['question_id'])) {
-                let p = 1;
-                for (let i = 0; i < answersArr.length; i++) {
-                    let votes_split = answersArr[i].split('( Faves: ');
-                    if (votes_split[0].length > 12) {
-                        votes_split[0] = votes_split[0].slice(0, 12) + '... ';
-                    }
-                    if (i == 0) {
-                        html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-clone float-end" onclick="copy_url(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
-                    } else if (i == 1) {
-                        html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-share float-end" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\')"></i></div>';
-                    } else if (i == 2) {
-                        html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-code float-end" aria-hidden="true" onclick="generate_embeded_code(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\',\'' + questionsToDisplay[j]['question'] + '\')"></i></div>';
-                    }
-
-                    p++;
-                }
-
-            } else {
-                answersArr.map((str, index) => {
-                    //let places = `${index + 1} Place (Faves: ${str.match(/\d+/)})`;
-                    //  html += '<div class="hover p-1"><b> ' + places + '</b></div>';
-                    let new_spl = str.split('( Faves: ')
-                    let places = 'Place (Faves:' + new_spl[1];
-                    if (index == 0) {
-                        html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone float-end" onclick="copy_url(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
-                    } else if (index == 1) {
-                        html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share float-end" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\')"></i></div>';
-                    }
-                    else if (index == 2) {
-                        html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code float-end" aria-hidden="true" onclick="generate_embeded_code(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\',\'' + questionsToDisplay[j]['question'] + '\')"></i></div>';
-                    }
-                });
-
-            }
-
-            html += '<div class="text-center"><a href="/questions_details/' + questionsToDisplay[j]['question_id'] + '" class="btn btn-primary m-2">Show me more</a></div></div></div></div>';
-        }
-
-        $('#display_questions').html(html);
-    }
-    // Function to generate pagination links
-    function generatePaginationLinks(totalPages) {
-        var html = '';
-
-        for (var i = 1; i <= totalPages; i++) {
-            html += '<span class="pagination-link btn btn-small btn-primary m-1 custom-page" data-page="' + i + '">' + i + '</span>';
-        }
-
-        $('#pagination').html(html);
-    }
-
-    // Event handler for pagination links
-    $(document).on('click', '.pagination-link', function () {
-        var page = parseInt($(this).data('page'));
-        $('.custom-page').removeClass('active-page');
-        $(this).addClass('active-page');
-        if (page !== currentPage) {
-            currentPage = page;
-            displayQuestions(currentPage);
-        }
-    });
     $.ajax({
         type: 'GET',
         url: '/indexonloadRequest',
         data: { task: 'get_questions', topic_name: $('#topic_name').val() },
         success: function (data) {
-            // alert(data.success);
-            // console.log(data);
             let obj = JSON.parse(data);
             // console.group(user_selected_answers);
             let html = '';
             let questions_slider = '';
-            //console.log(obj)
-            if (obj.top_comments.length > 0) {
-                top_comments += '<div class="col-md-4"><div class="container border border-blue mt-1 p-2 m-2"><p><b>Best comments in this topic</b></p><ol>';
-                for (let j = 0; j < obj.top_comments.length; j++) {
-                    top_comments += '<li>' + obj.top_comments[j]['name'] + ' (' + obj.top_comments[j]['upvotes'] + ' upvotes)</li>';
-                }
-                if (obj.top_comments.length == 5) {
-                    top_comments += '</ol><div class="text-center"><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#top_comments_modal" onclick="top_comments_modal(' + obj.topic_id + ')">Show me more</button></div></div></div>';
-                } else {
-                    top_comments += '</ol></div></div>';
-                }
-                // top_comments += '</ol></div></div>';
-            }
             if (obj.myfaves.length > 0) {
                 for (let k = 0; k < obj.myfaves.length; k++) {
                     html += '<tr><td>' + obj.myfaves[k]['question'] + '</td><td>' + obj.myfaves[k]['answers'] + '</td></tr>';
@@ -133,13 +29,6 @@ $(document).ready(function () {
             $('#display_topic_name').empty();
             // $('#display_topic_name').text(obj.topic_name.toUpperCase())
             $('#display_topic_name').text('Best in ' + obj.topic_name.charAt(0).toUpperCase() + obj.topic_name.slice(1))
-            let m = 1;
-            for (let j = 0; j < obj.this_user_answers.length; j++) {
-                user_selected_answers.push(obj.this_user_answers[j]['question_id'])
-            }
-            for (let j = 0; j < obj.this_user_answers.length; j++) {
-                user_selected_answers.push(obj.this_user_answers[j]['question_id'])
-            }
             for (let j = 0; j < obj.questions_slider.length; j++) {
                 let m = j;
                 if (m + 1 < obj.questions_slider.length) {
@@ -151,13 +40,6 @@ $(document).ready(function () {
             }
             $('#scrollContainer').empty();
             $('#scrollContainer').html(questions_slider);
-            obj.data = obj.data.sort((a, b) => parseInt(b.total_votes) - parseInt(a.total_votes));
-            allQuestions = obj.data; // Store all questions in the variable
-
-            var totalPages = Math.ceil(allQuestions.length / questionsPerPage);
-            generatePaginationLinks(totalPages);
-
-            displayQuestions(currentPage);
         },
         error: function (e) {
             console.log(e)
@@ -327,90 +209,8 @@ $('#search_questions').on('keyup', function () {
         url: '/searchQuestions',
         data: { task: 'searchQuestions', search: to_search, id: id },
         success: function (data) {
-
-            let obj = JSON.parse(data);
-            let m = 1;
-            // Function to display questions for the current page
-            function displayQuestions(page) {
-                var startIndex = (page - 1) * questionsPerPage;
-                var endIndex = startIndex + questionsPerPage;
-                var questionsToDisplay = allQuestions.slice(startIndex, endIndex);
-                var html = '';
-
-                for (var j = 0; j < questionsToDisplay.length; j++) {
-                    let answers = questionsToDisplay[j]['top_answers'];
-                    let answersArr = answers.split('}');
-                    // answersArr = answersArr.sort();
-                    answersArr = answersArr.sort((a, b) => {
-                        const votesA = parseInt(a.match(/\d+/));
-                        const votesB = parseInt(b.match(/\d+/));
-                        return votesB - votesA;
-                    });
-                    if (j == 2) {
-                        // html += '<div class="col-md-4"><div class="container border border-blue mt-1 p-2 m-2"><p><b>Best comments in this topic</b></p><ol><li>Lena85 (295 upvotes)</li><li>Dansky (285 upvotes)</li><li>Supermind (275 upvotes)</li><li>Quatorze14 (265 upvotes)</li><li>Supermind (265 upvotes)</li></ol></div></div>';
-                        if (top_comments.length > 0) {
-                            html += top_comments;
-                        }
-                    }
-                    html += '  <div class="col-md-4 mb-4"><div class="container border border-blue mt-1" ><div class="question"><div class="h-fixed-30 border-bottom"><h5 class="p-3 ">' + questionsToDisplay[j]['question'] + ' (' + questionsToDisplay[j]['total_votes'] + ' Faves)</h5></div><div class="suggestions p-1"></div>';
-                    if (user_selected_answers.includes(questionsToDisplay[j]['question_id'])) {
-                        let p = 1;
-                        for (let i = 0; i < answersArr.length; i++) {
-                            let votes_split = answersArr[i].split('( Faves: ');
-                            if (votes_split[0].length > 12) {
-                                votes_split[0] = votes_split[0].slice(0, 12) + '... ';
-                            }
-                            if (i == 0) {
-                                html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-clone float-end" onclick="copy_url(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
-                            } else if (i == 1) {
-                                html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-share float-end" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\')"></i></div>';
-                            } else if (i == 2) {
-                                html += '<div class="hover p-1"> ' + p + ' ' + votes_split[0] + '(Faves: ' + votes_split[1] + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fa fa-code float-end" aria-hidden="true" onclick="generate_embeded_code(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\',\'' + questionsToDisplay[j]['question'] + '\')"></i></div>';
-                            }
-
-                            p++;
-                        }
-
-                    } else {
-                        answersArr.map((str, index) => {
-                            //let places = `${index + 1} Place (Faves: ${str.match(/\d+/)})`;
-                            //  html += '<div class="hover p-1"><b> ' + places + '</b></div>';
-                            let new_spl = str.split('( Faves: ')
-                            let places = 'Place (Faves:' + new_spl[1];
-                            if (index == 0) {
-                                html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone float-end" onclick="copy_url(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\')" aria-hidden="true"></i></div>';
-                            } else if (index == 1) {
-                                html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share float-end" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\')"></i></div>';
-                            }
-                            else if (index == 2) {
-                                html += '<div class="hover p-1"> ' + places + ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code float-end" aria-hidden="true" onclick="generate_embeded_code(\'' + 'https://ifave.com/questions_details/' + questionsToDisplay[j]['question_id'] + '\',\'' + questionsToDisplay[j]['question'] + '\')"></i></div>';
-                            }
-                        });
-
-                    }
-
-                    html += '<div class="text-center"><a href="/questions_details/' + questionsToDisplay[j]['question_id'] + '" class="btn btn-primary m-2">Show me more</a></div></div></div></div>';
-                }
-
-                $('#display_questions').html(html);
-            }
-            // Function to generate pagination links
-            function generatePaginationLinks(totalPages) {
-                var html = '';
-
-                for (var i = 1; i <= totalPages; i++) {
-                    html += '<span class="pagination-link btn btn-small btn-primary m-1 custom-page" data-page="' + i + '">' + i + '</span>';
-                }
-
-                $('#pagination').html(html);
-            }
-            allQuestions = [];
-            obj.data = obj.data.sort((a, b) => parseInt(b.total_votes) - parseInt(a.total_votes));
-            allQuestions = obj.data;
-            console.log(allQuestions)
-            var totalPages = Math.ceil(allQuestions.length / questionsPerPage);
-            generatePaginationLinks(totalPages);
-            displayQuestions(currentPage);
+            $('#display_questions').empty();
+            $('#display_questions').html(data);
         },
         error: function (error) {
             console.log(error)

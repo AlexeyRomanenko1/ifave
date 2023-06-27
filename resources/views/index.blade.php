@@ -69,6 +69,7 @@
         <div class="">
             <div class="row mt-5" id="display_questions">
                 @php
+                $main_loop=1;
                 $jsonString = $subQuery;
                 $array = json_decode($jsonString, true);
                 @endphp
@@ -82,6 +83,21 @@
                 }, false);
 
                 @endphp
+                @if($main_loop==3)
+                <div class="col-md-4">
+                    <div class="container border border-blue mt-1 p-2 m-2">
+                        <p><b>Best comments in this topic</b></p>
+                        <ol>
+                            @foreach($comments as $comment)
+                            <li>{{$comment->name}} ({{$comment->upvotes}} upvotes)</li>
+                            @endforeach
+                        </ol>
+                        @if(count($comments) >=5)
+                        <div class="text-center"><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#top_comments_modal" onclick="top_comments_modal({{$topic_id}})">Show me more</button></div>
+                        @endif
+                    </div>
+                </div>
+                @endif
                 <div class="col-md-4 mb-4">
                     <div class="container border border-blue mt-1">
                         <div class="question">
@@ -90,12 +106,12 @@
                             </div>
                             <div class="suggestions p-1"></div>
                             @if(!$exists)
-                            @php 
+                            @php
                             $lm=1;
                             @endphp
                             @foreach ($answers as &$answer)
                             @php
-                            $answer_votes = substr($answer, strpos($answer, "( Faves") + 1);     
+                            $answer_votes = substr($answer, strpos($answer, "( Faves") + 1);
                             @endphp
                             @if($lm==1)
                             <div class="hover p-1">
@@ -110,7 +126,7 @@
                                 Place ( {{$answer_votes}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code float-end" onclick="generate_embeded_code('https://ifave.com/questions_details/{{$question->question_id}}','{{$question->question}}')" aria-hidden="true"></i>
                             </div>
                             @endif
-                            @php 
+                            @php
                             $lm=$lm+1;
                             @endphp
                             @endforeach
@@ -136,6 +152,9 @@
                         </div>
                     </div>
                 </div>
+                @php
+                $main_loop=$main_loop+1;
+                @endphp
                 @endforeach
                 <div class="pagination justify-content-center">
                     {{ $questions->links('pagination::bootstrap-4') }}
