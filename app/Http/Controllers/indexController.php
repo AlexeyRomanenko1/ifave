@@ -44,62 +44,51 @@ class indexController extends Controller
             } else {
                 $topicName = "The World";
             }
-            $questions = Questions::select('questions.id as question_id', 'questions.question', 'questions.question_category', 'qa.top_answers', 'totqa.total_votes')
+            // $questions = Questions::select('questions.id as question_id', 'questions.question', 'questions.question_category', 'qa.top_answers', 'totqa.total_votes')
+            // ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+            // ->leftJoin(DB::raw('
+            //     (SELECT questions_category, GROUP_CONCAT(answers, " ( Faves: ",vote_count,")" SEPARATOR "}") AS top_answers, SUM(vote_count) AS total_votes
+            //     FROM (
+            //         SELECT questions_category, answers, vote_count,     
+            //         ROW_NUMBER() OVER (PARTITION BY questions_category ORDER BY vote_count DESC) AS row_num
+            //         FROM questions_answer
+            //     ) AS qa
+            //     WHERE row_num <= 3
+            //     GROUP BY questions_category) AS qa
+            // '), 'questions.question_category', '=', 'qa.questions_category')
+            // ->leftJoin(DB::raw('
+            //     (SELECT questions_category, GROUP_CONCAT(answers, " ( Faves: ",vote_count,")" SEPARATOR "}") AS top_answers, SUM(vote_count) AS total_votes
+            //     FROM (
+            //         SELECT questions_category, answers, vote_count,     
+            //         ROW_NUMBER() OVER (PARTITION BY questions_category ORDER BY vote_count DESC) AS row_num
+            //         FROM questions_answer
+            //     ) AS totqa
+            //     GROUP BY questions_category) AS totqa
+            // '), 'questions.question_category', '=', 'totqa.questions_category')
+            // ->join('topics', 'questions.topic_id', '=', 'topics.id')
+            // ->where('topics.topic_name', $topicName)
+            // ->groupBy('questions.id', 'questions.question', 'questions.question_category', 'qa.top_answers', 'qa.total_votes')
+            // ->limit(20) // Limit the number of questions to 20
+            // ->get();
+            $questions = Questions::select(
+                'questions.id AS question_id',
+                'questions.question',
+                'questions.question_category',
+                DB::raw('GROUP_CONCAT(DISTINCT answers, CONCAT(" ( Faves: ", vote_count,")") ORDER BY vote_count DESC SEPARATOR "}") AS top_answers'),
+                DB::raw('SUM(vote_count) AS total_votes')
+            )
                 ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
-                ->leftJoin(DB::raw('
-                (SELECT questions_category, GROUP_CONCAT(answers, " ( Faves: ",vote_count,")" SEPARATOR "}") AS top_answers, SUM(vote_count) AS total_votes
-                FROM (
-                    SELECT questions_category, answers, vote_count,     
-                    ROW_NUMBER() OVER (PARTITION BY questions_category ORDER BY vote_count DESC) AS row_num
-                    FROM questions_answer
-                ) AS qa
-                WHERE row_num <= 3
-                GROUP BY questions_category) AS qa
-            '), 'questions.question_category', '=', 'qa.questions_category')
-                ->leftJoin(DB::raw('
-                (SELECT questions_category, GROUP_CONCAT(answers, " ( Faves: ",vote_count,")" SEPARATOR "}") AS top_answers, SUM(vote_count) AS total_votes
-                FROM (
-                    SELECT questions_category, answers, vote_count,     
-                    ROW_NUMBER() OVER (PARTITION BY questions_category ORDER BY vote_count DESC) AS row_num
-                    FROM questions_answer
-                ) AS totqa
-                GROUP BY questions_category) AS totqa
-            '), 'questions.question_category', '=', 'totqa.questions_category')
                 ->join('topics', 'questions.topic_id', '=', 'topics.id')
                 ->where('topics.topic_name', $topicName)
-                ->groupBy('questions.id', 'questions.question', 'questions.question_category', 'qa.top_answers', 'qa.total_votes')
+                ->groupBy('questions.id', 'questions.question', 'questions.question_category')
+                ->orderBy('questions.id')
+                // ->limit(20)
                 ->get();
-
-            // topics 
-            $hot_topics = array();
-            $topics = Topics::select('topics.id as topic_id', 'topics.topic_name', 'questions.id as question_id', 'questions.question', 'questions.question_category')->JOIN('questions', 'topics.id', '=', 'questions.topic_id')->get();
-            foreach ($topics as $topic) {
-                $question = Questionsanswers::select('*')->where('questions_category', '=', $topic->question_category)->where('answers', '<>', '')->orderby('vote_count', 'DESC')->limit(3)->get();
-                $answers = Questionsanswers::where('questions_category', $topic->question_category)->sum('vote_count');
-                if (count($question) > 0) {
-                    //foreach ($answers as $answer) {
-                    $question['total_sum'] = $answers;
-                    //}
-                    $question['question_id'] = $topic->question_id;
-                    $question['question'] = $topic->question;
-                    $question['topic_name'] = $topic->topic_name;
-                    $hot_topics[] = $question;
-                }
-            }
             $get_topic_details = Topics::select('*')->where('topic_name', $topicName)->get();
             foreach ($get_topic_details as $get_topic_detail) {
                 $topic_id = $get_topic_detail['id'];
             }
 
-            // query to get top comments 
-            // $comments = DB::table('comments')
-            //     ->select('users.name', 'comments.upvotes')
-            //     ->join('users', 'comments.comment_by', '=', 'users.id')
-            //     ->join('questions', 'comments.question_id', '=', 'questions.id')
-            //     ->where('questions.topic_id', '=', $topic_id)
-            //     ->orderBy('comments.upvotes')
-            //     ->limit(5)
-            //     ->get();
             $comments = DB::table('comments')
                 ->select('users.name', DB::raw('SUM(comments.upvotes) as upvotes'))
                 ->join('users', 'comments.comment_by', '=', 'users.id')
@@ -110,7 +99,7 @@ class indexController extends Controller
                 ->groupBy('users.name')
                 ->get();
             $questions_slider = Questions::select('*')->where('topic_id', $topic_id)->get();
-            return json_encode(['success' => 1, 'data' => $questions, 'this_user_answers' => $subQuery, 'topics' => $hot_topics, 'topic_name' => $topicName, 'questions_slider' => $questions_slider, 'myfaves' => $get_this_user_votes, 'top_comments' => $comments, 'topic_id' => $topic_id]);
+            return json_encode(['success' => 1, 'data' => $questions, 'this_user_answers' => $subQuery, 'topic_name' => $topicName, 'questions_slider' => $questions_slider, 'myfaves' => $get_this_user_votes, 'top_comments' => $comments, 'topic_id' => $topic_id]);
         }
         // return response()->json(['sucess' => 'hello']);
     }
