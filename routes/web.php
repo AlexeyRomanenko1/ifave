@@ -13,10 +13,10 @@ use App\Http\Controllers\indexController;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
-
+// Route::get('/', function () {
+//     return view('index');
+// });
+Route::get('/', [indexController::class, 'index']);
 // Route::post('indexonloadRequest', [indexController::class, 'indexonloadRequest'])->name('indexonload.post');
 Route::get('/indexonloadRequest', [indexController::class, 'indexonloadRequest']);
 Route::get('/getquestionanswers', [indexController::class, 'getquestionanswers']);

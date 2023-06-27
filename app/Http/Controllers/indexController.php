@@ -8,6 +8,7 @@ use App\Models\Questions;
 use App\Models\Topics;
 use App\Models\Questionsanswers;
 use App\Models\UsersAnswer;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -15,6 +16,47 @@ use Carbon\Carbon;
 class indexController extends Controller
 {
     //
+    public function index(Request $request)
+    {
+        $topicName = "The World";
+        $perPage = 15; // Number of items per page
+        $page = request()->get('page', 1); // Get the current page from the request
+        $userIpAddress = $this->getClientIP($request);
+        if (Auth::check()) {
+            // User is logged in
+            $userId = Auth::id();
+            $subQuery = UsersAnswer::select('question_id')
+                ->where('user_ip_address', $userId)
+                ->get();
+
+            $get_this_user_votes = DB::table('user_answers')->select('questions.question', 'questions_answer.answers')
+                ->join('questions', 'user_answers.question_id', 'questions.id')
+                ->join('questions_answer', 'user_answers.answer_id', 'questions_answer.id')
+                ->where('user_answers.user_ip_address', $userId)
+                ->get();
+        } else {
+            // User is not logged in
+            $subQuery = UsersAnswer::select('question_id')
+                ->where('user_ip_address', $userIpAddress)
+                ->get();
+            $get_this_user_votes = '';
+        }
+        $questions = Questions::select(
+            'questions.id AS question_id',
+            'questions.question',
+            'questions.question_category',
+            DB::raw('SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, " ( Faves: ", vote_count, ")") ORDER BY vote_count DESC SEPARATOR "}"), "}", 3) AS top_answers'),
+            DB::raw('SUM(vote_count) AS total_votes')
+        )
+            ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+            ->join('topics', 'questions.topic_id', '=', 'topics.id')
+            ->where('topics.topic_name', $topicName)
+            ->groupBy('questions.id', 'questions.question', 'questions.question_category')
+            ->orderBy('total_votes', 'desc') // Sort by total_votes in descending order
+            ->paginate($perPage, ['*'], 'page', $page);
+         
+        return view('index', compact('questions','subQuery'));
+    }
     public function indexonloadRequest(Request $request)
     {
 
@@ -44,37 +86,12 @@ class indexController extends Controller
             } else {
                 $topicName = "The World";
             }
-            // $questions = Questions::select('questions.id as question_id', 'questions.question', 'questions.question_category', 'qa.top_answers', 'totqa.total_votes')
-            // ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
-            // ->leftJoin(DB::raw('
-            //     (SELECT questions_category, GROUP_CONCAT(answers, " ( Faves: ",vote_count,")" SEPARATOR "}") AS top_answers, SUM(vote_count) AS total_votes
-            //     FROM (
-            //         SELECT questions_category, answers, vote_count,     
-            //         ROW_NUMBER() OVER (PARTITION BY questions_category ORDER BY vote_count DESC) AS row_num
-            //         FROM questions_answer
-            //     ) AS qa
-            //     WHERE row_num <= 3
-            //     GROUP BY questions_category) AS qa
-            // '), 'questions.question_category', '=', 'qa.questions_category')
-            // ->leftJoin(DB::raw('
-            //     (SELECT questions_category, GROUP_CONCAT(answers, " ( Faves: ",vote_count,")" SEPARATOR "}") AS top_answers, SUM(vote_count) AS total_votes
-            //     FROM (
-            //         SELECT questions_category, answers, vote_count,     
-            //         ROW_NUMBER() OVER (PARTITION BY questions_category ORDER BY vote_count DESC) AS row_num
-            //         FROM questions_answer
-            //     ) AS totqa
-            //     GROUP BY questions_category) AS totqa
-            // '), 'questions.question_category', '=', 'totqa.questions_category')
-            // ->join('topics', 'questions.topic_id', '=', 'topics.id')
-            // ->where('topics.topic_name', $topicName)
-            // ->groupBy('questions.id', 'questions.question', 'questions.question_category', 'qa.top_answers', 'qa.total_votes')
-            // ->limit(20) // Limit the number of questions to 20
-            // ->get();
+            
             $questions = Questions::select(
                 'questions.id AS question_id',
                 'questions.question',
                 'questions.question_category',
-                DB::raw('GROUP_CONCAT(DISTINCT answers, CONCAT(" ( Faves: ", vote_count,")") ORDER BY vote_count DESC SEPARATOR "}") AS top_answers'),
+                DB::raw('SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, " ( Faves: ", vote_count, ")") ORDER BY vote_count DESC SEPARATOR "}"), "}", 3) AS top_answers'),
                 DB::raw('SUM(vote_count) AS total_votes')
             )
                 ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
@@ -82,7 +99,7 @@ class indexController extends Controller
                 ->where('topics.topic_name', $topicName)
                 ->groupBy('questions.id', 'questions.question', 'questions.question_category')
                 ->orderBy('questions.id')
-                // ->limit(20)
+                ->limit(20)
                 ->get();
             $get_topic_details = Topics::select('*')->where('topic_name', $topicName)->get();
             foreach ($get_topic_details as $get_topic_detail) {
