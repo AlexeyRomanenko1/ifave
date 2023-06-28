@@ -44,6 +44,7 @@
     </div>
     <div class="container">
         <div class="">
+            <!-- 200/160 image size -->
             <div class="row mt-5" id="display_questions">
                 @php
                 $main_loop=1;

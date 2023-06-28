@@ -781,7 +781,7 @@ class indexController extends Controller
             ->groupBy('users.name')
             ->get();
 
-        return view("topics", compact('header_info', 'get_topic', 'questions', 'comments', 'subQuery'));
+        return view("topics", compact('header_info', 'get_topic', 'questions', 'comments', 'subQuery','topic_id'));
     }
     public function getClientIP(Request $request)
     {
