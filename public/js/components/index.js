@@ -334,6 +334,10 @@ function share_url(url) {
     $("#twitter_share").attr("href", "https://twitter.com/intent/tweet?text=" + encodeURI(text) + "&url=" + encodeURI(url));
 }
 
+
+function redirect_url(x) {
+    window.location.replace("/questions_details/" + x);
+}
 function scrollRight() {
     const scrollContainer = document.getElementById("scrollContainer");
     scrollContainer.scrollBy({ left: 100, behavior: "smooth" });

@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Topics;
 use App\Models\Questions;
 use App\Models\Questionsanswers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\File;
+use ZipArchive;
 
 class HomeController extends Controller
 {
@@ -311,22 +314,45 @@ class HomeController extends Controller
         $f = fopen('php://memory', 'w');
 
         // Set column headers 
-        $fields = array('#','USER NAME', 'USER EMAIL');
+        $fields = array('#', 'USER NAME', 'USER EMAIL');
         fputcsv($f, $fields, $delimiter);
-        $j=1;
+        $j = 1;
         foreach ($query as $users) {
-            $lineData = array($j,$users->name, $users->email);
+            $lineData = array($j, $users->name, $users->email);
             fputcsv($f, $lineData, $delimiter);
             $j++;
         }
         // Move back to beginning of file 
         fseek($f, 0);
-         // Set headers to download file rather than displayed 
-         header('Content-Type: text/csv');
-         header('Content-Disposition: attachment; filename="' . $filename . '";');
- 
-         //output all remaining data on a file pointer 
-         fpassthru($f);
-         //return redirect()->back()->with('success', "Importing Users data!");
+        // Set headers to download file rather than displayed 
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+        //output all remaining data on a file pointer 
+        fpassthru($f);
+        //return redirect()->back()->with('success', "Importing Users data!");
+    }
+
+    public function import_images(Request $request)
+    {
+        $request->validate([
+            'zip_file' => 'required|mimes:zip',
+        ]);
+
+        // Get the uploaded file
+        $zipFile = $request->file('zip_file');
+        // Extract the file to a temporary directory
+        $extractedPath = $zipFile->store('temp');
+
+        $destinationPath = public_path('images/question_images');
+        // Unzip the folder
+        $zip = new ZipArchive;
+        $zip->open(storage_path('app/' . $extractedPath));
+        $zip->extractTo($destinationPath);
+        $zip->close();
+
+        // Delete the temporary zip file
+        Storage::delete($extractedPath);
+        return redirect()->back()->with('success', "Images imported successfully!");
     }
 }

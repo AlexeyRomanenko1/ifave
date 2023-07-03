@@ -51,6 +51,7 @@ Route::get('/dashboard_answer_details', [App\Http\Controllers\HomeController::cl
 Route::post('/update_dashboard_answer', [App\Http\Controllers\HomeController::class, 'update_dashboard_answer'])->name('update_dashboard_answer');
 Route::post('/delete_dashboard_answer', [App\Http\Controllers\HomeController::class, 'delete_dashboard_answer'])->name('delete_dashboard_answer');
 Route::post('/export_users', [App\Http\Controllers\HomeController::class, 'export_users'])->name('export_users');
+Route::post('/import_images', [App\Http\Controllers\HomeController::class, 'import_images'])->name('import_images');
 
 // Route::get('/login', function () {
 //     return view('auth.login');

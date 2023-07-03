@@ -27,7 +27,8 @@
                 <div class="text-center">
                     <button class="btn btn-danger p-1 m-1" data-bs-toggle="modal" data-bs-target="#exampleModal">Import Questions</button>
                     <button class="btn btn-warning p-1 m-1" data-bs-toggle="modal" data-bs-target="#exampleModal2">Import Answers</button>
-                    <form method="POST" action="{{url('export_users')}}" >
+                    <button class="btn btn-primary p-1 m-1" data-bs-toggle="modal" data-bs-target="#exampleModal3">Import Images</button>
+                    <form method="POST" action="{{url('export_users')}}">
                         @csrf
                         <button type="submit" class="btn btn-success p-1 m-1">Export Users</button>
                     </form>
@@ -110,6 +111,31 @@
     </div>
 </div>
 
+<!-- Modal for importing images -->
+<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Import Answers</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{{url('import_images')}}" class="form-control" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <input type="file" class="form-control" name="zip_file" id="inputGroupFile02" required>
+                        <label class="input-group-text" for="inputGroupFile02">Upload</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Import Images</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- Modal -->
 <div class="modal fade" id="edit_question_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -163,6 +189,8 @@
         </div>
     </div>
 </div>
+
+
 @endsection
 @include('layouts.footer')
 <script src="{{ asset('js/components/dashboard.js')}}"></script>
