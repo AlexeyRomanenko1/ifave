@@ -338,7 +338,15 @@ class HomeController extends Controller
         $request->validate([
             'zip_file' => 'required|mimes:zip',
         ]);
+        $folderPath = public_path('images/question_images/ifave_images');
 
+        $files = File::glob($folderPath . '/*'); // Get all files in the folder
+    
+        foreach ($files as $file) {
+            if (is_file($file)) {
+                File::delete($file); // Delete the file
+            }
+        }
         // Get the uploaded file
         $zipFile = $request->file('zip_file');
         // Extract the file to a temporary directory
