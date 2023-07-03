@@ -342,6 +342,10 @@ function top_comments_modal(x) {
     })
 }
 
+function redirect_url(x) {
+    window.location.replace("/questions_details/" + x);
+}
+
 function scrollRight() {
     const scrollContainer = document.getElementById("scrollContainer");
     scrollContainer.scrollBy({ left: 100, behavior: "smooth" });
