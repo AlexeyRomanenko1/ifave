@@ -358,5 +358,26 @@ function generate_embeded_code(url, questionName) {
 }
 
 
+$(document).on('click', '.ajax-pagination .page-link', function (event) {
+    event.preventDefault(); // Prevent default link behavior
+     let pageUrl = $(this).attr('href');; // Get the URL of the clicked page
+    let to_search = $('#search_questions').val();
+    let id = $('#topic_id').val();
+    $.ajax({
+        type: 'GET',
+        url: pageUrl,
+        data: { task: 'searchQuestions', search: to_search, id: id },
+        success: function (data) {
+            $('#display_questions').empty();
+            $('#display_questions').html(data);
+        },
+        error: function (error) {
+            console.log(error)
+        }
+    })
+
+});
+
+
 
 

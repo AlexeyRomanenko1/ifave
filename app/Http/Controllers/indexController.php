@@ -256,7 +256,7 @@ class indexController extends Controller
 
     public function searchQuestions(Request $request)
     {
-        if ($request->task == 'searchQuestions') {
+       // if ($request->task == 'searchQuestions') {
             $tosearch = $request->search;
             $topicName = $request->id;
             //    $topicName='The World';
@@ -283,35 +283,6 @@ class indexController extends Controller
                 $get_this_user_votes = '';
             }
             if (strlen($tosearch) > 0) {
-                // $question_id = $request->question_id;
-                // if(strlen($tosearch) >= 3){
-
-                // $questions = Questions::select('questions.id as question_id', 'questions.question', 'questions.question_category', 'qa.top_answers', 'totqa.total_votes')
-                //     ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
-                //     ->leftJoin(DB::raw('
-                //     (SELECT questions_category, GROUP_CONCAT(answers, " ( Faves: ",vote_count,")" SEPARATOR "} ") AS top_answers, SUM(vote_count) AS total_votes
-                //     FROM (
-                //         SELECT questions_category, answers, vote_count,     
-                //         ROW_NUMBER() OVER (PARTITION BY questions_category ORDER BY vote_count DESC) AS row_num
-                //         FROM questions_answer
-                //     ) AS qa
-                //     WHERE row_num <= 3
-                //     GROUP BY questions_category) AS qa
-                // '), 'questions.question_category', '=', 'qa.questions_category')
-                //     ->leftJoin(DB::raw('
-                //     (SELECT questions_category, GROUP_CONCAT(answers, " ( Faves: ",vote_count,")" SEPARATOR "} ") AS top_answers, SUM(vote_count) AS total_votes
-                //     FROM (
-                //         SELECT questions_category, answers, vote_count,     
-                //         ROW_NUMBER() OVER (PARTITION BY questions_category ORDER BY vote_count DESC) AS row_num
-                //         FROM questions_answer
-                //     ) AS totqa
-                //     GROUP BY questions_category) AS totqa
-                // '), 'questions.question_category', '=', 'totqa.questions_category')
-                //     ->join('topics', 'questions.topic_id', '=', 'topics.id')
-                //     ->where('topics.id', $topicName)
-                //     ->where('questions.question', 'like', '%' . $tosearch . '%')
-                //     ->groupBy('questions.id', 'questions.question', 'questions.question_category', 'qa.top_answers', 'qa.total_votes')
-                //     ->get();
                 $questions = Questions::select(
                     'questions.id AS question_id',
                     'questions.question',
@@ -326,11 +297,6 @@ class indexController extends Controller
                     ->groupBy('questions.id', 'questions.question', 'questions.question_category')
                     ->orderBy('total_votes', 'desc') // Sort by total_votes in descending order
                     ->paginate($perPage);
-
-                // $get_topic_details = Topics::select('*')->where('topic_name', $topicName)->get();
-                // foreach ($get_topic_details as $get_topic_detail) {
-                //     $topic_id = $get_topic_detail['id'];
-                // }
                 $topic_id = $topicName;
                 $comments = DB::table('comments')
                     ->select('users.name', DB::raw('SUM(comments.upvotes) as upvotes'))
@@ -371,11 +337,11 @@ class indexController extends Controller
 
                 return view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id'));
             }
-        }
-        return json_encode([
-            'success' => 0,
-            'data' => 'Invalid request'
-        ]);
+       // }
+        // return json_encode([
+        //     'success' => 0,
+        //     'data' => 'Invalid request'
+        // ]);
     }
 
     public function questions_details(Request $request, $id)
