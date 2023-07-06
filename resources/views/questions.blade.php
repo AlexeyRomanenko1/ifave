@@ -50,7 +50,7 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="m-3" style="width:12rem">
-                        <button class="btn btn-grey" onclick="un_cover('{{$question_category}}')">No idea. show me</button>
+                        <button class="btn btn-grey" onclick="un_cover('{{$question_category}}')">No idea. Show me</button>
                     </div>
                     <div class="text-nowrap bd-highlight m-2" style="width:14rem">
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Not in the list. Add my fave</button>
