@@ -180,8 +180,8 @@
 
   .zoom-block {
     position: relative;
-    width: 200px;
-    height: 200px;
+    /* width: 200px;
+    height: 200px; */
     overflow: hidden;
     transition: transform 0.3s ease-in-out;
   }
