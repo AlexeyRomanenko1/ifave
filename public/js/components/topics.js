@@ -349,13 +349,14 @@ function redirect_url(x) {
 
 function scrollRight() {
     const scrollContainer = document.getElementById("scrollContainer");
-    scrollContainer.scrollBy({ left: 100, behavior: "smooth" });
+    scrollContainer.scrollBy({ left: 1000, behavior: "smooth" });
 }
 
 function scrollLeftcont() {
     const scrollContainer = document.getElementById("scrollContainer");
-    scrollContainer.scrollBy({ left: -100, behavior: "smooth" });
+    scrollContainer.scrollBy({ left: -1000, behavior: "smooth" });
 }
+
 
 function generate_embeded_code(url, questionName) {
     // Customize the embedded code template with the question link and name

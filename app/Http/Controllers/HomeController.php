@@ -364,4 +364,7 @@ class HomeController extends Controller
         Storage::delete($extractedPath);
         return redirect()->back()->with('success', "Images imported successfully!");
     }
+    public function verify_notification(Request $request){
+        return view('verification');
+    }
 }
