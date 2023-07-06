@@ -1,6 +1,4 @@
-<div class="container text-center">
-<p>&copy; {{date('Y')}} iFave All rights reserved.</p>
-</div>
+
 <!-- Optional JavaScript; choose one of the two! -->
 
 <!-- Option 1: Bootstrap Bundle with Popper -->
