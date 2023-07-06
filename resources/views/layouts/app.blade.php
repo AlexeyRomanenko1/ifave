@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/x-icon" href="/images/question_images/ifave.jpg">
+    <link rel="icon" type="image/x-icon" href="/images/question_images/IFAVE_PNG.png">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Questions Survey</title>
