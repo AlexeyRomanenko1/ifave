@@ -41,7 +41,8 @@ class HomeController extends Controller
         if ($user_type == 1) {
             return view('home');
         } else {
-            return view('index');
+            //return view('index');
+            return redirect()->route('/');
         }
     }
     public function import_questions(Request $request)
