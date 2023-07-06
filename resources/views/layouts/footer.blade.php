@@ -1,5 +1,5 @@
 <div class="container text-center">
-<p>&copy;@php {{date('Y')}} @endphp iFave All rights reserved.</p>
+<p>&copy; {{date('Y')}} iFave All rights reserved.</p>
 </div>
 <!-- Optional JavaScript; choose one of the two! -->
 

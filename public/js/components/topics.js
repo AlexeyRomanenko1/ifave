@@ -28,7 +28,7 @@ $(document).ready(function () {
             $('#faves_table').DataTable();
             $('#display_topic_name').empty();
             // $('#display_topic_name').text(obj.topic_name.toUpperCase())
-            $('#display_topic_name').text('Best in ' + obj.topic_name.charAt(0).toUpperCase() + obj.topic_name.slice(1))
+            $('#display_topic_name').html('<img class="mb-3" src="/images/question_images/ifave_page.jpg" height="50px" width="50px" alt=""> Best in ' + obj.topic_name.charAt(0).toUpperCase() + obj.topic_name.slice(1))
             for (let j = 0; j < obj.questions_slider.length; j++) {
                 let m = j;
                 if (m + 1 < obj.questions_slider.length) {
