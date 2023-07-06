@@ -42,7 +42,7 @@ class HomeController extends Controller
             return view('home');
         } else {
             //return view('index');
-            return redirect()->route('/');
+            return redirect('/');
         }
     }
     public function import_questions(Request $request)
