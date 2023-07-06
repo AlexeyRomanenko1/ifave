@@ -37,7 +37,9 @@ Route::get('topics/{topic_name}', [indexController::class, 'topic_name'])->name(
 Route::get('/get_comments_list', [indexController::class, 'get_comments_list'])->name('get_comments_list');
 
 // Route::get('redirect/{id}', 'YourController@redirectToUrlWithId')->name('url.redirect');
-Auth::routes();
+Auth::routes([
+    'verify'=>true
+]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::post('/import_questions', [App\Http\Controllers\HomeController::class, 'import_questions'])->name('import_questions');

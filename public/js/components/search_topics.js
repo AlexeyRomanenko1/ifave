@@ -7,9 +7,9 @@ $(document).ready(function () {
             // console.log(data);
             let html = '';
             let obj = JSON.parse(data);
-           // console.log(obj)
+            // console.log(obj)
             for (let j = 0; j < obj.data.length; j++) {
-                html += '<a href="/topics/' + obj.data[j]['topic_name'] + '" class="hover p-2 bg-light nav-link" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)"><b>' + obj.data[j]['topic_name'] + '</b></a>';
+                html += '<a href="/topics/' + obj.data[j]['topic_name'] + '" class="hover p-2 bg-light nav-link link-dark" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)"><b>' + obj.data[j]['topic_name'] + '</b></a>';
             }
             $('.set_suggestion_height_topics').empty();
             $('.set_suggestion_height_topics').html(html);
@@ -30,7 +30,7 @@ $('#search_topics').on('keyup', function () {
             // console.log(data);
             let html = '';
             let obj = JSON.parse(data);
-           // console.log(obj)
+            // console.log(obj)
             for (let j = 0; j < obj.data.length; j++) {
                 html += '<a href="/topics/' + obj.data[j]['topic_name'] + '" class="hover p-2 bg-light nav-link" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)"><b>' + obj.data[j]['topic_name'] + '</b></a>';
             }
@@ -42,3 +42,20 @@ $('#search_topics').on('keyup', function () {
         }
     })
 })
+
+$('.underline').hover(
+    function () {
+        $(this).addClass('hover');
+    },
+    function () {
+        $(this).removeClass('hover');
+    }
+);
+$('.zoom-block').hover(
+    function () {
+        $(this).addClass('hover');
+    },
+    function () {
+        $(this).removeClass('hover');
+    }
+);

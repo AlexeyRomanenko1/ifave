@@ -1,3 +1,6 @@
+<div class="container text-center">
+<p>&copy;@php {{date('Y')}} @endphp iFave All rights reserved.</p>
+</div>
 <!-- Optional JavaScript; choose one of the two! -->
 
 <!-- Option 1: Bootstrap Bundle with Popper -->

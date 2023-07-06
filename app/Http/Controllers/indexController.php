@@ -80,9 +80,10 @@ class indexController extends Controller
             if (Auth::check()) {
                 // User is logged in
                 $userId = Auth::id();
-                $get_this_user_votes = DB::table('user_answers')->select('questions.question', 'questions_answer.answers')
+                $get_this_user_votes = DB::table('user_answers')->select('questions.question', 'questions_answer.answers','topics.topic_name')
                     ->join('questions', 'user_answers.question_id', 'questions.id')
                     ->join('questions_answer', 'user_answers.answer_id', 'questions_answer.id')
+                    ->join('topics','questions.topic_id','topics.id')
                     ->where('user_answers.user_ip_address', $userId)
                     ->get();
             } else {

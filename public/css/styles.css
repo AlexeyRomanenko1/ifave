@@ -13,7 +13,9 @@
 
 }
 
-
+.unselect{
+    user-select: none;
+}
 .search input:focus {
 
     box-shadow: none;
@@ -139,11 +141,71 @@
     background-color: rgb(142, 169, 219);
     border-color: rgb(142, 169, 219);
 }
+.fa-facebook-square{
+    color: #037ED8;
+    font-size: 34px;
+}
+.fa-twitter-square{
+    color: #1C96E8;
+    font-size: 34px;
+}
+.fa-instagram{
+    color: #F401D3;
+    font-size: 34px;
+}
+ .text-muted {
+    display: none !important;
+}
+.underline {
+    position: relative;
+    display: inline-block;
+  }
+
+  .underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 2px;
+    background-color: #000;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .underline:hover::after {
+    transform: scaleX(1);
+  }
+
+  .zoom-block {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .zoom-block img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .zoom-block:hover {
+    transform: scale(1.1);
+  }
+
+  .zoom-block:hover img {
+    transform: scale(1.1);
+  }
 
 @media screen and (max-width: 1200px) {
     .fav_tracks_parent {
-        margin-top: 5rem;
-        margin-bottom: 1rem;
+        /* margin-top: 5rem;
+        margin-bottom: 1rem; */
         left: -80px;
         right: 0;
         top: 0;
@@ -153,7 +215,13 @@
         flex-direction: column;
         align-items: center;
     }
-
+    .user_faves_track{
+        margin-top:2rem;
+        margin-bottom: 2rem;    
+    }
+    .fav_tracks{
+        width: auto;
+    }
     .h-fixed-30 {
         height: 90px;
     }
@@ -172,8 +240,42 @@
         flex-direction: column;
         align-items: center;
     }
-
+    .user_faves_track{
+        margin-top:2rem;
+        margin-bottom: 2rem;    
+    }
+    .fav_tracks{
+        width: auto;
+    }
     .h-fixed-30 {
         height: 90px;
     }
+}
+@media screen and (max-width: 991px) and (min-width: 416px){
+    .fav_tracks_parent {
+        left: -190px;
+        right: 0;
+        top: 28px;
+        margin-right: 50px;
+        margin-bottom: 2rem;
+        margin-top: 2rem;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+@media screen and (max-width: 768px) and (min-width: 415px){
+    .fav_tracks_parent {
+        left: -90px;
+        right: 0;
+        top: 28px;
+        margin-right: 50px;
+        margin-bottom: 2rem;
+        margin-top: 2rem;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }  
 }

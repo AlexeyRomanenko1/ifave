@@ -21,7 +21,7 @@ $(document).ready(function () {
             let questions_slider = '';
             if (obj.myfaves.length > 0) {
                 for (let k = 0; k < obj.myfaves.length; k++) {
-                    html += '<tr><td>' + obj.myfaves[k]['question'] + '</td><td>' + obj.myfaves[k]['answers'] + '</td></tr>';
+                    html += '<tr><td>' + obj.myfaves[k]['question'] + '</td><td>' + obj.myfaves[k]['topic_name'] + '</td><td>' + obj.myfaves[k]['answers'] + '</td></tr>';
                     // faves_index = faves_index + 1;
                 }
             }
@@ -29,7 +29,7 @@ $(document).ready(function () {
             $('#faves_table_body').html(html);
             $('#faves_table').DataTable();
             $('#display_topic_name').empty()
-            $('#display_topic_name').text('Best in ' + obj.topic_name.charAt(0).toUpperCase() + obj.topic_name.slice(1))
+            $('#display_topic_name').html('<img class="mb-3" src="/images/question_images/ifave_page.jpg" height="50px" width="50px" alt=""> Best in ' + obj.topic_name.charAt(0).toUpperCase() + obj.topic_name.slice(1))
             for (let j = 0; j < obj.questions_slider.length; j++) {
                 let m = j;
                 if (m + 1 < obj.questions_slider.length) {
@@ -293,7 +293,7 @@ function un_cover(x) {
             // console.log(obj)
             let counter = 1;
             for (let j = 0; j < obj.data.length; j++) {
-                html += '<div class="hover p-2 bg-light" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.data[j]['id'] + ')"><b> ' + counter + ' ' + obj.data[j]['answers'] + ' (Faves: ' + obj.data[j]['vote_count'] + ')</b></div>';
+                html += '<div class="hover p-2 bg-light unselect" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote(' + obj.data[j]['id'] + ')"><b> ' + counter + '. ' + obj.data[j]['answers'] + ' (faves: ' + obj.data[j]['vote_count'] + ')</b></div>';
                 counter = counter + 1;
             }
             $('.set_suggestion_height').empty();
@@ -332,6 +332,7 @@ function share_url(url) {
     let text = "Check this question on ifave";
     $("#facebook_share").attr("href", "https://www.facebook.com/sharer/sharer.php?u=" + encodeURI(url));
     $("#twitter_share").attr("href", "https://twitter.com/intent/tweet?text=" + encodeURI(text) + "&url=" + encodeURI(url));
+    // $("#instagram_share").attr("href", "https://www.instagram.com/share?url=" + encodeURI(url));
 }
 
 
@@ -350,7 +351,7 @@ function scrollLeftcont() {
 
 function generate_embeded_code(url, questionName) {
     // Customize the embedded code template with the question link and name
-    var embeddedCode = '<a href="' + url + '">' + questionName + '</a>';
+    var embeddedCode = '<a href="' + url + '"><img src="https://ifave.com/images/question_images/ifave_page.jpg" height="30px" width="30px">' + questionName + '</a>';
     navigator.clipboard.writeText(embeddedCode);
     toastr.success('Embeded code copied!')
     // Display or use the generated embed code as needed
@@ -360,7 +361,7 @@ function generate_embeded_code(url, questionName) {
 
 $(document).on('click', '.ajax-pagination .page-link', function (event) {
     event.preventDefault(); // Prevent default link behavior
-     let pageUrl = $(this).attr('href');; // Get the URL of the clicked page
+    let pageUrl = $(this).attr('href');; // Get the URL of the clicked page
     let to_search = $('#search_questions').val();
     let id = $('#topic_id').val();
     $.ajax({
@@ -377,7 +378,19 @@ $(document).on('click', '.ajax-pagination .page-link', function (event) {
     })
 
 });
-
-
-
-
+$('.underline').hover(
+    function () {
+        $(this).addClass('hover');
+    },
+    function () {
+        $(this).removeClass('hover');
+    }
+);
+$('.zoom-block').hover(
+    function () {
+        $(this).addClass('hover');
+    },
+    function () {
+        $(this).removeClass('hover');
+    }
+);

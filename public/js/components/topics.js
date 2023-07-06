@@ -19,7 +19,7 @@ $(document).ready(function () {
             let questions_slider = '';
             if (obj.myfaves.length > 0) {
                 for (let k = 0; k < obj.myfaves.length; k++) {
-                    html += '<tr><td>' + obj.myfaves[k]['question'] + '</td><td>' + obj.myfaves[k]['answers'] + '</td></tr>';
+                    html += '<tr><td>' + obj.myfaves[k]['question'] + '</td><td>'+ obj.myfaves[k]['topic_name'] +'</td><td>' + obj.myfaves[k]['answers'] + '</td></tr>';
                     // faves_index = faves_index + 1;
                 }
             }
@@ -317,6 +317,7 @@ function share_url(url) {
     let text = "Check this question on ifave";
     $("#facebook_share").attr("href", "https://www.facebook.com/sharer/sharer.php?u=" + encodeURI(url));
     $("#twitter_share").attr("href", "https://twitter.com/intent/tweet?text=" + encodeURI(text) + "&url=" + encodeURI(url));
+    // $("#instagram_share").attr("href", "https://www.instagram.com/share?url=" + encodeURI(url));
 }
 
 function top_comments_modal(x) {

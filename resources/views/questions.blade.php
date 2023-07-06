@@ -10,8 +10,10 @@
         <input type="hidden" id="hidden_question_id" value="{{ $details['question_category'] }}">
         @if($details["topic_name"] == 'movies')
         <a href="/">Go back to best in {{ $details["topic_name"] }}</a>
+        <h4 class="mt-2 p-2">{{ $details["topic_name"] }}</h4>
         @else
         <a href="/topics/{{$details['topic_name']}}">Go back to best in {{ $details["topic_name"] }}</a>
+        <h4 class="mt-2 p-2">{{ $details["topic_name"] }}</h4>
         @endif
         <h3 class="p-2">
             {{ $details["question"] }}
@@ -32,7 +34,7 @@
                     $places=1;
                     @endphp
                     @foreach($question_answers as $answers)
-                    <div class="hover p-2 bg-light" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote({{ $answers['answer_id'] }})"><b>{{ $places }} {{ $answers['answers'] }} (Faves: {{$answers['vote_count']}})</b></div>
+                    <div class="hover p-2 bg-light unselect" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote({{ $answers['answer_id'] }})"><b>{{ $places }}. {{ $answers['answers'] }} (faves: {{$answers['vote_count']}})</b></div>
                     @php
                     $places=$places+1;
                     @endphp
@@ -40,15 +42,15 @@
                     @else
                     @foreach($question_answers as $answers)
                     <input type="hidden" id="hidden_to_be" value="1">
-                    <div class="hover p-2 bg-light" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote({{ $answers['answer_id'] }})"><b>{{ $answers['answers'] }}</b></div>
+                    <div class="hover p-2 bg-light unselect" oncopy="return false" onmouseover="highlight_sug(this)" onmouseout="nohighlight_sug(this)" onclick="add_vote({{ $answers['answer_id'] }})"><b>{{ $answers['answers'] }}</b></div>
                     @endforeach
                     @endif
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-8">
-                    <div class="text-nowrap bd-highlight m-3" style="width:12rem">
-                        <button class="btn btn-grey" onclick="un_cover('{{$question_category}}')">No idea. show me faves</button>
+                    <div class="m-3" style="width:12rem">
+                        <button class="btn btn-grey" onclick="un_cover('{{$question_category}}')">No idea. show me</button>
                     </div>
                     <div class="text-nowrap bd-highlight m-2" style="width:14rem">
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Not in the list. Add my fave</button>
@@ -171,7 +173,8 @@
                 @csrf
                 <div class="modal-body">
                     <input type="hidden" name="category" value="{{$header['question_category']}}">
-                    <input type="text" class="form-control m-1" name="add_answer[]" id="" placeholder="Add your fave here" required>
+                    <input type="text" class="form-control m-1 user_fave" onpaste="return false" name="add_answer[]" id="" maxlength="50" placeholder="Add your fave here" required>
+                    <small class="text-primary user-fave-warn text-center">0/50</small>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -211,9 +214,13 @@
 @include('footer.footer')
 <script>
     $('.modal-text').on('keyup', function() {
-        $('.modal-warn').html($(this).val().length + '/2000 character')
+        $('.modal-warn').html($(this).val().length + '/2000 characters')
     })
     $('.comment-text').on('keyup', function() {
-        $('.comment-warn').html($(this).val().length + '/2000 character')
+        $('.comment-warn').html($(this).val().length + '/2000 characters')
+    })
+    $('.user_fave').on('keyup', function() {
+
+        $('.user-fave-warn').html($(this).val().length + '/50 characters')
     })
 </script>

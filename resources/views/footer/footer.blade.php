@@ -2,7 +2,10 @@
 
 <!-- Option 1: Bootstrap Bundle with Popper -->
 <footer class="text-center">
-   <p class="p-5 m-2"></p> 
+   <p class="p-5 m-2"></p>
+   <div class="container text-center">
+      <p>&copy; {{ date('Y') }} iFave<sup>&reg;</sup> All rights reserved.</p>
+   </div>
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
