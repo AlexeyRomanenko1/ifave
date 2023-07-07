@@ -40,27 +40,26 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-    protected function credentials(Request $request)
-{
-    $credentials = $request->only($this->username(), 'password');
+    // protected function credentials(Request $request)
+    // {
+    //     $credentials = $request->only($this->username(), 'password');
 
-    $user = Auth::getProvider()->retrieveByCredentials($credentials);
+    //     $user = Auth::getProvider()->retrieveByCredentials($credentials);
 
-    if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
-        return false;
-    }
+    //     if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
+    //         return false;
+    //     }
 
-    return $credentials;
-}
+    //     return $credentials;
+    // }
 
-    protected function authenticated(Request $request, $user)
-    {
-        if (!$user->email_verified_at) {
-            $this->guard()->logout();
-            return redirect()->route('login')
-                ->with('error', 'Your account is not verified. Please check your email for verification instructions.');
-        }
+    // protected function authenticated(Request $request, $user)
+    // {
+    //     if (!$user->email_verified_at) {
+    //         $this->guard()->logout();
+    //         return redirect()->route('verify');
+    //     }
 
-        return redirect()->intended($this->redirectPath());
-    }
+    //     return redirect()->intended($this->redirectPath());
+    // }
 }
