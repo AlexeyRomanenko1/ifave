@@ -355,6 +355,10 @@ class indexController extends Controller
         if (Auth::check()) {
             // User is logged in
             $clientIP = Auth::id();
+            if (!Auth::user()->hasVerifiedEmail()) {
+                // User is not verified, redirect to a new route
+                return redirect()->route('verification.notice');
+            }
         } else {
             // User is not logged in
             $clientIP = $this->getClientIP($request);
@@ -708,6 +712,10 @@ class indexController extends Controller
         if (Auth::check()) {
             // User is logged in
             $userId = Auth::id();
+            if (!Auth::user()->hasVerifiedEmail()) {
+                // User is not verified, redirect to a new route
+                return redirect()->route('verification.notice');
+            }
             $subQuery = UsersAnswer::select('question_id')
                 ->where('user_ip_address', $userId)
                 ->get();
