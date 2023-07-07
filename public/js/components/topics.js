@@ -16,7 +16,7 @@ $(document).ready(function () {
             let obj = JSON.parse(data);
             // console.group(user_selected_answers);
             let html = '';
-            let questions_slider = '';
+            // let questions_slider = '';
             if (obj.myfaves.length > 0) {
                 for (let k = 0; k < obj.myfaves.length; k++) {
                     html += '<tr><td>' + obj.myfaves[k]['question'] + '</td><td>'+ obj.myfaves[k]['topic_name'] +'</td><td>' + obj.myfaves[k]['answers'] + '</td></tr>';
@@ -29,17 +29,17 @@ $(document).ready(function () {
             $('#display_topic_name').empty();
             // $('#display_topic_name').text(obj.topic_name.toUpperCase())
             $('#display_topic_name').html('<img class="mb-3" src="/images/question_images/ifave_page.jpg" height="50px" width="50px" alt=""> Best in ' + obj.topic_name.charAt(0).toUpperCase() + obj.topic_name.slice(1))
-            for (let j = 0; j < obj.questions_slider.length; j++) {
-                let m = j;
-                if (m + 1 < obj.questions_slider.length) {
-                    questions_slider += '<div class="inner-content d-flex flex-column me-2"><div class="line mb-2 me-2"><a href="/questions_details/' + obj.questions_slider[j]['id'] + '" class="text-decoration-none">' + obj.questions_slider[j]['question'] + '</a></div><div class="line me-2 mb-2"><a href="/questions_details/' + obj.questions_slider[j + 1]['id'] + '" class="text-decoration-none">' + obj.questions_slider[j + 1]['question'] + '</a></div></div>';
-                } else {
-                    questions_slider += '<div class="inner-content d-flex flex-column me-2"><div class="line mb-2 me-2"><a href="/questions_details/' + obj.questions_slider[j]['id'] + '" class="text-decoration-none">' + obj.questions_slider[j]['question'] + '</a></div></div>';
-                }
-                j = j + 1;
-            }
-            $('#scrollContainer').empty();
-            $('#scrollContainer').html(questions_slider);
+            // for (let j = 0; j < obj.questions_slider.length; j++) {
+            //     let m = j;
+            //     if (m + 1 < obj.questions_slider.length) {
+            //         questions_slider += '<div class="inner-content d-flex flex-column me-2"><div class="line mb-2 me-2"><a href="/questions_details/' + obj.questions_slider[j]['id'] + '" class="text-decoration-none">' + obj.questions_slider[j]['question'] + '</a></div><div class="line me-2 mb-2"><a href="/questions_details/' + obj.questions_slider[j + 1]['id'] + '" class="text-decoration-none">' + obj.questions_slider[j + 1]['question'] + '</a></div></div>';
+            //     } else {
+            //         questions_slider += '<div class="inner-content d-flex flex-column me-2"><div class="line mb-2 me-2"><a href="/questions_details/' + obj.questions_slider[j]['id'] + '" class="text-decoration-none">' + obj.questions_slider[j]['question'] + '</a></div></div>';
+            //     }
+            //     j = j + 1;
+            // }
+            // $('#scrollContainer').empty();
+            // $('#scrollContainer').html(questions_slider);
         },
         error: function (e) {
             console.log(e)
@@ -342,19 +342,55 @@ function top_comments_modal(x) {
         }
     })
 }
+$('#search_categories').on('keyup', function () {
+    let to_search = $(this).val();
+    let id = $('#topic_id').val();
+    $.ajax({
+        type: 'GET',
+        url: '/searchcategories',
+        data: { task: 'searchcategories', search: to_search, id: id },
+        success: function (data) {
+            let html = '';
+            let obj = JSON.parse(data);
+            if (obj.data.length > 0) {
+                for (let j = 0; j < obj.data.length; j++) {
+                    html += '<div class="col-md-6"><ul><li> <h6><a href="/questions_details/' + obj.data[j]['id'] + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
+                }
+            }
+            $('#on_search_category').empty();
+            $('#on_search_category').html(html);
+        },
+        error: function (error) {
+            console.log(error)
+        }
+    })
+})
 
+$('#open_search_category_modal').on('click', function () {
+    let to_search = $(this).val();
+    let id = $('#topic_id').val();
+    $.ajax({
+        type: 'GET',
+        url: '/searchcategories',
+        data: { task: 'searchcategories', search: to_search, id: id },
+        success: function (data) {
+            let html = '';
+            let obj = JSON.parse(data);
+            if (obj.data.length > 0) {
+                for (let j = 0; j < obj.data.length; j++) {
+                    html += '<div class="col-md-6"><ul><li> <h6><a href="/questions_details/' + obj.data[j]['id'] + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
+                }
+            }
+            $('#on_search_category').empty();
+            $('#on_search_category').html(html);
+        },
+        error: function (error) {
+            console.log(error)
+        }
+    })
+})
 function redirect_url(x) {
     window.location.replace("/questions_details/" + x);
-}
-
-function scrollRight() {
-    const scrollContainer = document.getElementById("scrollContainer");
-    scrollContainer.scrollBy({ left: 1000, behavior: "smooth" });
-}
-
-function scrollLeftcont() {
-    const scrollContainer = document.getElementById("scrollContainer");
-    scrollContainer.scrollBy({ left: -1000, behavior: "smooth" });
 }
 
 

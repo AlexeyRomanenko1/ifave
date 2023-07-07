@@ -25,6 +25,7 @@ Route::get('/searchAnswers', [indexController::class, 'searchAnswers']);
 Route::post('/entervote', [indexController::class, 'entervote']);
 Route::get('/searchQuestionsTopics', [indexController::class, 'searchQuestionsTopics']);
 Route::get('/searchQuestions', [indexController::class, 'searchQuestions']);
+Route::get('/searchcategories', [indexController::class, 'searchcategories']);
 Route::get('questions_details/{question}', [indexController::class, 'questions_details'])->name('questions_details');
 Route::post('/delete_vote', [indexController::class, 'delete_vote']);
 Route::post('/add_user_answer', [App\Http\Controllers\indexController::class, 'add_user_answer'])->name('add_user_answer');

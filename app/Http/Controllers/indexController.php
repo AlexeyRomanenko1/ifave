@@ -349,7 +349,20 @@ class indexController extends Controller
         //     'data' => 'Invalid request'
         // ]);
     }
-
+    public function searchcategories(Request $request)
+    {
+        $tosearch = $request->search;
+        $topicName = $request->id;
+        if (strlen($tosearch) > 0) {
+            $query = DB::table('questions')->where('topic_id', $topicName)->where('question', 'like', '%' . $tosearch . '%')->get();
+        } else {
+            $query = DB::table('questions')->where('topic_id', $topicName)->get();
+        }
+        return json_encode([
+            'success' => 1,
+            'data' => $query
+        ]);
+    }
     public function questions_details(Request $request, $id)
     {
         if (Auth::check()) {

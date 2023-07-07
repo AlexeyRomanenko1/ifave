@@ -202,6 +202,10 @@
     transform: scale(1.1);
   }
 
+  .set_suggestion_height_categories{
+    height: 250px;
+    overflow-y: auto;
+  }
 @media screen and (max-width: 1200px) {
     .fav_tracks_parent {
         /* margin-top: 5rem;
@@ -230,7 +234,7 @@
 @media screen and (max-width: 415px) {
     .fav_tracks_parent {
         margin-top: 5rem;
-        margin-bottom: 1rem;
+        margin-bottom: 5rem;
         left: -8px;
         right: 0;
         top: 0;

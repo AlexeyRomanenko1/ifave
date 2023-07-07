@@ -26,12 +26,15 @@
         </div>
         <h3 class="mb-3" id="display_topic_name"></h3>
     </div>
-    <div class="container position-relative mb-4 mt-5">
+    <!-- <div class="container position-relative mb-4 mt-5">
         <i onclick="scrollRight()" class="fa fa-4x fa-angle-double-right position-absolute right-scroll-btn" aria-hidden="true"></i>
         <i onclick="scrollLeftcont()" class="fa fa-4x fa-angle-double-left position-absolute left-scroll-btn" aria-hidden="true"></i>
         <div class="container fixed-width d-flex " id="scrollContainer">
 
         </div>
+    </div> -->
+    <div class="container text-center mb-5">
+        <h3><a a href="" data-bs-toggle="modal" id="open_search_category_modal" data-bs-target="#all_categories">All categories</a></h3>
     </div>
     <div class="row height d-flex justify-content-center align-items-center">
         <div class="col-md-8">
@@ -191,5 +194,37 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="all_categories" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Categories</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row height d-flex justify-content-center align-items-center">
+                    <div class="col-md-8">
+                        <div class="search">
+                            <i class="fa fa-search"></i>
+                            <input type="text" id="search_categories" class="form-control" placeholder="Search for category">
+                            <div class="set_suggestion_height mt-3 d-none">
 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="set_suggestion_height_categories mt-3 rounded container">
+                    <div class="row" id="on_search_category">
+                       
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @include('footer.footer')
