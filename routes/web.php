@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Auth;
 // Route::get('/', function () {
 //     return view('index');
 // });
-Route::get('/', [indexController::class, 'index']);
+Route::get('/', [indexController::class, 'index'])->name('/');
 // Route::post('indexonloadRequest', [indexController::class, 'indexonloadRequest'])->name('indexonload.post');
 Route::get('/indexonloadRequest', [indexController::class, 'indexonloadRequest']);
 Route::get('/getquestionanswers', [indexController::class, 'getquestionanswers']);
@@ -40,7 +40,7 @@ Route::get('/get_comments_list', [indexController::class, 'get_comments_list'])-
 
 // Route::get('redirect/{id}', 'YourController@redirectToUrlWithId')->name('url.redirect');
 Auth::routes([
-    'verify'=>true
+    'verify' => true
 ]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('verified');
@@ -56,6 +56,9 @@ Route::post('/update_dashboard_answer', [App\Http\Controllers\HomeController::cl
 Route::post('/delete_dashboard_answer', [App\Http\Controllers\HomeController::class, 'delete_dashboard_answer'])->name('delete_dashboard_answer');
 Route::post('/export_users', [App\Http\Controllers\HomeController::class, 'export_users'])->name('export_users');
 Route::post('/import_images', [App\Http\Controllers\HomeController::class, 'import_images'])->name('import_images');
+//Blogging routes
+Route::get('/create-blog', [App\Http\Controllers\BlogController::class, 'index'])->name('create-blog-index');
+Route::post('/create_blog', [App\Http\Controllers\BlogController::class, 'create_blog'])->name('create_blog');
 // Route::get('/verify_notification', [App\Http\Controllers\HomeController::class, 'verify_notification'])->name('verify_notification')->middleware('verified');
 
 // Route::get('/login', function () {

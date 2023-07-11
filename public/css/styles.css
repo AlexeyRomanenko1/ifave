@@ -206,6 +206,24 @@
     height: 250px;
     overflow-y: auto;
   }
+  #fr-logo{
+    display:none !important;
+  }
+  .bootstrap-tagsinput .tag {
+    margin-right: 2px;
+    color: #ffff !important;
+    background-color: #06214e;
+    padding: 0.2rem;
+    border-radius: 4px;
+    padding: 4px;
+  }
+  .bootstrap-tagsinput{
+    width: 100%;
+    padding: 0.375rem 0.75rem !important;
+    font-size: 1rem !important;
+    font-weight: 400 !important;
+    line-height: 1.5 !important;
+  }
 @media screen and (max-width: 1200px) {
     .fav_tracks_parent {
         /* margin-top: 5rem;
