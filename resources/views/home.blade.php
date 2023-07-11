@@ -58,7 +58,7 @@
                 <td>{{$questions->question}}</td>
                 <td>{{$questions->topic_name}}</td>
                 <td>{{$questions->question_category}}</td>
-                <td><i class="fa fa-bars text-success m-1 p-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#edit_question_modal" onclick="edit_modal_form('{{$questions->id}}')"></i><i class="fa fa-trash m-1 text-danger p-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#delete_question_modal" onclick="delete_modal_form('{{$questions->topic_name}}')"></i><a target="_blank" href="/answers/'{{$questions->question_category}}"><i class="fa fa-eye m-1 text-primary p-2" aria-hidden="true"></i></a></td>
+                <td><i class="fa fa-bars text-success m-1 p-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#edit_question_modal" onclick="edit_modal_form('{{$questions->id}}')"></i><i class="fa fa-trash m-1 text-danger p-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#delete_question_modal" onclick="delete_modal_form('{{$questions->topic_name}}')"></i><a target="_blank" href="/answers/{{$questions->question_category}}"><i class="fa fa-eye m-1 text-primary p-2" aria-hidden="true"></i></a></td>
             </tr>
             @php
             $k=$k+1;
