@@ -39,7 +39,11 @@ class HomeController extends Controller
             $user_type = $user_details->user_type;
         }
         if ($user_type == 1) {
-            return view('home');
+            $perPage = 100; // Number of items per page
+            $page = request()->get('page', 1); // Get the current page from the request
+            $query = DB::table('questions')->select('questions.id', 'questions.question', 'questions.question_category', 'topics.topic_name')->join('topics', 'questions.topic_id', 'topics.id') ->paginate($perPage, ['*'], 'page', $page);
+           // return view('home');
+           return view('home', compact('query'));
         } else {
             //return view('index');
             return redirect('/');
@@ -211,11 +215,11 @@ class HomeController extends Controller
 
     public function dashboard_questions(Request $request)
     {
-        $query = DB::table('questions')->select('questions.id', 'questions.question', 'questions.question_category', 'topics.topic_name')->join('topics', 'questions.topic_id', 'topics.id')->get();
-        return json_encode([
-            'success' => 1,
-            'data' => $query
-        ]);
+        // $query = DB::table('questions')->select('questions.id', 'questions.question', 'questions.question_category', 'topics.topic_name')->join('topics', 'questions.topic_id', 'topics.id')->get();
+        // return json_encode([
+        //     'success' => 1,
+        //     'data' => $query
+        // ]);
     }
 
     public function dashboard_question_details(Request $request)
@@ -342,7 +346,7 @@ class HomeController extends Controller
         $folderPath = public_path('images/question_images/ifave_images');
 
         $files = File::glob($folderPath . '/*'); // Get all files in the folder
-    
+
         foreach ($files as $file) {
             if (is_file($file)) {
                 File::delete($file); // Delete the file
@@ -364,7 +368,8 @@ class HomeController extends Controller
         Storage::delete($extractedPath);
         return redirect()->back()->with('success', "Images imported successfully!");
     }
-    public function verify_notification(Request $request){
+    public function verify_notification(Request $request)
+    {
         return view('verification');
     }
 }

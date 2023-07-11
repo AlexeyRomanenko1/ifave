@@ -22,3 +22,13 @@
         })
         .trigger('change');
 })()
+
+// $('#blog_form').on('submit',function(e){
+//     e.preventDefault();
+//     if($('#tags').val()==''){
+//         toastr.warning('Tags can not be empty');
+//     }
+//     if($('#edit').val()==''){
+//         toastr.warning('Blog content can not be empty');   
+//     }
+// })

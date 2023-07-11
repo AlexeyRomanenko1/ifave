@@ -49,7 +49,21 @@
             </tr>
         </thead>
         <tbody id="questions_table_body">
-
+            @php
+            $k=1;
+            @endphp
+            @foreach($query as $questions)
+            <tr>
+                <td>{{$k}}</td>
+                <td>{{$questions->question}}</td>
+                <td>{{$questions->topic_name}}</td>
+                <td>{{$questions->question_category}}</td>
+                <td><i class="fa fa-bars text-success m-1 p-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#edit_question_modal" onclick="edit_modal_form('{{$questions->id}}')"></i><i class="fa fa-trash m-1 text-danger p-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#delete_question_modal" onclick="delete_modal_form('{{$questions->topic_name}}')"></i><a target="_blank" href="/answers/'{{$questions->question_category}}"><i class="fa fa-eye m-1 text-primary p-2" aria-hidden="true"></i></a></td>
+            </tr>
+            @php
+            $k=$k+1;
+            @endphp
+            @endforeach
         </tbody>
         <tfoot>
             <tr>
@@ -61,6 +75,9 @@
             </tr>
         </tfoot>
     </table>
+    <div class="pagination justify-content-center mt-5">
+        {{ $query->links('pagination::bootstrap-5') }}
+    </div>
 </div>
 <!-- Modal for importing questions -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

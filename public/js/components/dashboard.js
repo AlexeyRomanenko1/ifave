@@ -1,27 +1,27 @@
-$(document).ready(function () {
-    $.ajax({
-        type: 'GET',
-        url: '/dashboard_questions',
-        data: { task: 'get_questions' },
-        success: function (data) {
-            let obj = JSON.parse(data);
-            let html = '';
-            let k = 1;
-            for (let j = 0; j < obj.data.length; j++) {
-                html += '<tr><td>' + k + '</td><td>' + obj.data[j]['question'] + '</td><td>' + obj.data[j]['topic_name'] + '</td><td>' + obj.data[j]['question_category'] + '</td><td><i class="fa fa-bars text-success m-1 p-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#edit_question_modal" onclick="edit_modal_form(' + obj.data[j]['id'] + ')" ></i><i class="fa fa-trash m-1 text-danger p-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#delete_question_modal" onclick="delete_modal_form(' + obj.data[j]['id'] + ')"></i><a target="_blank" href="/answers/'+ obj.data[j]['question_category'] +'"><i class="fa fa-eye m-1 text-primary p-2" aria-hidden="true"></i></a></td></tr>';
-                k = k + 1;
-            }
-            $('#questions_table_body').empty();
-            $('#questions_table_body').html(html);
-            // console.log(obj);
-            $('#questions').DataTable();
-        },
-        error: function (e) {
-            console.log(e)
-        }
-    });
+// $(document).ready(function () {
+//     $.ajax({
+//         type: 'GET',
+//         url: '/dashboard_questions',
+//         data: { task: 'get_questions' },
+//         success: function (data) {
+//             let obj = JSON.parse(data);
+//             let html = '';
+//             let k = 1;
+//             for (let j = 0; j < obj.data.length; j++) {
+//                 html += '<tr><td>' + k + '</td><td>' + obj.data[j]['question'] + '</td><td>' + obj.data[j]['topic_name'] + '</td><td>' + obj.data[j]['question_category'] + '</td><td><i class="fa fa-bars text-success m-1 p-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#edit_question_modal" onclick="edit_modal_form(' + obj.data[j]['id'] + ')" ></i><i class="fa fa-trash m-1 text-danger p-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#delete_question_modal" onclick="delete_modal_form(' + obj.data[j]['id'] + ')"></i><a target="_blank" href="/answers/'+ obj.data[j]['question_category'] +'"><i class="fa fa-eye m-1 text-primary p-2" aria-hidden="true"></i></a></td></tr>';
+//                 k = k + 1;
+//             }
+//             $('#questions_table_body').empty();
+//             $('#questions_table_body').html(html);
+//             // console.log(obj);
+//             $('#questions').DataTable();
+//         },
+//         error: function (e) {
+//             console.log(e)
+//         }
+//     });
 
-});
+// });
 
 
 function edit_modal_form(x) {
