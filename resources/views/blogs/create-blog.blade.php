@@ -3,11 +3,11 @@
     <div class="text-center">
         <h4 class="text-decoration-underline">Create Blog</h4>
     </div>
-    <form method="POST" action="{{url('/create_blog')}}">
+    <form method="POST" action="{{url('/create_blog')}}" enctype="multipart/form-data">
         @csrf
         <div class="mb-3">
             <label for="blog_title" class="form-label">Blog Title</label>
-            <input type="text" class="form-control" id="blog_title" required>
+            <input type="text" class="form-control" id="blog_title" name="blog_title" required>
         </div>
         <div class="mb-3">
             <label for="tags" class="form-label">Tags</label><br>
