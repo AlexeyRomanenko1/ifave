@@ -46,19 +46,23 @@ class indexController extends Controller
                 ->get();
             $get_this_user_votes = '';
         }
-        $questions = Questions::select(
-            'questions.id AS question_id',
-            'questions.question',
-            'questions.question_category',
-            DB::raw('SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, " ( Faves: ", vote_count, ")") ORDER BY vote_count DESC SEPARATOR "}"), "}", 3) AS top_answers'),
-            DB::raw('SUM(vote_count) AS total_votes')
-        )
-            ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+        $questions = DB::table('questions')
+            ->select(
+                'questions.id AS question_id',
+                'questions.question',
+                'questions.question_category',
+                DB::raw("SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, ' ( Faves: ', vote_count, ')') ORDER BY vote_count DESC SEPARATOR '}'), '}', 3) AS top_answers"),
+                DB::raw("SUM(COALESCE(questions_answer.vote_count, 0)) AS total_votes")
+            )
             ->join('topics', 'questions.topic_id', '=', 'topics.id')
-            ->where('topics.topic_name', $topicName)
+            ->leftJoin('questions_answer', function ($join) {
+                $join->on('questions.question_category', '=', 'questions_answer.questions_category');
+            })
+            ->where('topics.topic_name', '=', $topicName)
             ->groupBy('questions.id', 'questions.question', 'questions.question_category')
-            ->orderBy('total_votes', 'desc') // Sort by total_votes in descending order
+            ->orderBy('total_votes', 'DESC')
             ->paginate($perPage, ['*'], 'page', $page);
+
 
         $get_topic_details = Topics::select('*')->where('topic_name', $topicName)->get();
         foreach ($get_topic_details as $get_topic_detail) {
@@ -289,19 +293,36 @@ class indexController extends Controller
             $get_this_user_votes = '';
         }
         if (strlen($tosearch) > 0) {
-            $questions = Questions::select(
-                'questions.id AS question_id',
-                'questions.question',
-                'questions.question_category',
-                DB::raw('SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, " ( Faves: ", vote_count, ")") ORDER BY vote_count DESC SEPARATOR "}"), "}", 3) AS top_answers'),
-                DB::raw('SUM(vote_count) AS total_votes')
-            )
-                ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+            // $questions = Questions::select(
+            //     'questions.id AS question_id',
+            //     'questions.question',
+            //     'questions.question_category',
+            //     DB::raw('SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, " ( Faves: ", vote_count, ")") ORDER BY vote_count DESC SEPARATOR "}"), "}", 3) AS top_answers'),
+            //     DB::raw('SUM(vote_count) AS total_votes')
+            // )
+            //     ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+            //     ->join('topics', 'questions.topic_id', '=', 'topics.id')
+            //     ->where('topics.id', $topicName)
+            //     ->where('questions.question', 'like', '%' . $tosearch . '%')
+            //     ->groupBy('questions.id', 'questions.question', 'questions.question_category')
+            //     ->orderBy('total_votes', 'desc') // Sort by total_votes in descending order
+            //     ->paginate($perPage);
+            $questions = DB::table('questions')
+                ->select(
+                    'questions.id AS question_id',
+                    'questions.question',
+                    'questions.question_category',
+                    DB::raw("SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, ' ( Faves: ', vote_count, ')') ORDER BY vote_count DESC SEPARATOR '}'), '}', 3) AS top_answers"),
+                    DB::raw("SUM(COALESCE(questions_answer.vote_count, 0)) AS total_votes")
+                )
                 ->join('topics', 'questions.topic_id', '=', 'topics.id')
-                ->where('topics.id', $topicName)
+                ->leftJoin('questions_answer', function ($join) {
+                    $join->on('questions.question_category', '=', 'questions_answer.questions_category');
+                })
+                ->where('topics.id', '=', $topicName)
                 ->where('questions.question', 'like', '%' . $tosearch . '%')
                 ->groupBy('questions.id', 'questions.question', 'questions.question_category')
-                ->orderBy('total_votes', 'desc') // Sort by total_votes in descending order
+                ->orderBy('total_votes', 'DESC')
                 ->paginate($perPage);
             $topic_id = $topicName;
             $comments = DB::table('comments')
@@ -317,18 +338,34 @@ class indexController extends Controller
             return view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id'));
         } else {
             // $topicName = $request->id;
-            $questions = Questions::select(
-                'questions.id AS question_id',
-                'questions.question',
-                'questions.question_category',
-                DB::raw('SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, " ( Faves: ", vote_count, ")") ORDER BY vote_count DESC SEPARATOR "}"), "}", 3) AS top_answers'),
-                DB::raw('SUM(vote_count) AS total_votes')
-            )
-                ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+            // $questions = Questions::select(
+            //     'questions.id AS question_id',
+            //     'questions.question',
+            //     'questions.question_category',
+            //     DB::raw('SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, " ( Faves: ", vote_count, ")") ORDER BY vote_count DESC SEPARATOR "}"), "}", 3) AS top_answers'),
+            //     DB::raw('SUM(vote_count) AS total_votes')
+            // )
+            //     ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+            //     ->join('topics', 'questions.topic_id', '=', 'topics.id')
+            //     ->where('topics.id', $topicName)
+            //     ->groupBy('questions.id', 'questions.question', 'questions.question_category')
+            //     ->orderBy('total_votes', 'desc') // Sort by total_votes in descending order
+            //     ->paginate($perPage);
+            $questions = DB::table('questions')
+                ->select(
+                    'questions.id AS question_id',
+                    'questions.question',
+                    'questions.question_category',
+                    DB::raw("SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, ' ( Faves: ', vote_count, ')') ORDER BY vote_count DESC SEPARATOR '}'), '}', 3) AS top_answers"),
+                    DB::raw("SUM(COALESCE(questions_answer.vote_count, 0)) AS total_votes")
+                )
                 ->join('topics', 'questions.topic_id', '=', 'topics.id')
-                ->where('topics.id', $topicName)
+                ->leftJoin('questions_answer', function ($join) {
+                    $join->on('questions.question_category', '=', 'questions_answer.questions_category');
+                })
+                ->where('topics.id', '=', $topicName)
                 ->groupBy('questions.id', 'questions.question', 'questions.question_category')
-                ->orderBy('total_votes', 'desc') // Sort by total_votes in descending order
+                ->orderBy('total_votes', 'DESC')
                 ->paginate($perPage);
             $topic_id = $topicName;
             $comments = DB::table('comments')
@@ -745,20 +782,36 @@ class indexController extends Controller
                 ->get();
             $get_this_user_votes = '';
         }
-        $questions = Questions::select(
-            'questions.id AS question_id',
-            'questions.question',
-            'questions.question_category',
-            DB::raw('SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, " ( Faves: ", vote_count, ")") ORDER BY vote_count DESC SEPARATOR "}"), "}", 3) AS top_answers'),
-            DB::raw('SUM(vote_count) AS total_votes')
-        )
-            ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
-            ->join('topics', 'questions.topic_id', '=', 'topics.id')
-            ->where('topics.topic_name', $topicName)
-            ->groupBy('questions.id', 'questions.question', 'questions.question_category')
-            ->orderBy('total_votes', 'desc') // Sort by total_votes in descending order
-            ->paginate($perPage, ['*'], 'page', $page);
+        // $questions = Questions::select(
+        //     'questions.id AS question_id',
+        //     'questions.question',
+        //     'questions.question_category',
+        //     DB::raw('SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, " ( Faves: ", vote_count, ")") ORDER BY vote_count DESC SEPARATOR "}"), "}", 3) AS top_answers'),
+        //     DB::raw('SUM(vote_count) AS total_votes')
+        // )
+        //     ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+        //     ->join('topics', 'questions.topic_id', '=', 'topics.id')
+        //     ->where('topics.topic_name', $topicName)
+        //     ->groupBy('questions.id', 'questions.question', 'questions.question_category')
+        //     ->orderBy('total_votes', 'desc') // Sort by total_votes in descending order
+        //     ->paginate($perPage, ['*'], 'page', $page);
 
+        $questions = DB::table('questions')
+            ->select(
+                'questions.id AS question_id',
+                'questions.question',
+                'questions.question_category',
+                DB::raw("SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, ' ( Faves: ', vote_count, ')') ORDER BY vote_count DESC SEPARATOR '}'), '}', 3) AS top_answers"),
+                DB::raw("SUM(COALESCE(questions_answer.vote_count, 0)) AS total_votes")
+            )
+            ->join('topics', 'questions.topic_id', '=', 'topics.id')
+            ->leftJoin('questions_answer', function ($join) {
+                $join->on('questions.question_category', '=', 'questions_answer.questions_category');
+            })
+            ->where('topics.topic_name', '=', $topicName)
+            ->groupBy('questions.id', 'questions.question', 'questions.question_category')
+            ->orderBy('total_votes', 'DESC')
+            ->paginate($perPage, ['*'], 'page', $page);
         $get_topic_details = Topics::select('*')->where('topic_name', $topicName)->get();
         foreach ($get_topic_details as $get_topic_detail) {
             $topic_id = $get_topic_detail['id'];

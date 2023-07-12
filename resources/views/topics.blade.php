@@ -111,6 +111,7 @@
                             @php
                             $lm=1;
                             @endphp
+                            @if($question->top_answers)
                             @foreach ($answers as &$answer)
                             @php
                             $answer_votes = substr($answer, strpos($answer, "( Faves") + 1);
@@ -132,6 +133,7 @@
                             $lm=$lm+1;
                             @endphp
                             @endforeach
+                            @endif
                             @else
                             @for($m=0; $m < count($answers);$m++) @php preg_match('/^(.*)(\( Faves: \d+\))$/', $answers[$m], $matches); $text=$matches[1]; $faves=$matches[2]; if (strlen($text)> 18) {
                                 $text = substr($text, 0, 18) . '...';
@@ -216,7 +218,7 @@
                 </div>
                 <div class="set_suggestion_height_categories mt-3 rounded container">
                     <div class="row" id="on_search_category">
-                       
+
 
                     </div>
                 </div>
