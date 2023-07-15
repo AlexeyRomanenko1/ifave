@@ -20,7 +20,7 @@
 @endif
 <script src="{{ asset('js/components/search_topics.js')}}"></script>
 
-@if (request()->route()->getName() == 'create-blog-index')
+@if (request()->route()->getName() == 'create-blog-index' || request()->route()->getName() == 'create_blog_topic_question')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
 <script type="text/javascript" src="{{ asset('js/froala_editor.min.js')}}"></script>
 <script type="text/javascript" src="{{ asset('js/plugins/align.min.js')}}"></script>

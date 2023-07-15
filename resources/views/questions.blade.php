@@ -6,6 +6,9 @@
         $question_category=$details['question_category'];
         $question_id=$details['id'];
         $question=$details["question"];
+        $blog_question=str_replace(" ", "-", $details["question"]);
+        $blog_topic_name=str_replace(" ", "-", $details["topic_name"]);
+
         @endphp
         <input type="hidden" id="hidden_question_id" value="{{ $details['question_category'] }}">
         @if($details["topic_name"] == 'movies')
@@ -55,6 +58,9 @@
                     <div class="text-nowrap bd-highlight m-2" style="width:14rem">
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Not in the list. Add my fave</button>
                     </div>
+                    <div class="text-nowrap bd-highlight m-2" style="width:14rem">
+                        <a href="/create-blog/{{$blog_topic_name}}/{{$blog_question}}" class="btn btn-primary">Create blog on this category</a>
+                    </div>
                     <p class="">
                         <i class="fa fa-2x fa-clone float-center p-2 m-2" aria-hidden="true" onclick="copy_url('https://ifave.com/questions_details/'+{{ $question_id }})"></i> <i class="fa fa-2x fa-share float-center p-2 m-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url('https://ifave.com/questions_details/' + {{$question_id}})"></i> <i class="fa fa-2x fa-code float-center p-2 m-2" aria-hidden="true" onclick="generate_embeded_code('https://ifave.com/questions_details/' +{{ $question_id }}, '{{ $question }}')"></i>
                     </p>
@@ -92,6 +98,23 @@
             </div>
         </div>
     </div>
+    @if(count($posts) > 0)
+    <div class="container mb-4">
+        <div class="row">
+            @foreach($posts as $post)
+            <div class="col-md-2"><img src="/images/posts/{{$post->featured_image}}" class="zoom-block img-fluid" height="300px" width="300px" alt=""></div>
+            <div class="col-md-10 pt-5">
+                <h4><a href="">{{$post->title}}</a></h4>
+                {!! substr(strip_tags($post->blog_content), 0, 500) !!}...
+                &nbsp;<a href=""> read more</a>
+            </div>
+            @endforeach
+        </div>
+    </div>
+    @if(count($posts) > 4)
+    <div class="text-center"><a href="">Show More Blogs</a></div>
+    @endif
+    @endif
     <div class="container">
         <div class="text-center">
             <h4>Comments</h4>

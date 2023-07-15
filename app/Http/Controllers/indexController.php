@@ -79,7 +79,15 @@ class indexController extends Controller
             ->groupBy('users.name')
             ->get();
 
-        return view('index', compact('questions', 'subQuery', 'comments', 'topic_id'));
+        //query to get posts data 
+        $posts = DB::table('posts')
+            ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at')
+            ->join('users', 'posts.user_id', 'users.id')
+            ->where('posts.topic_id', $topic_id)
+            ->orderByDesc('posts.vote_count')
+            ->limit(4)
+            ->get();
+        return view('index', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'));
     }
     public function indexonloadRequest(Request $request)
     {
@@ -334,8 +342,15 @@ class indexController extends Controller
                 ->limit(5)
                 ->groupBy('users.name')
                 ->get();
-
-            return view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id'));
+            //query to get posts data 
+            $posts = DB::table('posts')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at')
+                ->join('users', 'posts.user_id', 'users.id')
+                ->where('posts.topic_id', $topic_id)
+                ->orderByDesc('posts.vote_count')
+                ->limit(4)
+                ->get();
+            return view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'));
         } else {
             // $topicName = $request->id;
             // $questions = Questions::select(
@@ -377,8 +392,14 @@ class indexController extends Controller
                 ->limit(5)
                 ->groupBy('users.name')
                 ->get();
-
-            return view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id'));
+            $posts = DB::table('posts')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at')
+                ->join('users', 'posts.user_id', 'users.id')
+                ->where('posts.topic_id', $topic_id)
+                ->orderByDesc('posts.vote_count')
+                ->limit(4)
+                ->get();
+            return view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'));
         }
         // }
         // return json_encode([
@@ -439,12 +460,14 @@ class indexController extends Controller
             ->selectRaw('(upvotes - downvotes) as difference')
             ->where('question_id', $question_id)
             ->orderBy('difference', 'DESC')
+            ->limit(5)
             ->get();
         // $data=[
         //     'question_details'=>$question_details,
         //     'question_answers'=>$question_answers
         // ];
-        return view('questions', compact('header_info', 'question_answers', 'get_user_answers', 'get_comments'));
+        $posts = DB::table('posts')->select('*')->where('question_id', $question_id)->orderBy('vote_count', 'DESC')->get();
+        return view('questions', compact('header_info', 'question_answers', 'get_user_answers', 'get_comments', 'posts'));
     }
     public function delete_vote(Request $request)
     {
@@ -827,7 +850,14 @@ class indexController extends Controller
             ->groupBy('users.name')
             ->get();
 
-        return view("topics", compact('header_info', 'get_topic', 'questions', 'comments', 'subQuery', 'topic_id'));
+            $posts = DB::table('posts')
+            ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at')
+            ->join('users', 'posts.user_id', 'users.id')
+            ->where('posts.topic_id', $topic_id)
+            ->orderByDesc('posts.vote_count')
+            ->limit(4)
+            ->get();
+        return view("topics", compact('header_info', 'get_topic', 'questions', 'comments', 'subQuery', 'topic_id','posts'));
     }
     public function getClientIP(Request $request)
     {

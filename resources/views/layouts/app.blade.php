@@ -24,7 +24,7 @@
     <link href="{{ asset('css/header.css') }}" rel="stylesheet">
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
     <link href="{{ asset('css/berlin_sans.css') }}" rel="stylesheet">
-    @if (request()->route()->getName() == 'create-blog-index')
+    @if (request()->route()->getName() == 'create-blog-index' || request()->route()->getName() == 'create_blog_topic_question')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('css/froala_editor.css') }}">
     <link rel="stylesheet" href="{{ asset('css/froala_style.css') }}">
@@ -75,7 +75,7 @@
                             <a href="" class="nav-link">About</a>
                         </li> -->
                         <li class="nav-item">
-                            <a href="" class="nav-link">Contact</a>
+                            <a href="{{ url('/contact-us') }}" class="nav-link">Contact</a>
                         </li>
                     </ul>
 

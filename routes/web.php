@@ -37,7 +37,8 @@ Route::get('/get_topics', [indexController::class, 'get_topics']);
 Route::get('/search_topics', [indexController::class, 'search_topics']);
 Route::get('topics/{topic_name}', [indexController::class, 'topic_name'])->name('topic_name');
 Route::get('/get_comments_list', [indexController::class, 'get_comments_list'])->name('get_comments_list');
-
+Route::get('/contact-us', [App\Http\Controllers\ContactController::class, 'index'])->name('contact_us_index');
+Route::post('/contact-us', [App\Http\Controllers\ContactController::class, 'contact_us'])->name('contact_us');
 // Route::get('redirect/{id}', 'YourController@redirectToUrlWithId')->name('url.redirect');
 Auth::routes([
     'verify' => true
@@ -57,8 +58,9 @@ Route::post('/delete_dashboard_answer', [App\Http\Controllers\HomeController::cl
 Route::post('/export_users', [App\Http\Controllers\HomeController::class, 'export_users'])->name('export_users');
 Route::post('/import_images', [App\Http\Controllers\HomeController::class, 'import_images'])->name('import_images');
 //Blogging routes
-Route::get('/create-blog', [App\Http\Controllers\BlogController::class, 'index'])->name('create-blog-index');
-Route::post('/create_blog', [App\Http\Controllers\BlogController::class, 'create_blog'])->name('create_blog');
+Route::get('/create-blog', [App\Http\Controllers\BlogController::class, 'index'])->name('create-blog-index')->middleware('verified');
+Route::post('/create_blog', [App\Http\Controllers\BlogController::class, 'create_blog'])->name('create_blog')->middleware('verified');
+Route::get('create-blog/{topic}/{question}', [App\Http\Controllers\BlogController::class, 'create_blog_topic_question'])->name('create_blog_topic_question')->middleware('verified');
 // Route::get('/verify_notification', [App\Http\Controllers\HomeController::class, 'verify_notification'])->name('verify_notification')->middleware('verified');
 
 // Route::get('/login', function () {

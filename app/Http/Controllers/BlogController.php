@@ -37,6 +37,12 @@ class BlogController extends Controller
             // User is not verified, redirect to a new route
             return redirect()->route('verification.notice');
         }
+        $validatedData = $request->validate([
+            'blog_title' => 'required',
+            'tags' => 'required',
+            'blog_content' => 'required',
+            'featured_image'=>'required'
+        ]);
         $tags = $request->tags;
         $blog_title = $request->blog_title;
         $blog_content = $request->blog_content;
@@ -49,23 +55,47 @@ class BlogController extends Controller
                 return redirect()->back()->with('error', "Only JPG,JPEG,PNG entensions are allowed");
             }
             $uniqueName = date('m_d_Y_his') . $blog_title . '.' . $extension;
-           // $file->storeAs(public_path('images/posts/'), $uniqueName);
+            // $file->storeAs(public_path('images/posts/'), $uniqueName);
             $path =  $file->move(public_path('images/posts/'), $uniqueName);
-
         } else {
             $uniqueName = '';
         }
-        $insert_blog =  DB::table('posts')->insert([
-            'user_id' => $user_id,
-            'title' => $blog_title,
-            'tags' => $tags,
-            'blog_content' => $blog_content,
-            'featured_image' => $uniqueName
-        ]);
+        if (isset($request->topic_id) && isset($request->question_id)) {
+            $insert_blog =  DB::table('posts')->insert([
+                'user_id' => $user_id,
+                'title' => $blog_title,
+                'tags' => $tags,
+                'topic_id' => $request->topic_id,
+                'question_id' => $request->question_id,
+                'blog_content' => $blog_content,
+                'featured_image' => $uniqueName
+            ]);
+        } else {
+            $insert_blog =  DB::table('posts')->insert([
+                'user_id' => $user_id,
+                'title' => $blog_title,
+                'tags' => $tags,
+                'blog_content' => $blog_content,
+                'featured_image' => $uniqueName
+            ]);
+        }
+
         if ($insert_blog) {
             return redirect()->back()->with('success', "Blog created successfully");
         } else {
             return redirect()->back()->with('error', "Something went wrong");
         }
+    }
+    public function create_blog_topic_question(Request $request, $topic, $question)
+    {
+        $topic = str_replace("-", " ", $topic);
+        $question = str_replace("-", " ", $question);
+        $topic_id = DB::table('topics')
+            ->where('topic_name', $topic)
+            ->pluck('id');
+        $question_id = DB::table('questions')
+            ->where('question', $question)
+            ->pluck('id');
+        return view('blogs.create-blog', compact('topic', 'question', 'topic_id', 'question_id'));
     }
 }
