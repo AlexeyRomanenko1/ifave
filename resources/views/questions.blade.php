@@ -58,9 +58,6 @@
                     <div class="text-nowrap bd-highlight m-2" style="width:14rem">
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Not in the list. Add my fave</button>
                     </div>
-                    <div class="text-nowrap bd-highlight m-2" style="width:14rem">
-                        <a href="/create-blog/{{$blog_topic_name}}/{{$blog_question}}" class="btn btn-primary">Create blog on this category</a>
-                    </div>
                     <p class="">
                         <i class="fa fa-2x fa-clone float-center p-2 m-2" aria-hidden="true" onclick="copy_url('https://ifave.com/questions_details/'+{{ $question_id }})"></i> <i class="fa fa-2x fa-share float-center p-2 m-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url('https://ifave.com/questions_details/' + {{$question_id}})"></i> <i class="fa fa-2x fa-code float-center p-2 m-2" aria-hidden="true" onclick="generate_embeded_code('https://ifave.com/questions_details/' +{{ $question_id }}, '{{ $question }}')"></i>
                     </p>
@@ -114,6 +111,14 @@
     @if(count($posts) > 4)
     <div class="text-center"><a href="">Show More Blogs</a></div>
     @endif
+    <div class="container mb-4">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-6">
+                <a href="/create-blog/{{$blog_topic_name}}/{{$blog_question}}" class="btn btn-logo">Create blog on this category</a>
+            </div>
+        </div>
+    </div>
     @endif
     <div class="container">
         <div class="text-center">
