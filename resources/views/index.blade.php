@@ -201,7 +201,7 @@
                     @endphp
                     @endforeach
                     @else
-                    @for($m=0; $m < 3;$m++) @php preg_match('/^(.*)(\( Faves: \d+\))$/', $answers[$m], $matches); $text=$matches[1]; $faves=$matches[2]; if (strlen($text)> 18) {
+                    @for($m=0; $m < count($answers);$m++) @php preg_match('/^(.*)(\( Faves: \d+\))$/', $answers[$m], $matches); $text=$matches[1]; $faves=$matches[2]; if (strlen($text)> 18) {
                         $text = substr($text, 0, 18) . '...';
                         }
                         $to_answer = $text . $faves;
