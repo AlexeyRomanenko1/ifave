@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Message;
 use Illuminate\Queue\SerializesModels;
 
 class ContactMail extends Mailable
@@ -54,7 +55,7 @@ class ContactMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'contact',
+            text: 'From' . $this->email . '<br>' . 'Name' . $this->name . $this->message
         );
     }
 
