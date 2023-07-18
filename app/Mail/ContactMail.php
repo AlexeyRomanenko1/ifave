@@ -42,22 +42,22 @@ class ContactMail extends Mailable
     /**
      * Get the message envelope.
      */
-    public function envelope(): Envelope
-    {
-        return new Envelope(
-            subject: "$this->subject",
-        );
-    }
+    // public function envelope(): Envelope
+    // {
+    //     return new Envelope(
+    //         subject: "$this->subject",
+    //     );
+    // }
 
-    /**
-     * Get the message content definition.
-     */
-    public function content(): Content
-    {
-        return new Content(
-            text: 'From' . $this->email . '<br>' . 'Name' . $this->name . $this->message
-        );
-    }
+    // /**
+    //  * Get the message content definition.
+    //  */
+    // public function content(): Content
+    // {
+    //     return new Content(
+    //         text: 'From' . $this->email . '<br>' . 'Name' . $this->name . $this->message
+    //     );
+    // }
 
     /**
      * Get the attachments for the message.
