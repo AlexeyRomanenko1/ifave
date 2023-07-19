@@ -42,7 +42,12 @@ class ContactMail extends Mailable
     public function build()
     {
         return $this->view('emails.contact')
-            ->subject($this->subject)
+            ->subject('New Contact Form Submission')
+            ->with([
+                'name' => $this->name,
+                'email' => $this->email,
+                'message' => $this->message,
+            ])
             ->replyTo($this->email, $this->name);
     }
     /**
