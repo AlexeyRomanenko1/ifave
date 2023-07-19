@@ -15,7 +15,7 @@ class ContactMail extends Mailable
     use Queueable, SerializesModels;
     public $name;
     public $email;
-    public $message;
+    public $text_message;
     public $subject;
 
     /**
@@ -30,7 +30,7 @@ class ContactMail extends Mailable
     {
         $this->name = $name;
         $this->email = $email;
-        $this->message = $message;
+        $this->text_message = $message;
         $this->subject = $subject;
     }
 
@@ -46,7 +46,7 @@ class ContactMail extends Mailable
             ->with([
                 'name' => $this->name,
                 'email' => $this->email,
-                'message' => $this->message,
+                'text_message' => $this->text_message,
             ])
             ->replyTo($this->email, $this->name);
     }
