@@ -41,13 +41,9 @@ class ContactMail extends Mailable
      */
     public function build()
     {
-        return $this->subject($this->subject)
-            ->text('emails.contact')
-            ->with([
-                'name' => $this->name,
-                'email' => $this->email,
-                'message' => $this->message,
-            ]);
+        return $this->view('emails.contact')
+            ->subject($this->subject)
+            ->replyTo($this->email, $this->name);
     }
     /**
      * Get the message envelope.
