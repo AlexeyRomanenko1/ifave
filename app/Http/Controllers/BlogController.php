@@ -98,4 +98,15 @@ class BlogController extends Controller
             ->pluck('id');
         return view('blogs.create-blog', compact('topic', 'question', 'topic_id', 'question_id'));
     }
+    public function show_blogs(Request $request){
+        //query to get posts data 
+        $perPage = 20; // Number of items per page
+        $page = request()->get('page', 1); // Get the current page from the request
+        $posts = DB::table('posts')
+            ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at')
+            ->join('users', 'posts.user_id', 'users.id')
+            ->orderByDesc('posts.vote_count')
+            ->paginate($perPage, ['*'], 'page', $page);
+            return view('posts.blog', compact('posts'));
+    }
 }
