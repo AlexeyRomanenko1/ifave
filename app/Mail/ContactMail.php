@@ -45,6 +45,7 @@ class ContactMail extends Mailable
             ->subject($this->subject)
             ->replyTo($this->email, $this->name)
             ->with([
+                'subject' => $this->subject,
                 'name' => $this->name,
                 'email' => $this->email,
                 'message' => $this->message,
