@@ -20,10 +20,10 @@ class ContactController extends Controller
             'name' => 'required',
             'email' => 'required|email',
             'message' => 'required',
-            'subject'=>'required'
+            'subject' => 'required'
         ]);
         Mail::to('contact@ifave.com')->send(new ContactMail($validatedData['name'], $validatedData['email'], $validatedData['message'], $validatedData['subject']));
-
+        Mail::to('contact@ifave.com')->send(new ContactMail($validatedData['name'], $validatedData['email'], $validatedData['message'], $validatedData['subject']));
         // Redirect back with a success message
         return redirect()->back()->with('success', 'Your message has been sent successfully!');
     }

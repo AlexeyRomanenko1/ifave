@@ -17,17 +17,23 @@ class ContactMail extends Mailable
     public $email;
     public $message;
     public $subject;
+
     /**
      * Create a new message instance.
+     *
+     * @param string $name
+     * @param string $email
+     * @param string $message
+     * @param string $subject
      */
     public function __construct($name, $email, $message, $subject)
     {
-        //
         $this->name = $name;
         $this->email = $email;
         $this->message = $message;
         $this->subject = $subject;
     }
+
     /**
      * Build the message.
      *
@@ -35,9 +41,14 @@ class ContactMail extends Mailable
      */
     public function build()
     {
-        return $this->view('contact')
+        return $this->view('emails.contact')
             ->subject($this->subject)
-            ->replyTo($this->email, $this->name);
+            ->replyTo($this->email, $this->name)
+            ->with([
+                'name' => $this->name,
+                'email' => $this->email,
+                'message' => $this->message,
+            ]);
     }
     /**
      * Get the message envelope.
