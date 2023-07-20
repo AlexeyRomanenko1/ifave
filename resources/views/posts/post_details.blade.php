@@ -4,7 +4,9 @@
         <div class="col-md-8">
             @foreach($posts as $post)
             <h2>{{$post->title}}</h2>
-            <img src="/images/posts/{{$post->featured_image}}" class="img-fluid mt-3" alt="...">
+            <div class="text-center">
+                <img src="/images/posts/{{$post->featured_image}}" class="img-fluid mt-3" alt="...">
+            </div>
             <div class="mt-3">
                 {!! $post->blog_content !!}
             </div>
@@ -47,7 +49,7 @@
                         @foreach($latest_posts as $lates_post)
                         <div class="row">
                             <div class="col-md-4">
-                                <img src="/images/posts/{{$lates_post->featured_image}}" height="80px" width="80px">
+                                <img src="/images/posts/{{$lates_post->featured_image}}" class="mt-2" height="80px" width="80px">
                             </div>
                             <div class="col-md-8">
                                 <h4 class="mt-2"><a href="/blog/{{$lates_post->slug}}">{{$lates_post->title}}</a></h4>
