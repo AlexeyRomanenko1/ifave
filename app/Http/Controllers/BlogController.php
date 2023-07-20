@@ -115,12 +115,137 @@ class BlogController extends Controller
     }
     public function blog_details(Request $request, $slug)
     {
-        $posts = DB::table('posts')->select('posts.title', 'posts.tags', 'posts.blog_content', 'posts.featured_image', 'posts.vote_count', 'users.name', 'posts.created_at')
+        if (Auth::check()) {
+            // User is logged in
+            $clientIP = Auth::id();
+        } else {
+            // User is not logged in
+            $clientIP = $this->getClientIP($request);
+        }
+        $check_if_viewed= DB::table('post_views')->select('*')->where('post_id', $slug)->where('viewed_by', $clientIP)->count();
+        if ($check_if_viewed == 0) {
+            $insert_view = DB::table('post_views')->insert([
+                'viewed_by' => $clientIP,
+                'post_id' => $slug
+            ]);
+            if ($insert_view) {
+                $view_count = DB::table('posts')->select('*')->where('slug',$slug)->get();
+                foreach($view_count as $views){
+                    $post_views_count=$views->views_count;
+                }
+                $view_count=$post_views_count+1;
+                $update_votes = DB::table('posts')
+                    ->where('slug',$slug)
+                    ->update([
+                        'views_count' => $view_count
+                    ]);
+            }
+        }
+        $posts = DB::table('posts')->select('posts.title', 'posts.tags', 'posts.blog_content', 'posts.featured_image', 'posts.vote_count', 'users.name', 'posts.created_at', 'posts.id', 'posts.down_votes','posts.views_count')
             ->join('users', 'users.id', 'posts.user_id')
             ->where('posts.slug', $slug)
             ->get();
 
         $latest_posts = DB::table('posts')->select('*')->orderByDesc('created_at')->limit(5)->get();
         return view('posts.post_details', compact('posts', 'latest_posts'));
+    }
+    public function upvote_post(Request $request)
+    {
+        if (Auth::check()) {
+            // User is logged in
+            $clientIP = Auth::id();
+        } else {
+            // User is not logged in
+            $clientIP = $this->getClientIP($request);
+        }
+        $check_if_voted = DB::table('posts_votes_history')->select('*')->where('post_id', $request->post_id)->where('vote_by', $clientIP)->count();
+        if ($check_if_voted == 0) {
+            $insert_upvote = DB::table('posts_votes_history')->insert([
+                'vote_by' => $clientIP,
+                'vote_type' => 'Upvote',
+                'post_id' => $request->post_id
+            ]);
+            if ($insert_upvote) {
+                $vote_count = $request->upvote + 1;
+                $update_votes = DB::table('posts')
+                    ->where('id', $request->post_id)
+                    ->update([
+                        'vote_count' => $vote_count
+                    ]);
+                if ($update_votes) {
+                    return json_encode([
+                        'success' => 1,
+                        'data' => 'Post upvoted successfully'
+                    ]);
+                } else {
+                    return json_encode([
+                        'success' => 0,
+                        'data' => 'Something went wrong'
+                    ]);
+                }
+            } else {
+                return json_encode([
+                    'success' => 0,
+                    'data' => 'Something went wrong'
+                ]);
+            }
+        } else {
+            return json_encode([
+                'success' => 0,
+                'data' => 'You have already voted for this post'
+            ]);
+        }
+    }
+    public function downvote_post(Request $request)
+    {
+        if (Auth::check()) {
+            // User is logged in
+            $clientIP = Auth::id();
+        } else {
+            // User is not logged in
+            $clientIP = $this->getClientIP($request);
+        }
+        $check_if_voted = DB::table('posts_votes_history')->select('*')->where('post_id', $request->post_id)->where('vote_by', $clientIP)->count();
+        if ($check_if_voted == 0) {
+            $insert_upvote = DB::table('posts_votes_history')->insert([
+                'vote_by' => $clientIP,
+                'vote_type' => 'Downvotevote',
+                'post_id' => $request->post_id
+            ]);
+            if ($insert_upvote) {
+                $vote_count = $request->down_vote + 1;
+                $update_votes = DB::table('posts')
+                    ->where('id', $request->post_id)
+                    ->update([
+                        'downvotes' => $vote_count
+                    ]);
+                if ($update_votes) {
+                    return json_encode([
+                        'success' => 1,
+                        'data' => 'Post down voted successfully'
+                    ]);
+                } else {
+                    return json_encode([
+                        'success' => 0,
+                        'data' => 'Something went wrong'
+                    ]);
+                }
+            } else {
+                return json_encode([
+                    'success' => 0,
+                    'data' => 'Something went wrong'
+                ]);
+            }
+        } else {
+            return json_encode([
+                'success' => 0,
+                'data' => 'You have already voted for this post'
+            ]);
+        }
+    }
+    public function getClientIP(Request $request)
+    {
+        $ip = $request->getClientIp();
+        return $ip;
     }
 }

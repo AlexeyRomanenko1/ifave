@@ -41,6 +41,9 @@ Route::get('/contact-us', [App\Http\Controllers\ContactController::class, 'index
 Route::post('/contact-us', [App\Http\Controllers\ContactController::class, 'contact_us'])->name('contact_us');
 Route::get('/blog', [App\Http\Controllers\BlogController::class, 'show_blogs'])->name('blog');
 Route::get('blog/{slug}', [App\Http\Controllers\BlogController::class, 'blog_details'])->name('blog_details');
+Route::post('/upvote_post', [App\Http\Controllers\BlogController::class, 'upvote_post']);
+Route::post('/downvote_post', [App\Http\Controllers\BlogController::class, 'downvote_post']);
+
 // Route::get('redirect/{id}', 'YourController@redirectToUrlWithId')->name('url.redirect');
 Auth::routes([
     'verify' => true

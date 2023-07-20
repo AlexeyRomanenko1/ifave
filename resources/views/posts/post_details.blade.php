@@ -3,7 +3,21 @@
     <div class="row">
         <div class="col-md-8">
             @foreach($posts as $post)
-            <h2>{{$post->title}}</h2>
+            <input type="hidden" id="post_id" value="{{$post->id}}">
+            <input type="hidden" id="post_vote_count" value="{{$post->vote_count}}">
+            <input type="hidden" id="post_down_votes" value="{{$post->down_votes}}">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>{{$post->title}}</h2>
+                <div class="d-flex">
+                    <div class="text-center mx-3">
+                        <i class="fa fa-2x fa-thumbs-up text-success post-thumbs-up" aria-hidden="true"></i>
+                        <div><small>Likes: {{ number_format($post->vote_count,0,'.',',') }}</small></div>
+                    </div>
+                    <div class="text-center mx-3">
+                        <i class="fa fa-2x fa-thumbs-down text-danger post-thumbs-down" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </div>
             <div class="text-center">
                 <img src="/images/posts/{{$post->featured_image}}" class="img-fluid mt-3" alt="...">
             </div>
@@ -12,9 +26,11 @@
             </div>
             <div class="mt-2">
                 <small><b>Author:</b> {{$post->name}}</small><br>
-                <small><b>Date:</b> {{$post->created_at}}</small>
+                <small><b>Date:</b> {{$post->created_at}}</small><br>
+                <small><b>Views:</b> {{ number_format($post->views_count, 0, '.', ',')}}</small>
             </div>
             @endforeach
+
         </div>
         <div class="col-md-4">
             <div class="container">
