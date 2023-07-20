@@ -24,10 +24,15 @@
             <div class="mt-3">
                 {!! $post->blog_content !!}
             </div>
+            <hr>
             <div class="mt-2">
-                <small><b>Author:</b> {{$post->name}}</small><br>
-                <small><b>Date:</b> {{$post->created_at}}</small><br>
-                <small><b>Views:</b> {{ number_format($post->views_count, 0, '.', ',')}}</small>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4"><small><b>Author:</b> {{$post->name}}</small></div>
+                        <div class="col-md-4"><small class="float-end"><b>Date:</b> {{$post->created_at}}</small></div>
+                        <div class="col-md-4"><small class="float-end"><b>Views:</b> {{ number_format($post->views_count, 0, '.', ',')}}</small></div>
+                    </div>
+                </div>
             </div>
             @endforeach
 
