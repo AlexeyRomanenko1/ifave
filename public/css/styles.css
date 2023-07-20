@@ -232,8 +232,8 @@
     .fav_tracks_parent {
         /* margin-top: 5rem;
         margin-bottom: 1rem; */
-        left: -80px;
-        right: 0;
+        left: 40px;
+        right: o;
         top: 0;
         margin-right: 50px;
         display: flex;
@@ -289,6 +289,7 @@
         justify-content: center;
         flex-direction: column;
         align-items: center;
+        width: 700px;
     }
 }
 @media screen and (max-width: 768px) and (min-width: 415px){
@@ -304,4 +305,19 @@
         flex-direction: column;
         align-items: center;
     }  
+}
+@media screen and (max-width: 1200px) and (min-width: 991px){
+    .fav_tracks_parent {
+        /* margin-top: 5rem;
+        margin-bottom: 1rem; */
+        left: 140px;
+        right: o;
+        top: 0;
+        margin-right: 50px;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        width: 300px;
+    }
 }
