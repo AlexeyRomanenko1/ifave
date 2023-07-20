@@ -102,7 +102,7 @@
                                 <img src="/images/posts/{{$post->featured_image}}" class="zoom-block img-fluid" alt="">
                             </div>
                             <div class="col-md-9">
-                                <h4 class="mt-2"><a href="">{{$post->title}}</a></h4>
+                                <h4 class="mt-2"><a href="/blog/{{$post->slug}}">{{$post->title}}</a></h4>
                                 @if($col_md==6)
                                 {!! substr(strip_tags($post->blog_content), 0, 110) !!}... <br><br>
                                 @elseif($col_md==12)
@@ -139,7 +139,7 @@
                             <img src="/images/posts/{{$post->featured_image}}" class="zoom-block img-fluid" alt="">
                         </div>
                         <div class="col-md-9">
-                            <h4 class="mt-2"><a href="">{{$post->title}}</a></h4>
+                            <h4 class="mt-2"><a href="/blog/{{$post->slug}}">{{$post->title}}</a></h4>
                             @if($col_md==6)
                             {!! substr(strip_tags($post->blog_content), 0, 110) !!}... <br><br>
                             @elseif($col_md==12)

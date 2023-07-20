@@ -41,12 +41,13 @@ class BlogController extends Controller
             'blog_title' => 'required',
             'tags' => 'required',
             'blog_content' => 'required',
-            'featured_image'=>'required'
+            'featured_image' => 'required'
         ]);
         $tags = $request->tags;
         $blog_title = $request->blog_title;
         $blog_content = $request->blog_content;
         $user_id = Auth::id();
+        $slug = str_replace(" ", "-", $request->blog_title) . "-" . $user_id . "-" . date('m-d-Y-his');
         if ($request->hasFile('featured_image') && $request->file('featured_image')->isValid()) {
             $file = $request->file('featured_image');
             $allowedExtensions = ['jpg', 'jpeg', 'png', 'JPG', 'JPEG', 'PNG'];
@@ -68,7 +69,8 @@ class BlogController extends Controller
                 'topic_id' => $request->topic_id,
                 'question_id' => $request->question_id,
                 'blog_content' => $blog_content,
-                'featured_image' => $uniqueName
+                'featured_image' => $uniqueName,
+                'slug' => $slug
             ]);
         } else {
             $insert_blog =  DB::table('posts')->insert([
@@ -76,7 +78,8 @@ class BlogController extends Controller
                 'title' => $blog_title,
                 'tags' => $tags,
                 'blog_content' => $blog_content,
-                'featured_image' => $uniqueName
+                'featured_image' => $uniqueName,
+                'slug' => $slug
             ]);
         }
 
@@ -98,15 +101,26 @@ class BlogController extends Controller
             ->pluck('id');
         return view('blogs.create-blog', compact('topic', 'question', 'topic_id', 'question_id'));
     }
-    public function show_blogs(Request $request){
+    public function show_blogs(Request $request)
+    {
         //query to get posts data 
         $perPage = 20; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
         $posts = DB::table('posts')
-            ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at')
+            ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
             ->join('users', 'posts.user_id', 'users.id')
             ->orderByDesc('posts.vote_count')
             ->paginate($perPage, ['*'], 'page', $page);
-            return view('posts.blog', compact('posts'));
+        return view('posts.blog', compact('posts'));
+    }
+    public function blog_details(Request $request, $slug)
+    {
+        $posts = DB::table('posts')->select('posts.title', 'posts.tags', 'posts.blog_content', 'posts.featured_image', 'posts.vote_count', 'users.name', 'posts.created_at')
+            ->join('users', 'users.id', 'posts.user_id')
+            ->where('posts.slug', $slug)
+            ->get();
+
+        $latest_posts = DB::table('posts')->select('*')->orderByDesc('created_at')->limit(5)->get();
+        return view('posts.post_details', compact('posts', 'latest_posts'));
     }
 }

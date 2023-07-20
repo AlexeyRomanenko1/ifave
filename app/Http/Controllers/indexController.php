@@ -81,7 +81,7 @@ class indexController extends Controller
 
         //query to get posts data 
         $posts = DB::table('posts')
-            ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at')
+            ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at','posts.slug')
             ->join('users', 'posts.user_id', 'users.id')
             ->where('posts.topic_id', $topic_id)
             ->orderByDesc('posts.vote_count')
@@ -344,7 +344,7 @@ class indexController extends Controller
                 ->get();
             //query to get posts data 
             $posts = DB::table('posts')
-                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at','posts.slug')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
                 ->orderByDesc('posts.vote_count')
@@ -393,7 +393,7 @@ class indexController extends Controller
                 ->groupBy('users.name')
                 ->get();
             $posts = DB::table('posts')
-                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at','posts.slug')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
                 ->orderByDesc('posts.vote_count')
@@ -466,7 +466,7 @@ class indexController extends Controller
         //     'question_details'=>$question_details,
         //     'question_answers'=>$question_answers
         // ];
-        $posts = DB::table('posts')->select('*')->where('question_id', $question_id)->orderBy('vote_count', 'DESC')->get();
+        $posts = DB::table('posts')->select('*')->where('question_id', $question_id)->orderBy('created_at', 'DESC')->get();
         return view('questions', compact('header_info', 'question_answers', 'get_user_answers', 'get_comments', 'posts'));
     }
     public function delete_vote(Request $request)

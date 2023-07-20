@@ -101,7 +101,7 @@
             @foreach($posts as $post)
             <div class="col-md-2"><img src="/images/posts/{{$post->featured_image}}" class="zoom-block img-fluid" height="300px" width="300px" alt=""></div>
             <div class="col-md-10 pt-5">
-                <h4><a href="">{{$post->title}}</a></h4>
+                <h4><a href="/blog/{{$post->slug}}">{{$post->title}}</a></h4>
                 {!! substr(strip_tags($post->blog_content), 0, 500) !!}...
                 &nbsp;<a href=""> read more</a>
             </div>
