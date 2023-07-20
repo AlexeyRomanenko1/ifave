@@ -47,7 +47,7 @@
                         @foreach($latest_posts as $lates_post)
                         <div class="row">
                             <div class="col-md-4">
-                                <img src="/images/posts/{{$lates_post->featured_image}}" height="200px" width="200px">
+                                <img src="/images/posts/{{$lates_post->featured_image}}" height="80px" width="80px">
                             </div>
                             <div class="col-md-8">
                                 <h4 class="mt-2"><a href="/blog/{{$lates_post->slug}}">{{$lates_post->title}}</a></h4>
