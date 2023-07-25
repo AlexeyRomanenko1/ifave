@@ -41,7 +41,7 @@
         </div>
         <h4 class="mt-4">Bloggers</h4>
         <div class="container mb-5">
-            <section class="regular slider">
+            <section class="regular slider d-none">
                 @foreach($bloggers as $blogger)
                 <div>
                     @if($blogger->image !=='' && $blogger->image !== null)

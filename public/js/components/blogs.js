@@ -7,6 +7,7 @@ $(document).on('ready', function () {
         slidesToScroll: 3,
         lazyLoad: true
     });
+    $('.regular').removeClass('d-none');
 });
 
 $('#location').on('change', function () {
