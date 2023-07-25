@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md-4">
             <b>Profile Image</b><br>
-            @if($user_image[0] !='')
+            @if($user_image[0] !='' && $user_image[0] !==null)
             <img src="/images/user_images/{{$user_image[0]}}" class="img-fluid profile_image mt-4" />
             @else
             <img src="/images/user_images/IFAVE_PNG.png" class="img-fluid profile_image mt-4" />
