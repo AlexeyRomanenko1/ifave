@@ -28,7 +28,7 @@ $('#location').on('change', function () {
             $('#select_category').empty();
             $("#select_category").attr("disabled", false);
             $('#select_category').html(html);
-            $("#select_category").customselect();
+            // $("#select_category").customselect();
         },
         error: function (e) {
             console.log(e)
