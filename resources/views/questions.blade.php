@@ -111,14 +111,6 @@
     @if(count($posts) > 4)
     <div class="text-center"><a href="">Show More Blogs</a></div>
     @endif
-    <div class="container mb-4">
-        <div class="row">
-            <div class="col-md-2"></div>
-            <div class="col-md-6">
-                <a href="/create-blog/{{$blog_topic_name}}/{{$blog_question}}" class="btn btn-logo">Create blog on this category</a>
-            </div>
-        </div>
-    </div>
     @endif
     <div class="container">
         <div class="text-center">

@@ -11,6 +11,8 @@ class VerifyCsrfToken extends Middleware
      *
      * @var array<int, string>
      */
+    protected $addHttpCookie = true;
+    protected $lifetime = 2678400; // 1 day in seconds
     protected $except = [
         //
     ];

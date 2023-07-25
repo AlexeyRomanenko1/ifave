@@ -29,13 +29,18 @@ class BlogController extends Controller
             // User is not logged in
             return redirect()->route('/');
         }
-        return view('blogs.create-blog');
+        $topics = DB::table('topics')->select('*')->get();
+        return view('blogs.create-blog', compact('topics'));
     }
     public function create_blog(Request $request)
     {
         if (!Auth::user()->hasVerifiedEmail()) {
             // User is not verified, redirect to a new route
-            return redirect()->route('verification.notice');
+            // return redirect()->route('verification.notice');
+            return json_encode([
+                'success' => 3,
+                'data' => 'Unverified User'
+            ]);
         }
         $validatedData = $request->validate([
             'blog_title' => 'required',
@@ -84,9 +89,17 @@ class BlogController extends Controller
         }
 
         if ($insert_blog) {
-            return redirect()->back()->with('success', "Blog created successfully");
+            //return redirect()->back()->with('success', "Blog created successfully");
+            return json_encode([
+                'success' => 1,
+                'data' => 'Blog created successfully'
+            ]);
         } else {
-            return redirect()->back()->with('error', "Something went wrong");
+            // return redirect()->back()->with('error', "Something went wrong");
+            return json_encode([
+                'success' => 0,
+                'data' => 'Something went wrong'
+            ]);
         }
     }
     public function create_blog_topic_question(Request $request, $topic, $question)
@@ -122,26 +135,26 @@ class BlogController extends Controller
             // User is not logged in
             $clientIP = $this->getClientIP($request);
         }
-        $check_if_viewed= DB::table('post_views')->select('*')->where('post_id', $slug)->where('viewed_by', $clientIP)->count();
+        $check_if_viewed = DB::table('post_views')->select('*')->where('post_id', $slug)->where('viewed_by', $clientIP)->count();
         if ($check_if_viewed == 0) {
             $insert_view = DB::table('post_views')->insert([
                 'viewed_by' => $clientIP,
                 'post_id' => $slug
             ]);
             if ($insert_view) {
-                $view_count = DB::table('posts')->select('*')->where('slug',$slug)->get();
-                foreach($view_count as $views){
-                    $post_views_count=$views->views_count;
+                $view_count = DB::table('posts')->select('*')->where('slug', $slug)->get();
+                foreach ($view_count as $views) {
+                    $post_views_count = $views->views_count;
                 }
-                $view_count=$post_views_count+1;
+                $view_count = $post_views_count + 1;
                 $update_votes = DB::table('posts')
-                    ->where('slug',$slug)
+                    ->where('slug', $slug)
                     ->update([
                         'views_count' => $view_count
                     ]);
             }
         }
-        $posts = DB::table('posts')->select('posts.title', 'posts.tags', 'posts.blog_content', 'posts.featured_image', 'posts.vote_count', 'users.name', 'posts.created_at', 'posts.id', 'posts.down_votes','posts.views_count')
+        $posts = DB::table('posts')->select('posts.title', 'posts.tags', 'posts.blog_content', 'posts.featured_image', 'posts.vote_count', 'users.name', 'posts.created_at', 'posts.id', 'posts.down_votes', 'posts.views_count')
             ->join('users', 'users.id', 'posts.user_id')
             ->where('posts.slug', $slug)
             ->get();
@@ -209,7 +222,7 @@ class BlogController extends Controller
         if ($check_if_voted == 0) {
             $insert_upvote = DB::table('posts_votes_history')->insert([
                 'vote_by' => $clientIP,
-                'vote_type' => 'Downvotevote',
+                'vote_type' => 'Downvote',
                 'post_id' => $request->post_id
             ]);
             if ($insert_upvote) {
@@ -217,7 +230,7 @@ class BlogController extends Controller
                 $update_votes = DB::table('posts')
                     ->where('id', $request->post_id)
                     ->update([
-                        'downvotes' => $vote_count
+                        'down_votes' => $vote_count
                     ]);
                 if ($update_votes) {
                     return json_encode([
@@ -242,6 +255,35 @@ class BlogController extends Controller
                 'data' => 'You have already voted for this post'
             ]);
         }
+    }
+    public function get_categories_onchange(Request $request)
+    {
+        $topic_id = $request->topic_id;
+        $query = DB::table('questions')->select('*')->where('topic_id', $topic_id)->get();
+        return json_encode([
+            'success' => 1,
+            'data' => $query
+        ]);
+    }
+    public function upload_content_image(Request $request)
+    {
+        $file = $request->file('content_images');
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'JPG', 'JPEG', 'PNG'];
+        $extension = $file->getClientOriginalExtension();
+        if (!in_array($extension, $allowedExtensions)) {
+            return json_encode([
+                'success'=>0,
+                'data'=>'Only JPG,JPEG,PNG entensions are allowed'
+            ]);
+        }
+        // $uniqueName = date('m_d_Y_his') . $file->getClientOriginalName() . '.' . $extension;
+        $uniqueName = date('m_d_Y_his') . $file->getClientOriginalName();
+        // $file->storeAs(public_path('images/posts/'), $uniqueName);
+        $path =  $file->move(public_path('images/posts/'), $uniqueName);
+        return json_encode([
+            'success'=>1,
+            'path'=>'/images/posts/'.$uniqueName
+        ]);
     }
     public function getClientIP(Request $request)
     {

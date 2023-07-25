@@ -19,7 +19,7 @@ $('.post-thumbs-up').on('click', function (e) {
         }
     });
 })
-$('.posts-thumbs-down').on('click',function(e){
+$('.post-thumbs-down').on('click',function(e){
     $.ajax({
         type: 'POST',
         url: '/downvote_post',

@@ -24,38 +24,8 @@
 @endif
 @if (request()->route()->getName() == 'create-blog-index' || request()->route()->getName() == 'create_blog_topic_question')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
-<script type="text/javascript" src="{{ asset('js/froala_editor.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/align.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/char_counter.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/code_beautifier.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/code_view.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/colors.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/draggable.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/emoticons.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/entities.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/file.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/font_size.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/font_family.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/fullscreen.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/image.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/image_manager.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/line_breaker.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/inline_style.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/link.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/lists.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/paragraph_format.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/paragraph_style.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/quick_insert.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/quote.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/table.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/save.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/url.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/video.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/help.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/print.min.js')}}"></script>
-<!-- <script type="text/javascript" src="{{ asset('js/third_party/spell_checker.min.js')}}"></script> -->
-<script type="text/javascript" src="{{ asset('js/plugins/special_characters.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/word_paste.min.js')}}"></script>
+<script src="{{ asset('src/jquery.richtext.js')}}"></script>
+<script src="{{ asset('select_src/jquery-customselect.js')}}"></script>
 <script src="{{ asset('js/components/create_blog.js')}}"></script>
 @endif
 <!-- Option 2: Separate Popper and Bootstrap JS -->
