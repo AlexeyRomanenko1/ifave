@@ -41,7 +41,7 @@ $('#select_location').on('change', function () {
         data: { '_token': $('meta[name="csrf-token"]').attr('content'), topic_id: $(this).val() },
         success: function (data) {
             // $("#msg").html(data.msg);
-            console.log(data)
+            // console.log(data)
             let obj = JSON.parse(data);
             let html = '<option selected disabled>Select Category</option>';
             for (let j = 0; j < obj.data.length; j++) {
@@ -50,7 +50,7 @@ $('#select_location').on('change', function () {
             $("#select_category").attr("disabled", false);
             $('#select_category').empty();
             $('#select_category').html(html);
-            $("#select_category").customselect();
+            // $("#select_category").customselect();
         },
         error: function (e) {
             console.log(e)

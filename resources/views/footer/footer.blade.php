@@ -28,6 +28,16 @@
 <script src="{{ asset('select_src/jquery-customselect.js')}}"></script>
 <script src="{{ asset('js/components/create_blog.js')}}"></script>
 @endif
+@if (request()->route()->getName() == 'blog' || request()->route()->getName() == 'filter_blog')
+<script src="{{ asset('select_src/jquery-customselect.js')}}"></script>
+<script src="https://code.jquery.com/jquery-migrate-3.4.0.min.js"></script>
+<script src="{{ asset('slick/slick.js?v2022')}}" type="text/javascript" charset="utf-8"></script>
+<script src="{{ asset('js/components/blogs.js')}}"></script>
+@endif
+@if (request()->route()->getName() == 'update-profile')
+<script src="{{ asset('js/components/user_profile.js')}}"></script>
+@endif
+
 <!-- Option 2: Separate Popper and Bootstrap JS -->
 <!--
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>

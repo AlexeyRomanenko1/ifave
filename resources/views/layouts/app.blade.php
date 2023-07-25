@@ -29,6 +29,11 @@
     <link href="{{ asset('src/richtext.min.css') }}" rel="stylesheet">
     <link href="{{ asset('select_src/jquery-customselect.css') }}" rel="stylesheet">
     @endif
+    @if (request()->route()->getName() == 'blog' || request()->route()->getName() == 'filter_blog')
+    <link href="{{ asset('select_src/jquery-customselect.css') }}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ asset('slick/slick.css?v2022') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('slick/slick-theme.css?v2022') }}">
+    @endif
 </head>
 
 <body>
@@ -91,11 +96,13 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/update-profile">
+                                    Update Profile
+                                </a>
                                 <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                     {{ __('Logout') }}
                                 </a>
-
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                     @csrf
                                 </form>
