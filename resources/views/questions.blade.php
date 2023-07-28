@@ -109,7 +109,7 @@
         </div>
     </div>
     @if(count($posts) > 4)
-    <div class="text-center"><a href="">Show More Blogs</a></div>
+    <div class="text-center"><a href="/blog">Show More Blogs</a></div>
     @endif
     @endif
     <div class="container">

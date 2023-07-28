@@ -43,7 +43,7 @@ Route::get('/blog', [App\Http\Controllers\BlogController::class, 'show_blogs'])-
 Route::get('blog/{slug}', [App\Http\Controllers\BlogController::class, 'blog_details'])->name('blog_details');
 Route::post('/upvote_post', [App\Http\Controllers\BlogController::class, 'upvote_post']);
 Route::post('/downvote_post', [App\Http\Controllers\BlogController::class, 'downvote_post']);
-Route::get('blog/{topic_slug}/{question_slug}', [App\Http\Controllers\BlogController::class, 'filter_blog'])->name('filter_blog');
+Route::get('blogs/{topic_slug}/{question_slug}', [App\Http\Controllers\BlogController::class, 'filter_blog'])->name('filter_blog');
 Route::get('blogger/{user_name}/{topic_slug}/{question_slug}', [App\Http\Controllers\BlogController::class, 'blogger_location_filter'])->name('filter_blog');
 Route::get('blogger/{user_name}', [App\Http\Controllers\BlogController::class, 'blogger_filter'])->name('filter_blog');
 // Route::get('redirect/{id}', 'YourController@redirectToUrlWithId')->name('url.redirect');

@@ -101,19 +101,19 @@
                 @endif
                 @foreach($posts as $post)
                 @if($post_loop < 3) <div class="col-md-{{$col_md}}">
-                    <div class="container border border-blue mt-3 p-2 m-2">
+                    <div class="container mt-3 p-2 m-2">
                         <div class="row">
                             <div class="col-md-3">
                                 <img src="/images/posts/{{$post->featured_image}}" class="zoom-block img-fluid" alt="">
                             </div>
                             <div class="col-md-9">
-                                <h4 class="mt-2"><a href="/blog/{{$post->slug}}">{{$post->title}}</a></h4>
+                                <h4 class="mt-2"><a href="/blog/{{$post->slug}}">{{ substr(strip_tags($post->title), 0, 100)}}</a></h4>
                                 @if($col_md==6)
-                                {!! substr(strip_tags($post->blog_content), 0, 110) !!}... <br><br>
+                                {!! substr(strip_tags($post->blog_content), 0, 150) !!}... <br><br>
                                 @elseif($col_md==12)
                                 {!! substr(strip_tags($post->blog_content), 0, 700) !!}... <br><br>
                                 @endif
-                                <small><b>Date:</b> {{$post->created_at}}</small><br>
+                                <small><b>Date:</b> {{ date('d-m-Y', strtotime($post->created_at)) }}</small><br>
                                 <small><b>Author:</b> {{$post->name}}</small>
                             </div>
                         </div>
@@ -138,19 +138,19 @@
             @foreach($posts as $index=>$post)
             @if($index > 1)
             <div class="col-md-{{$col_md}}">
-                <div class="container border border-blue mt-3 p-2 m-2">
+                <div class="container mt-3 p-2 m-2">
                     <div class="row">
                         <div class="col-md-3">
                             <img src="/images/posts/{{$post->featured_image}}" class="zoom-block img-fluid" alt="">
                         </div>
                         <div class="col-md-9">
-                            <h4 class="mt-2"><a href="/blog/{{$post->slug}}">{{$post->title}}</a></h4>
+                            <h4 class="mt-2"><a href="/blog/{{$post->slug}}">{{ substr(strip_tags($post->title), 0, 100)}}</a></h4>
                             @if($col_md==6)
-                            {!! substr(strip_tags($post->blog_content), 0, 110) !!}... <br><br>
+                            {!! substr(strip_tags($post->blog_content), 0, 150) !!}... <br><br>
                             @elseif($col_md==12)
                             {!! substr(strip_tags($post->blog_content), 0, 700) !!}... <br><br>
                             @endif
-                            <small><b>Date:</b> {{$post->created_at}}</small><br>
+                            <small><b>Date:</b> {{ date('d-m-Y', strtotime($post->created_at)) }}</small><br>
                             <small><b>Author:</b> {{$post->name}}</small>
                         </div>
                     </div>

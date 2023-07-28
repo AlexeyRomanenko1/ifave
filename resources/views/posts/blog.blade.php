@@ -4,7 +4,7 @@
     <!-- <div class="text-center">
         <button class="btn btn-primary mb-5">Create Blog</button>
     </div> -->
-    <!-- <div class="row height d-flex justify-content-center align-items-center">
+    <div class="row height d-flex justify-content-center align-items-center">
         <div class="col-md-8">
             <div class="search">
                 <i class="fa fa-search"></i>
@@ -14,7 +14,7 @@
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
     @if(isset($topic_slug) && isset($question_slug))
     <input type="hidden" name="topic_slug" id="topic_slug" value="{{$topic_slug}}">
     <input type="hidden" name="question_slug" id="question_slug" value="{{$question_slug}}">
@@ -31,12 +31,17 @@
                 </select>
             </div>
             <div class="col-md-5">
-                <select class="custom-select form-control" id="select_category" name="question_id" aria-label="Select Category">
-                    <option selected disabled>Select Category</option>
-                </select>
+                <div id="custom-select-category">
+                    <select class="custom-select form-control" id="select_category" name="question_id" aria-label="Select Category">
+                        <option selected disabled>Select Category</option>
+                    </select>
+                </div>
             </div>
             <div class="col-md-2">
                 <button type="submit" class="btn btn-primary filter_blogs">Filter</button>
+                @if(isset($topic_slug) && isset($question_slug))
+                <a href="/blog" class="btn btn-success">Clear Filter</a>
+                @endif
             </div>
         </div>
         <h4 class="mt-4">Bloggers</h4>
@@ -45,9 +50,9 @@
                 @foreach($bloggers as $blogger)
                 <div>
                     @if($blogger->image !=='' && $blogger->image !== null)
-                    <img onclick="blogger_route('{{$blogger->username}}')" src="/images/user_images/{{$blogger->image}}" width="200px" height="200px">
+                    <img onclick="blogger_route('{{$blogger->username}}')" src="/images/user_images/{{$blogger->image}}">
                     @else
-                    <img onclick="blogger_route('{{$blogger->username}}')" src="/images/user_images/IFAVE_PNG.png" width="200px" height="200px">
+                    <img onclick="blogger_route('{{$blogger->username}}')" src="/images/user_images/default_profile_picture.jpg">
                     @endif
                     <p onclick="blogger_route('{{$blogger->username}}')" class="mt-3">{{$blogger->username}}</p>
                     <p onclick="blogger_route('{{$blogger->username}}')">Rating {{$blogger->rating}}</p>
@@ -57,7 +62,7 @@
             </section>
         </div>
     </div>
-    <div class="container mt-4">
+    <div class="container mt-4" id="posts_list">
         @foreach($posts as $post)
         <div class="row border border-blue mt-3 p-2 m-2">
             <div class="col-md-3">
@@ -66,7 +71,7 @@
             <div class="col-md-9">
                 <h4 class="mt-2"><a href="/blog/{{$post->slug}}">{{$post->title}}</a></h4>
                 {!! substr(strip_tags($post->blog_content), 0, 700) !!}... <br><br>
-                <small><b>Date:</b> {{$post->created_at}}</small><br>
+                <small><b>Date:</b> {{ date('d-m-Y', strtotime($post->created_at)) }}</small><br>
                 <small><b>Author:</b> {{$post->name}}</small>
             </div>
         </div>

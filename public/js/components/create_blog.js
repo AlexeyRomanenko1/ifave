@@ -1,6 +1,7 @@
 (function () {
     $('#edit').richText();
     $("#select_location").customselect();
+
     $('input')
         .on('change', function (event) {
             var $element = $(event.target);
@@ -43,14 +44,18 @@ $('#select_location').on('change', function () {
             // $("#msg").html(data.msg);
             // console.log(data)
             let obj = JSON.parse(data);
-            let html = '<option selected disabled>Select Category</option>';
+            let html = '  <label for="select_category" class="form-label">Category<b class="text-danger">*</b></label> <select class="custom-select custom-select-category" id="select_category" name="question_id" aria-label="Select Category" disabled><option selected disabled>Select Category</option>';
+
+            // let ul = '<li class="active">Select Category</li>';
             for (let j = 0; j < obj.data.length; j++) {
                 html += '<option value="' + obj.data[j]['id'] + '">' + obj.data[j]['question'] + '</option>';
+                // ul = '<li class="active" data-value="' + obj.data[j]['id'] + '">' + obj.data[j]['question'] + '</li>';
             }
+            html += '</select>';
             $("#select_category").attr("disabled", false);
-            $('#select_category').empty();
-            $('#select_category').html(html);
-            // $("#select_category").customselect();
+            $('#custom-select-category').empty();
+            $('#custom-select-category').html(html);
+            $("#select_category").customselect();
         },
         error: function (e) {
             console.log(e)
@@ -150,7 +155,7 @@ $('#blog_form').on('submit', function (e) {
 })
 
 // function get_selected_image(x) {
-$('.content_images').on('change', function (e){
+$('.content_images').on('change', function (e) {
     var formData = new FormData();
 
     // Get all the files so we easily can get the length etc.
@@ -169,10 +174,10 @@ $('.content_images').on('change', function (e){
         success: function (data) {
             console.log(data);
             var obj = JSON.parse(data);
-            let html='';
+            let html = '';
             // invalid file format.
             if (obj.success == 1) {
-                html +='<div class="row mt-5"><div class="col-md-3"><img src="'+ obj.path +'" heigth="100px" width="100px"></img></div><div class="col-md-9"><p><b>URL:</b></p><p onclick="copy_image_path(\'' + obj.path + '\')">'+ obj.path +'</p></div></div>';
+                html += '<div class="row mt-5"><div class="col-md-3"><img src="' + obj.path + '" heigth="100px" width="100px"></img></div><div class="col-md-9"><p><b>URL:</b></p><p onclick="copy_image_path(\'' + obj.path + '\')">' + obj.path + '</p></div></div>';
                 $('.images_div').append(html);
             } else {
                 toastr.error(obj.data);
@@ -183,8 +188,11 @@ $('.content_images').on('change', function (e){
         }
     });
 })
-
-function copy_image_path(x){
+$('#blog_title').on('keyup',function(){
+    $('.title_count').empty();
+    $('.title_count').html($(this).val().length+'/100');
+})
+function copy_image_path(x) {
     navigator.clipboard.writeText(x);
     toastr.success('Link copied!')
 }

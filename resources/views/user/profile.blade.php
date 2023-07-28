@@ -7,7 +7,7 @@
             @if($user_image[0] !='' && $user_image[0] !==null)
             <img src="/images/user_images/{{$user_image[0]}}" class="img-fluid profile_image mt-4" />
             @else
-            <img src="/images/user_images/IFAVE_PNG.png" class="img-fluid profile_image mt-4" />
+            <img src="/images/user_images/default_profile_picture.jpg" class="img-fluid profile_image mt-4" />
             @endif
         </div>
         <div class="col-md-8">

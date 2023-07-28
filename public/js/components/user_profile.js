@@ -20,8 +20,8 @@ $("#formFile").on('change', function () {
                 var height = this.height;
 
                 // Display the dimensions (you can do whatever you want with them)
-                if (width !== 200 && height !== 200) {
-                    toastr.error('Image size should be 200 x 200 pixels. Provided size is ' + height + ' x ' + width);
+                if (width !== 90 && height !== 120) {
+                    toastr.error('Image size should be 90 x 120 pixels. Provided size is ' + height + ' x ' + width);
                     $("#formFile").val("");
                 }
             });
