@@ -23,12 +23,13 @@
                     <input type="text" class="form-control" id="location" name="location" value="{{$info->location}}" maxlength="30" required>
                 </div>
                 <div class="mb-3">
-                    <label for="formFile" class="form-label">Profile Picture<b class="text-danger"> ( 200 x 200 )</b></label>
+                    <label for="formFile" class="form-label">Profile Picture<b class="text-danger"> ( 90 x 120 pixels)</b></label>
                     <input class="form-control" type="file" id="formFile" name="profile_picture">
                 </div>
                 <div class="mb-3">
                     <label for="bio">Bio</label>
-                    <textarea name="bio" id="bio" cols="114" rows="10" value="{{$info->bio}}" required> {{$info->bio}}</textarea>
+                    <textarea name="bio" id="bio" cols="114" rows="10" maxlength="700" value="{{$info->bio}}" required> {{$info->bio}}</textarea>
+                    <small class="text-danger text-bio">0/100</small>
                 </div>
                 @endforeach
                 <button type="submit" class="btn btn-primary">Update</button>
@@ -37,3 +38,9 @@
     </div>
 </div>
 @include('footer.footer')
+<script>
+    $('#bio').on('keyup',function(){
+        $('.text-bio').empty();
+        $('.text-bio').html($(this).val().length+"/700");
+    })
+</script>
