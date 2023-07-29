@@ -81,7 +81,7 @@ class indexController extends Controller
 
         //query to get posts data 
         $posts = DB::table('posts')
-            ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at','posts.slug')
+            ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
             ->join('users', 'posts.user_id', 'users.id')
             ->where('posts.topic_id', $topic_id)
             ->orderByDesc('posts.vote_count')
@@ -344,7 +344,7 @@ class indexController extends Controller
                 ->get();
             //query to get posts data 
             $posts = DB::table('posts')
-                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at','posts.slug')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
                 ->orderByDesc('posts.vote_count')
@@ -393,7 +393,7 @@ class indexController extends Controller
                 ->groupBy('users.name')
                 ->get();
             $posts = DB::table('posts')
-                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at','posts.slug')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
                 ->orderByDesc('posts.vote_count')
@@ -747,6 +747,34 @@ class indexController extends Controller
         ]);
     }
 
+    public function get_blogger(Request $request)
+    {
+        $bloggers = DB::table('users as u')
+            ->join('posts as p', 'u.id', '=', 'p.user_id')
+            ->select('u.name as username', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
+            ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
+            ->orderByDesc('rating')
+            ->get();
+        return json_encode([
+            'success' => 1,
+            'data' => $bloggers
+        ]);
+    }
+    public function search_bloggers(Request $request)
+    {
+        $searchTerm = '%' . $request->to_search . '%';
+        $bloggers = DB::table('users as u')
+            ->join('posts as p', 'u.id', '=', 'p.user_id')
+            ->select('u.name as username', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
+            ->where('u.name', 'like', $searchTerm) // Adding the where condition for name search
+            ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
+            ->orderByDesc('rating')
+            ->get();
+            return json_encode([
+                'success' => 1,
+                'data' => $bloggers
+            ]);
+    }
     public function search_topics(Request $request)
     {
         $tosearch = $request->to_search;
@@ -850,14 +878,14 @@ class indexController extends Controller
             ->groupBy('users.name')
             ->get();
 
-            $posts = DB::table('posts')
-            ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at','posts.slug')
+        $posts = DB::table('posts')
+            ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
             ->join('users', 'posts.user_id', 'users.id')
             ->where('posts.topic_id', $topic_id)
             ->orderByDesc('posts.vote_count')
             ->limit(4)
             ->get();
-        return view("topics", compact('header_info', 'get_topic', 'questions', 'comments', 'subQuery', 'topic_id','posts'));
+        return view("topics", compact('header_info', 'get_topic', 'questions', 'comments', 'subQuery', 'topic_id', 'posts'));
     }
     public function getClientIP(Request $request)
     {

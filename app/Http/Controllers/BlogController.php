@@ -122,13 +122,14 @@ class BlogController extends Controller
         $posts = DB::table('posts')
             ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
             ->join('users', 'posts.user_id', 'users.id')
+            ->where('posts.status',1)
             ->orderByDesc('posts.vote_count')
             ->paginate($perPage, ['*'], 'page', $page);
 
         $bloggers = DB::table('users as u')
             ->join('posts as p', 'u.id', '=', 'p.user_id')
-            ->select('u.name as username', 'u.image', 'u.bio', DB::raw('SUM(p.vote_count) as rating'))
-            ->groupBy('u.id', 'u.name', 'u.image', 'u.bio')
+            ->select('u.name as username', 'u.image', 'u.bio','u.location', DB::raw('SUM(p.vote_count) as rating'))
+            ->groupBy('u.id', 'u.name', 'u.image', 'u.bio','u.location')
             ->orderByDesc('rating')
             ->get();
 
@@ -318,6 +319,7 @@ class BlogController extends Controller
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
                 ->where('posts.question_id', $question_id)
+                ->where('posts.status',1)
                 ->orderByDesc('posts.vote_count')
                 ->paginate($perPage, ['*'], 'page', $page);
         } else {
@@ -325,13 +327,14 @@ class BlogController extends Controller
                 ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
+                ->where('posts.status',1)
                 ->orderByDesc('posts.vote_count')
                 ->paginate($perPage, ['*'], 'page', $page);
         }
         $bloggers = DB::table('users as u')
             ->join('posts as p', 'u.id', '=', 'p.user_id')
-            ->select('u.name as username', 'u.image', 'u.bio', DB::raw('SUM(p.vote_count) as rating'))
-            ->groupBy('u.id', 'u.name', 'u.image', 'u.bio')
+            ->select('u.name as username', 'u.image', 'u.bio','u.location', DB::raw('SUM(p.vote_count) as rating'))
+            ->groupBy('u.id', 'u.name', 'u.image', 'u.bio','u.location')
             ->orderByDesc('rating')
             ->get();
 
@@ -367,6 +370,7 @@ class BlogController extends Controller
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
                 ->where('posts.question_id', $question_id)
+                ->where('posts.status',1)
                 ->where('users.id', $user_id)
                 ->orderByDesc('posts.vote_count')
                 ->paginate($perPage, ['*'], 'page', $page);
@@ -375,14 +379,15 @@ class BlogController extends Controller
                 ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
+                ->where('posts.status',1)
                 ->where('users.id', $user_id)
                 ->orderByDesc('posts.vote_count')
                 ->paginate($perPage, ['*'], 'page', $page);
         }
         $bloggers = DB::table('users as u')
             ->join('posts as p', 'u.id', '=', 'p.user_id')
-            ->select('u.name as username', 'u.image', 'u.bio', DB::raw('SUM(p.vote_count) as rating'))
-            ->groupBy('u.id', 'u.name', 'u.image', 'u.bio')
+            ->select('u.name as username', 'u.image', 'u.bio','u.location', DB::raw('SUM(p.vote_count) as rating'))
+            ->groupBy('u.id', 'u.name', 'u.image', 'u.bio','u.location')
             ->orderByDesc('rating')
             ->get();
 
@@ -403,18 +408,68 @@ class BlogController extends Controller
             ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
             ->join('users', 'posts.user_id', 'users.id')
             ->where('users.id', $user_id)
+            ->where('posts.status',1)
             ->orderByDesc('posts.vote_count')
             ->paginate($perPage, ['*'], 'page', $page);
 
         $bloggers = DB::table('users as u')
             ->join('posts as p', 'u.id', '=', 'p.user_id')
-            ->select('u.name as username', 'u.image', 'u.bio', DB::raw('SUM(p.vote_count) as rating'))
-            ->groupBy('u.id', 'u.name', 'u.image', 'u.bio')
+            ->select('u.name as username', 'u.image', 'u.bio','u.location', DB::raw('SUM(p.vote_count) as rating'))
+            ->groupBy('u.id', 'u.name', 'u.image', 'u.bio','u.location')
             ->orderByDesc('rating')
             ->get();
 
         $topics = DB::table('topics')->select('*')->get();
         return view('posts.blog', compact('posts', 'bloggers', 'topics'));
+    }
+    public function searchBlogs(Request $request)
+    {
+        $perPage = 20; // Number of items per page
+        $page = request()->get('page', 1); // Get the current page from the request
+        if (isset($request->topic_slug) && isset($request->question_slug)) {
+            $topic = str_replace('-', " ", $request->topic_slug);
+            $question = str_replace('-', " ", $request->question_slug);
+            $topic_id = DB::table('topics')
+                ->where('topic_name', $topic)
+                ->pluck('id');
+
+            $topic_id = $topic_id[0];
+            if ($question != 'All Categories') {
+                $question_id = DB::table('questions')
+                    ->where('question', $question)
+                    ->where('topic_id', $topic_id[0])
+                    ->pluck('id');
+                $question_id = $question_id[0];
+                $posts = DB::table('posts')
+                    ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
+                    ->join('users', 'posts.user_id', 'users.id')
+                    ->where('posts.topic_id', $topic_id)
+                    ->where('posts.question_id', $question_id)
+                    ->where('posts.status',1)
+                    ->where('posts.title', 'like', '%' . $request->search . '%')
+                    ->orderByDesc('posts.vote_count')
+                    ->paginate($perPage, ['*'], 'page', $page);
+            } else {
+                $posts = DB::table('posts')
+                    ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
+                    ->join('users', 'posts.user_id', 'users.id')
+                    ->where('posts.topic_id', $topic_id)
+                    ->where('posts.status',1)
+                    ->where('posts.title', 'like', '%' . $request->search . '%')
+                    ->orderByDesc('posts.vote_count')
+                    ->paginate($perPage, ['*'], 'page', $page);
+            }
+        } else {
+            $posts = DB::table('posts')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
+                ->join('users', 'posts.user_id', 'users.id')
+                ->where('posts.status',1)
+                ->where('posts.title', 'like', '%' . $request->search . '%')
+                ->orderByDesc('posts.vote_count')
+                ->limit(1)
+                ->paginate($perPage, ['*'], 'page', $page);
+        }
+        return view('posts.pagination', compact('posts'));
     }
     public function getClientIP(Request $request)
     {

@@ -41,9 +41,9 @@ class HomeController extends Controller
         if ($user_type == 1) {
             $perPage = 100; // Number of items per page
             $page = request()->get('page', 1); // Get the current page from the request
-            $query = DB::table('questions')->select('questions.id', 'questions.question', 'questions.question_category', 'topics.topic_name')->join('topics', 'questions.topic_id', 'topics.id') ->paginate($perPage, ['*'], 'page', $page);
-           // return view('home');
-           return view('home', compact('query'));
+            $query = DB::table('questions')->select('questions.id', 'questions.question', 'questions.question_category', 'topics.topic_name')->join('topics', 'questions.topic_id', 'topics.id')->paginate($perPage, ['*'], 'page', $page);
+            // return view('home');
+            return view('home', compact('query'));
         } else {
             //return view('index');
             return redirect('/');
@@ -367,6 +367,68 @@ class HomeController extends Controller
         // Delete the temporary zip file
         Storage::delete($extractedPath);
         return redirect()->back()->with('success', "Images imported successfully!");
+    }
+    public function blog_requests(Request $request)
+    {
+        $userId = Auth::id();
+        $this_user = DB::table('users')->select('*')->where('id', $userId)->get();
+        foreach ($this_user as $user_details) {
+            //print_r($user_details);
+            $user_type = $user_details->user_type;
+        }
+        if ($user_type == 1) {
+            $perPage = 20; // Number of items per page
+            $page = request()->get('page', 1); // Get the current page from the request
+            $posts = DB::table('posts')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
+                ->join('users', 'posts.user_id', 'users.id')
+                ->where('posts.status', 0)
+                ->paginate($perPage, ['*'], 'page', $page);
+            return view('admin.blog_requests', compact('posts'));
+        } else {
+            //return view('index');
+            return redirect('/');
+        }
+    }
+    public function blog_request_slug(Request $request, $slug)
+    {
+        $userId = Auth::id();
+        $this_user = DB::table('users')->select('*')->where('id', $userId)->get();
+        foreach ($this_user as $user_details) {
+            //print_r($user_details);
+            $user_type = $user_details->user_type;
+        }
+        if ($user_type == 1) {
+            $posts = DB::table('posts')->select('posts.title', 'posts.tags', 'posts.blog_content', 'posts.featured_image', 'posts.vote_count', 'users.name', 'posts.created_at', 'posts.id', 'posts.down_votes', 'posts.views_count')
+                ->join('users', 'users.id', 'posts.user_id')
+                ->where('posts.slug', $slug)
+                ->get();
+            $post_id = DB::table('posts')->where('slug', $slug)->pluck('id');
+            $post_id = $post_id[0];
+            return view('admin.post_details', compact('posts', 'post_id'));
+        } else {
+            return redirect('/');
+        }
+    }
+    public function approve_post(Request $request)
+    {
+        $userId = Auth::id();
+        $this_user = DB::table('users')->select('*')->where('id', $userId)->get();
+        foreach ($this_user as $user_details) {
+            //print_r($user_details);
+            $user_type = $user_details->user_type;
+        }
+        if ($user_type == 1) {
+            $post_id = $request->post_id;
+            $update_votes = DB::table('posts')
+                ->where('id', $post_id)
+                ->update([
+                    'status' => 1
+                ]);
+            return redirect()->back()->with('success', 'Post approved successfully');
+        } else {
+            return redirect('/');
+        }
     }
     public function verify_notification(Request $request)
     {

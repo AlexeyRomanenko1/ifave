@@ -1,21 +1,21 @@
 $(document).on('ready', function () {
     $("#location").customselect();
-    let slider_slick= $(".regular").slick({
+    let slider_slick = $(".regular").slick({
         dots: true,
         infinite: true,
         slidesToShow: 4,
         slidesToScroll: 3,
         lazyLoad: true
     });
-    if(slider_slick){
+    if (slider_slick) {
         call_slider_onload();
     }
     // setTimeout(()=>{
     //     $('.regular').removeClass('d-none')
     // },5000);
-  
+
 });
-function call_slider_onload(){
+function call_slider_onload() {
     $('.regular').removeClass('d-none');
 }
 $('#location').on('change', function () {
@@ -59,6 +59,39 @@ $('.filter_blogs').on('click', function (e) {
     window.location.replace("/blogs/" + topic_slug + "/" + question_slug);
 })
 
+$('#search_blogs').on('keyup', function () {
+    let to_search = $(this).val();
+    let topic_slug = $('#topic_slug').val();
+    let question_slug = $('#question_slug').val();
+    if (topic_slug !== undefined && question_slug !== undefined) {
+        $.ajax({
+            type: 'GET',
+            url: '/searchBlogs',
+            data: { task: 'searchBlogs', search: to_search,topic_slug:topic_slug,question_slug:question_slug },
+            success: function (data) {
+                
+                $('#posts_list').empty();
+                $('#posts_list').html(data);
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        })
+    }else{
+        $.ajax({
+            type: 'GET',
+            url: '/searchBlogs',
+            data: { task: 'searchBlogs', search: to_search },
+            success: function (data) {
+                $('#posts_list').empty();
+                $('#posts_list').html(data);
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        }) 
+    }
+})
 function blogger_route(x) {
     let user_name = x.replace(/\s/g, "-");
     let topic_slug = $('#topic_slug').val();

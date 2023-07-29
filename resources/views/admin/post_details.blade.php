@@ -1,5 +1,16 @@
 @include('layouts.app')
-
+<div class="container p-4 mb-4">
+    <div class="text-center">
+        <button class="btn btn-danger p-1 m-1" data-bs-toggle="modal" data-bs-target="#exampleModal">Import Questions</button>
+        <button class="btn btn-warning p-1 m-1" data-bs-toggle="modal" data-bs-target="#exampleModal2">Import Answers</button>
+        <button class="btn btn-primary p-1 m-1" data-bs-toggle="modal" data-bs-target="#exampleModal3">Import Images</button>
+        <a href="/blog-requests" class="btn btn-dark p-1 m-1">Blog Requests</a>
+        <form method="POST" action="{{url('export_users')}}">
+            @csrf
+            <button type="submit" class="btn btn-success p-1 m-1">Export Users</button>
+        </form>
+    </div>
+</div>
 <div class="container">
     <div class="row">
         <div class="col-md-8">
@@ -42,6 +53,16 @@
             <div class="container">
                 <div class="card mt-5">
                     <div class="card-header text-center">
+                        <h6>APPROVE BLOG</h6>
+                    </div>
+                    <div class="card-body text-center">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#approve_blog">
+                            Approve Blog
+                        </button>
+                    </div>
+                </div>
+                <div class="card mt-5">
+                    <div class="card-header text-center">
                         <h6>CONNECT & FOLLOW</h6>
                     </div>
                     <div class="card-body text-center">
@@ -62,27 +83,29 @@
                         </form>
                     </div>
                 </div>
-                @if(count($latest_posts) > 0)
-                <div class="card mt-5">
-                    <div class="card-header text-center">
-                        <h6>LATEST POSTS</h6>
-                    </div>
-                    <div class="card-body">
-                        @foreach($latest_posts as $lates_post)
-                        <div class="row">
-                            <div class="col-md-4">
-                                <img src="/images/posts/{{$lates_post->featured_image}}" class="mt-2" height="80px" width="80px">
-                            </div>
-                            <div class="col-md-8">
-                                <h4 class="mt-2"><a href="/blog/{{$lates_post->slug}}">{{$lates_post->title}}</a></h4>
-                                {!! substr(strip_tags($lates_post->blog_content), 0, 100) !!}... <br><br>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-                @endif
             </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="approve_blog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{url('/approve-post')}}" method="POST">
+                <div class="modal-body">
+                    @csrf
+                    <input type="hidden" name="post_id" value="{{$post_id}}">
+                    <small><b>Are you sure you want to approve this blog</b></small>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Approve</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

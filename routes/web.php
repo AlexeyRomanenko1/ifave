@@ -35,6 +35,8 @@ Route::post('/downvote_comment', [indexController::class, 'downvote_comment']);
 Route::get('/uncover_answers', [indexController::class, 'uncover_answers']);
 Route::get('/get_topics', [indexController::class, 'get_topics']);
 Route::get('/search_topics', [indexController::class, 'search_topics']);
+Route::get('/get_blogger', [indexController::class, 'get_blogger']);
+Route::get('/search_bloggers', [indexController::class, 'search_bloggers']);
 Route::get('topics/{topic_name}', [indexController::class, 'topic_name'])->name('topic_name');
 Route::get('/get_comments_list', [indexController::class, 'get_comments_list'])->name('get_comments_list');
 Route::get('/contact-us', [App\Http\Controllers\ContactController::class, 'index'])->name('contact_us_index');
@@ -46,12 +48,17 @@ Route::post('/downvote_post', [App\Http\Controllers\BlogController::class, 'down
 Route::get('blogs/{topic_slug}/{question_slug}', [App\Http\Controllers\BlogController::class, 'filter_blog'])->name('filter_blog');
 Route::get('blogger/{user_name}/{topic_slug}/{question_slug}', [App\Http\Controllers\BlogController::class, 'blogger_location_filter'])->name('filter_blog');
 Route::get('blogger/{user_name}', [App\Http\Controllers\BlogController::class, 'blogger_filter'])->name('filter_blog');
+Route::get('/searchBlogs', [App\Http\Controllers\BlogController::class, 'searchBlogs'])->name('searchBlogs');
 // Route::get('redirect/{id}', 'YourController@redirectToUrlWithId')->name('url.redirect');
 Auth::routes([
     'verify' => true
 ]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('verified');
+Route::get('/blog-requests', [App\Http\Controllers\HomeController::class, 'blog_requests'])->name('blog_requests')->middleware('verified');
+Route::post('/approve-post', [App\Http\Controllers\HomeController::class, 'approve_post'])->name('approve_post');
+
+Route::get('/blog-request/{slug}', [App\Http\Controllers\HomeController::class, 'blog_request_slug'])->name('blog_request_slug')->middleware('verified');
 Route::post('/import_questions', [App\Http\Controllers\HomeController::class, 'import_questions'])->name('import_questions');
 Route::post('/import_answer', [App\Http\Controllers\HomeController::class, 'import_answer'])->name('import_answer');
 Route::get('/dashboard_questions', [App\Http\Controllers\HomeController::class, 'dashboard_questions'])->name('dashboard_questions');

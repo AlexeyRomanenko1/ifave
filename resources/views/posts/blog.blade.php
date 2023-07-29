@@ -8,9 +8,8 @@
         <div class="col-md-8">
             <div class="search">
                 <i class="fa fa-search"></i>
-                <input type="text" id="search_questions" class="form-control" placeholder="Search for blogs">
+                <input type="text" id="search_blogs" class="form-control" placeholder="Search for blogs">
                 <div class="set_suggestion_height mt-3 d-none">
-
                 </div>
             </div>
         </div>
@@ -55,6 +54,11 @@
                     <img onclick="blogger_route('{{$blogger->username}}')" src="/images/user_images/default_profile_picture.jpg">
                     @endif
                     <p onclick="blogger_route('{{$blogger->username}}')" class="mt-3">{{$blogger->username}}</p>
+                    @if($blogger->location !='' || $blogger->location != null)
+                    <p onclick="blogger_route('{{$blogger->username}}')">Location {{$blogger->location}}</p>
+                    @else 
+                    <p onclick="blogger_route('{{$blogger->username}}')">Location Unknown</p>
+                    @endif
                     <p onclick="blogger_route('{{$blogger->username}}')">Rating {{$blogger->rating}}</p>
                     <button onclick="blogger_bio('{{$blogger->bio}}','{{$blogger->username}}')" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bio_modal" id="open_bio">bio</button>
                 </div>

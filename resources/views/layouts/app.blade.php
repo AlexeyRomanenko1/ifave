@@ -69,6 +69,9 @@
                             <a href="{{ url('/create-blog') }}" class="nav-link">Create Blog</a>
                         </li>
                         <li class="nav-item">
+                            <a href="" class="nav-link" data-bs-toggle="modal" data-bs-target="#all_bloggers">All Bloggers</a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{ url('/contact-us') }}" class="nav-link">Contact</a>
                         </li>
                     </ul>
@@ -146,7 +149,34 @@
             </div>
         </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="all_bloggers" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="exampleModalLabel">All Locations</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row height d-flex justify-content-center align-items-center">
+                        <div class="col-md-8">
+                            <div class="search">
+                                <i class="fa fa-search"></i>
+                                <input type="text" id="tosearch_blogger" class="form-control" placeholder="Search">
+                                <!-- <button class="btn btn-primary">Search</button> -->
+                                <div class="set_suggestion_height_bloggers mt-3 rounded">
 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Modal -->
     <div class="modal fade" id="myfavetrack" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">

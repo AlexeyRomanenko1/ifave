@@ -27,7 +27,9 @@
                 <div class="text-center">
                     <button class="btn btn-danger p-1 m-1" data-bs-toggle="modal" data-bs-target="#exampleModal">Import Questions</button>
                     <button class="btn btn-warning p-1 m-1" data-bs-toggle="modal" data-bs-target="#exampleModal2">Import Answers</button>
-                    <form method="POST" action="{{url('export_users')}}" >
+                    <button class="btn btn-primary p-1 m-1" data-bs-toggle="modal" data-bs-target="#exampleModal3">Import Images</button>
+                    <a href="/blog-requests"class="btn btn-dark p-1 m-1">Blog Requests</a>
+                    <form method="POST" action="{{url('export_users')}}">
                         @csrf
                         <button type="submit" class="btn btn-success p-1 m-1">Export Users</button>
                     </form>

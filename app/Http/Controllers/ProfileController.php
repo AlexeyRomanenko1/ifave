@@ -33,14 +33,16 @@ class ProfileController extends Controller
                 ->where('id', $user_id)
                 ->update([
                     'image' => $uniqueName,
-                    'bio' => $request->bio
+                    'bio' => $request->bio,
+                    'location'=>$request->location
                 ]);
             return redirect()->back()->with('success', 'Profile Updated successfully');
         } else {
             $update_votes = DB::table('users')
                 ->where('id', $user_id)
                 ->update([
-                    'bio' => $request->bio
+                    'bio' => $request->bio,
+                    'location'=>$request->location
                 ]);
             return redirect()->back()->with('success', 'Profile Updated successfully');
         }

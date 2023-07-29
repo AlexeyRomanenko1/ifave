@@ -19,6 +19,10 @@
                     <input type="text" class="form-control" id="name" value="{{$info->name}}" readonly>
                 </div>
                 <div class="mb-3">
+                    <label for="location">Location</label>
+                    <input type="text" class="form-control" id="location" name="location" value="{{$info->location}}" maxlength="30" required>
+                </div>
+                <div class="mb-3">
                     <label for="formFile" class="form-label">Profile Picture<b class="text-danger"> ( 200 x 200 )</b></label>
                     <input class="form-control" type="file" id="formFile" name="profile_picture">
                 </div>
