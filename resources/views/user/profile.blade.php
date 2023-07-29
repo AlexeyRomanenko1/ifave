@@ -29,7 +29,7 @@
                 <div class="mb-3">
                     <label for="bio">Bio</label>
                     <textarea name="bio" id="bio" cols="114" rows="10" maxlength="700" value="{{$info->bio}}" required> {{$info->bio}}</textarea>
-                    <small class="text-danger text-bio">0/100</small>
+                    <small class="text-danger text-bio">0/700</small>
                 </div>
                 @endforeach
                 <button type="submit" class="btn btn-primary">Update</button>
