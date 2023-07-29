@@ -68,9 +68,7 @@
                         <li class="nav-item">
                             <a href="{{ url('/create-blog') }}" class="nav-link">Create Blog</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="" class="nav-link" data-bs-toggle="modal" data-bs-target="#all_bloggers">All Bloggers</a>
-                        </li>
+
                         <li class="nav-item">
                             <a href="{{ url('/contact-us') }}" class="nav-link">Contact</a>
                         </li>
