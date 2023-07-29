@@ -33,7 +33,7 @@ $('#location').on('change', function () {
 
             // let ul = '<li class="active">Select Category</li>';
             for (let j = 0; j < obj.data.length; j++) {
-                html += '<option value="' + obj.data[j]['id'] + '">' + obj.data[j]['question'] + '</option>';
+                html += '<option value="' + obj.data[j]['question'] + '">' + obj.data[j]['question'] + '</option>';
                 // ul = '<li class="active" data-value="' + obj.data[j]['id'] + '">' + obj.data[j]['question'] + '</li>';
             }
             html += '</select>';

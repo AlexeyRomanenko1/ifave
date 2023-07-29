@@ -311,7 +311,7 @@ class BlogController extends Controller
         if ($question != 'All Categories') {
             $question_id = DB::table('questions')
                 ->where('question', $question)
-                ->where('topic_id', $topic_id[0])
+                ->where('topic_id', $topic_id)
                 ->pluck('id');
             $question_id = $question_id[0];
             $posts = DB::table('posts')
@@ -362,7 +362,7 @@ class BlogController extends Controller
         if ($question != 'All Categories') {
             $question_id = DB::table('questions')
                 ->where('question', $question)
-                ->where('topic_id', $topic_id[0])
+                ->where('topic_id', $topic_id)
                 ->pluck('id');
             $question_id = $question_id[0];
             $posts = DB::table('posts')
