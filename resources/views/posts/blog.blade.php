@@ -43,7 +43,7 @@
                 @endif
             </div>
         </div>
-        <a href="" class="nav-link" data-bs-toggle="modal" data-bs-target="#all_bloggers"><h4>All Bloggers</h4></a>
+        <a href="" class="nav-link mt-5" data-bs-toggle="modal" data-bs-target="#all_bloggers"><h4>All Bloggers</h4></a>
         <div class="container mb-5">
             <section class="regular slider d-none">
                 @foreach($bloggers as $blogger)
