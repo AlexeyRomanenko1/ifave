@@ -1,5 +1,9 @@
 (function () {
-    $('#edit').richText();
+    // $('#edit').richText();
+    new FroalaEditor("#edit", {
+        key:"OXC1lD4B3B14B10D6D6C5dNSWXa1c1MDe1CI1PLPFa1F1EESFKVlA6F6D5H5A1D3A11A3D5F4==",
+        theme: 'dark'
+      })
     $("#select_location").customselect();
 
     $('input')

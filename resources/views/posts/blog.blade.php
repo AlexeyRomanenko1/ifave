@@ -47,7 +47,7 @@
         <div class="container mb-5">
             <section class="regular slider d-none">
                 @foreach($bloggers as $blogger)
-                <div>
+                <div class="p-2 m-2">
                     @if($blogger->image !=='' && $blogger->image !== null)
                     <img onclick="blogger_route('{{$blogger->username}}')" src="/images/user_images/{{$blogger->image}}">
                     @else
