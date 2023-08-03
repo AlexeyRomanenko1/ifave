@@ -47,7 +47,7 @@
         <div class="container mb-5">
             <section class="regular slider d-none">
                 @foreach($bloggers as $blogger)
-                <div class="p-2 m-2">
+                <div class="p-2 m-2 text-center">
                     @if($blogger->image !=='' && $blogger->image !== null)
                     <img onclick="blogger_route('{{$blogger->username}}')" src="/images/user_images/{{$blogger->image}}">
                     @else
@@ -55,11 +55,11 @@
                     @endif
                     <p onclick="blogger_route('{{$blogger->username}}')" class="mt-3">{{$blogger->username}}</p>
                     @if($blogger->location !='' || $blogger->location != null)
-                    <p onclick="blogger_route('{{$blogger->username}}')">Location {{$blogger->location}}</p>
+                    <p onclick="blogger_route('{{$blogger->username}}')"> {{$blogger->location}}</p>
                     @else 
-                    <p onclick="blogger_route('{{$blogger->username}}')">Location Unknown</p>
+                    <p onclick="blogger_route('{{$blogger->username}}')">Unknown</p>
                     @endif
-                    <p onclick="blogger_route('{{$blogger->username}}')">Rating {{$blogger->rating}}</p>
+                    <p onclick="blogger_route('{{$blogger->username}}')">{{$blogger->rating}}</p>
                     <button onclick="blogger_bio('{{$blogger->bio}}','{{$blogger->username}}')" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bio_modal" id="open_bio">bio</button>
                 </div>
                 @endforeach

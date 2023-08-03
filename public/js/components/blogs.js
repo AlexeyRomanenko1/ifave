@@ -1,18 +1,54 @@
 $(document).on('ready', function () {
     $("#location").customselect();
-    let slider_slick = $(".regular").slick({
-        dots: true,
-        infinite: true,
-        slidesToShow: 4,
-        slidesToScroll: 3,
-        lazyLoad: true
-    });
-    if (slider_slick) {
-        call_slider_onload();
-    }
+    // let slider_slick = $(".regular").slick({
+    //     dots: true,
+    //     infinite: true,
+    //     slidesToShow: 4,
+    //     slidesToScroll: 3,
+    //     lazyLoad: true
+    // });
+    // if (slider_slick) {
+    //     call_slider_onload();
+    // }
     // setTimeout(()=>{
     //     $('.regular').removeClass('d-none')
     // },5000);
+    function setSliderSettings() {
+        const windowWidth = $(window).width();
+        let slidesToShow = 4;
+        let slidesToScroll = 3;
+
+        if (windowWidth < 1200) {
+            slidesToShow = 3;
+            slidesToScroll = 2;
+        }
+
+        if (windowWidth < 992) {
+            slidesToShow = 2;
+            slidesToScroll = 1;
+        }
+
+        $(".regular").slick("slickSetOption", "slidesToShow", slidesToShow, true);
+        $(".regular").slick("slickSetOption", "slidesToScroll", slidesToScroll, true);
+    }
+
+    let slider_slick = $(".regular").slick({
+        dots: true,
+        infinite: true,
+        lazyLoad: true
+    });
+
+    if (slider_slick) {
+        call_slider_onload();
+    }
+
+    // Call the function when the window is resized
+    $(window).on("resize", function () {
+        setSliderSettings();
+    });
+
+    // Set initial slider settings
+    setSliderSettings();
 
 });
 function call_slider_onload() {
@@ -67,9 +103,9 @@ $('#search_blogs').on('keyup', function () {
         $.ajax({
             type: 'GET',
             url: '/searchBlogs',
-            data: { task: 'searchBlogs', search: to_search,topic_slug:topic_slug,question_slug:question_slug },
+            data: { task: 'searchBlogs', search: to_search, topic_slug: topic_slug, question_slug: question_slug },
             success: function (data) {
-                
+
                 $('#posts_list').empty();
                 $('#posts_list').html(data);
             },
@@ -77,7 +113,7 @@ $('#search_blogs').on('keyup', function () {
                 console.log(error)
             }
         })
-    }else{
+    } else {
         $.ajax({
             type: 'GET',
             url: '/searchBlogs',
@@ -89,7 +125,7 @@ $('#search_blogs').on('keyup', function () {
             error: function (error) {
                 console.log(error)
             }
-        }) 
+        })
     }
 })
 function blogger_route(x) {
