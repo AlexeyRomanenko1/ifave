@@ -10,6 +10,7 @@ use App\Models\Questionsanswers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\File;
 use ZipArchive;
 
@@ -53,20 +54,21 @@ class BlogController extends Controller
         $blog_content = $request->blog_content;
         $user_id = Auth::id();
         $slug = str_replace(" ", "-", $request->blog_title) . "-" . $user_id . "-" . date('m-d-Y-his');
+     
         if ($request->hasFile('featured_image') && $request->file('featured_image')->isValid()) {
             $file = $request->file('featured_image');
             $allowedExtensions = ['jpg', 'jpeg', 'png', 'JPG', 'JPEG', 'PNG'];
             $extension = $file->getClientOriginalExtension();
             if (!in_array($extension, $allowedExtensions)) {
-                return redirect()->back()->with('error', "Only JPG,JPEG,PNG entensions are allowed");
+                return json_encode(['success'=>0, 'data'=>"Only JPG,JPEG,PNG entensions are allowed"]);
             }
-            $uniqueName = date('m_d_Y_his') . $blog_title . '.' . $extension;
+            $uniqueName = date('m_d_Y_his') . $file->getClientOriginalName();
             // $file->storeAs(public_path('images/posts/'), $uniqueName);
             $path =  $file->move(public_path('images/posts/'), $uniqueName);
         } else {
             $uniqueName = '';
         }
-        if (isset($request->topic_id) && isset($request->question_id)) {
+        // if (isset($request->topic_id) && isset($request->question_id)) {
             $insert_blog =  DB::table('posts')->insert([
                 'user_id' => $user_id,
                 'title' => $blog_title,
@@ -77,16 +79,16 @@ class BlogController extends Controller
                 'featured_image' => $uniqueName,
                 'slug' => $slug
             ]);
-        } else {
-            $insert_blog =  DB::table('posts')->insert([
-                'user_id' => $user_id,
-                'title' => $blog_title,
-                'tags' => $tags,
-                'blog_content' => $blog_content,
-                'featured_image' => $uniqueName,
-                'slug' => $slug
-            ]);
-        }
+        // } else {
+        //     $insert_blog =  DB::table('posts')->insert([
+        //         'user_id' => $user_id,
+        //         'title' => $blog_title,
+        //         'tags' => $tags,
+        //         'blog_content' => $blog_content,
+        //         'featured_image' => $uniqueName,
+        //         'slug' => $slug
+        //     ]);
+        // }
 
         if ($insert_blog) {
             //return redirect()->back()->with('success', "Blog created successfully");
@@ -122,14 +124,14 @@ class BlogController extends Controller
         $posts = DB::table('posts')
             ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
             ->join('users', 'posts.user_id', 'users.id')
-            ->where('posts.status',1)
+            ->where('posts.status', 1)
             ->orderByDesc('posts.vote_count')
             ->paginate($perPage, ['*'], 'page', $page);
 
         $bloggers = DB::table('users as u')
             ->join('posts as p', 'u.id', '=', 'p.user_id')
-            ->select('u.name as username', 'u.image', 'u.bio','u.location', DB::raw('SUM(p.vote_count) as rating'))
-            ->groupBy('u.id', 'u.name', 'u.image', 'u.bio','u.location')
+            ->select('u.name as username', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
+            ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
             ->orderByDesc('rating')
             ->get();
 
@@ -277,23 +279,33 @@ class BlogController extends Controller
     }
     public function upload_content_image(Request $request)
     {
-        $file = $request->file('content_images');
-        $allowedExtensions = ['jpg', 'jpeg', 'png', 'JPG', 'JPEG', 'PNG'];
-        $extension = $file->getClientOriginalExtension();
-        if (!in_array($extension, $allowedExtensions)) {
-            return json_encode([
-                'success' => 0,
-                'data' => 'Only JPG,JPEG,PNG entensions are allowed'
-            ]);
-        }
-        // $uniqueName = date('m_d_Y_his') . $file->getClientOriginalName() . '.' . $extension;
+        // $file = $request->file('content_images');
+        // $allowedExtensions = ['jpg', 'jpeg', 'png', 'JPG', 'JPEG', 'PNG'];
+        // $extension = $file->getClientOriginalExtension();
+        // if (!in_array($extension, $allowedExtensions)) {
+        //     return json_encode([
+        //         'success' => 0,
+        //         'data' => 'Only JPG,JPEG,PNG entensions are allowed'
+        //     ]);
+        // }
+        // // $uniqueName = date('m_d_Y_his') . $file->getClientOriginalName() . '.' . $extension;
+        // $uniqueName = date('m_d_Y_his') . $file->getClientOriginalName();
+        // // $file->storeAs(public_path('images/posts/'), $uniqueName);
+        // $path =  $file->move(public_path('images/posts/'), $uniqueName);
+        // return json_encode([
+        //     'success' => 1,
+        //     'path' => '/images/posts/' . $uniqueName
+        // ]);
+        $file = $request->file('file');
         $uniqueName = date('m_d_Y_his') . $file->getClientOriginalName();
-        // $file->storeAs(public_path('images/posts/'), $uniqueName);
         $path =  $file->move(public_path('images/posts/'), $uniqueName);
-        return json_encode([
-            'success' => 1,
-            'path' => '/images/posts/' . $uniqueName
-        ]);
+        // Validate the uploaded file, for example, you can check the file extension and size.
+
+        // Save the file to a designated location, for example, the public/uploads folder.
+        // $path = $file->store('uploads', 'public');
+
+        // Return the URL of the uploaded image back to Froala.
+        return response()->json(['link' => asset('/images/posts/' . $uniqueName)]);
     }
 
     public function filter_blog(Request $request, $topic_slug, $question_slug)
@@ -319,7 +331,7 @@ class BlogController extends Controller
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
                 ->where('posts.question_id', $question_id)
-                ->where('posts.status',1)
+                ->where('posts.status', 1)
                 ->orderByDesc('posts.vote_count')
                 ->paginate($perPage, ['*'], 'page', $page);
         } else {
@@ -327,14 +339,14 @@ class BlogController extends Controller
                 ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
-                ->where('posts.status',1)
+                ->where('posts.status', 1)
                 ->orderByDesc('posts.vote_count')
                 ->paginate($perPage, ['*'], 'page', $page);
         }
         $bloggers = DB::table('users as u')
             ->join('posts as p', 'u.id', '=', 'p.user_id')
-            ->select('u.name as username', 'u.image', 'u.bio','u.location', DB::raw('SUM(p.vote_count) as rating'))
-            ->groupBy('u.id', 'u.name', 'u.image', 'u.bio','u.location')
+            ->select('u.name as username', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
+            ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
             ->orderByDesc('rating')
             ->get();
 
@@ -370,7 +382,7 @@ class BlogController extends Controller
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
                 ->where('posts.question_id', $question_id)
-                ->where('posts.status',1)
+                ->where('posts.status', 1)
                 ->where('users.id', $user_id)
                 ->orderByDesc('posts.vote_count')
                 ->paginate($perPage, ['*'], 'page', $page);
@@ -379,15 +391,15 @@ class BlogController extends Controller
                 ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
-                ->where('posts.status',1)
+                ->where('posts.status', 1)
                 ->where('users.id', $user_id)
                 ->orderByDesc('posts.vote_count')
                 ->paginate($perPage, ['*'], 'page', $page);
         }
         $bloggers = DB::table('users as u')
             ->join('posts as p', 'u.id', '=', 'p.user_id')
-            ->select('u.name as username', 'u.image', 'u.bio','u.location', DB::raw('SUM(p.vote_count) as rating'))
-            ->groupBy('u.id', 'u.name', 'u.image', 'u.bio','u.location')
+            ->select('u.name as username', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
+            ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
             ->orderByDesc('rating')
             ->get();
 
@@ -408,14 +420,14 @@ class BlogController extends Controller
             ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
             ->join('users', 'posts.user_id', 'users.id')
             ->where('users.id', $user_id)
-            ->where('posts.status',1)
+            ->where('posts.status', 1)
             ->orderByDesc('posts.vote_count')
             ->paginate($perPage, ['*'], 'page', $page);
 
         $bloggers = DB::table('users as u')
             ->join('posts as p', 'u.id', '=', 'p.user_id')
-            ->select('u.name as username', 'u.image', 'u.bio','u.location', DB::raw('SUM(p.vote_count) as rating'))
-            ->groupBy('u.id', 'u.name', 'u.image', 'u.bio','u.location')
+            ->select('u.name as username', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
+            ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
             ->orderByDesc('rating')
             ->get();
 
@@ -445,7 +457,7 @@ class BlogController extends Controller
                     ->join('users', 'posts.user_id', 'users.id')
                     ->where('posts.topic_id', $topic_id)
                     ->where('posts.question_id', $question_id)
-                    ->where('posts.status',1)
+                    ->where('posts.status', 1)
                     ->where('posts.title', 'like', '%' . $request->search . '%')
                     ->orderByDesc('posts.vote_count')
                     ->paginate($perPage, ['*'], 'page', $page);
@@ -454,7 +466,7 @@ class BlogController extends Controller
                     ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
                     ->join('users', 'posts.user_id', 'users.id')
                     ->where('posts.topic_id', $topic_id)
-                    ->where('posts.status',1)
+                    ->where('posts.status', 1)
                     ->where('posts.title', 'like', '%' . $request->search . '%')
                     ->orderByDesc('posts.vote_count')
                     ->paginate($perPage, ['*'], 'page', $page);
@@ -463,7 +475,7 @@ class BlogController extends Controller
             $posts = DB::table('posts')
                 ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
                 ->join('users', 'posts.user_id', 'users.id')
-                ->where('posts.status',1)
+                ->where('posts.status', 1)
                 ->where('posts.title', 'like', '%' . $request->search . '%')
                 ->orderByDesc('posts.vote_count')
                 ->limit(1)

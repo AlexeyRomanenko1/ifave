@@ -1,9 +1,32 @@
 (function () {
     // $('#edit').richText();
+    var uploadUrl = $('#edit').data('upload-url');
     new FroalaEditor("#edit", {
-        key:"OXC1lD4B3B14B10D6D6C5dNSWXa1c1MDe1CI1PLPFa1F1EESFKVlA6F6D5H5A1D3A11A3D5F4==",
-        theme: 'dark'
-      })
+        key: "OXC1lD4B3B14B10D6D6C5dNSWXa1c1MDe1CI1PLPFa1F1EESFKVlA6F6D5H5A1D3A11A3D5F4==",
+        theme: 'dark',
+        toolbarButtons: {
+            // Customize the buttons you want to show in the toolbar.
+            // Remove 'insertVideo' to exclude it. Keep 'insertImage'.
+            moreText: {
+              buttons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor']
+            },
+            moreParagraph: {
+              buttons: ['alignLeft', 'alignCenter', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent', 'quote']
+            },
+            moreRich: {
+              buttons: ['insertImage', 'insertLink', 'insertTable', 'emoticons', 'fontAwesome', 'specialCharacters']
+            },
+            moreMisc: {
+              buttons: ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'spellChecker', 'selectAll', 'html', 'help']
+            }
+          },
+        imageUploadURL: uploadUrl,
+        imageUploadMethod: 'POST', // Set the method to POST
+        imageUploadParams: {
+            _token: $('meta[name="csrf-token"]').attr('content') // Pass the CSRF token if required
+        }
+    })
+    // $('#imageManager-1').addClass('d-none');
     $("#select_location").customselect();
 
     $('input')
@@ -48,7 +71,7 @@ $('#select_location').on('change', function () {
             // $("#msg").html(data.msg);
             // console.log(data)
             let obj = JSON.parse(data);
-            let html = '  <label for="select_category" class="form-label">Category<b class="text-danger">*</b></label> <select class="custom-select custom-select-category" id="select_category" name="question_id" aria-label="Select Category" disabled><option selected disabled>Select Category</option>';
+            let html = '  <label for="select_category" class="form-label">Category<b class="text-danger">*</b></label> <select class="custom-select custom-select-category" id="select_category" name="question_id" aria-label="Select Category"><option selected disabled>Select Category</option>';
 
             // let ul = '<li class="active">Select Category</li>';
             for (let j = 0; j < obj.data.length; j++) {
@@ -192,9 +215,9 @@ $('.content_images').on('change', function (e) {
         }
     });
 })
-$('#blog_title').on('keyup',function(){
+$('#blog_title').on('keyup', function () {
     $('.title_count').empty();
-    $('.title_count').html($(this).val().length+'/100');
+    $('.title_count').html($(this).val().length + '/100');
 })
 function copy_image_path(x) {
     navigator.clipboard.writeText(x);

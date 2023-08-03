@@ -92,48 +92,8 @@
             @enderror
         </div>
         <div class="mb-3">
-            <label for="content_image_table" class="form-label">Content Images</label>
-            <table class="table table-bordered" id="content_image_table">
-                <tbody>
-                    <tr>
-                        <td>File</td>
-                        <td>
-                            <input class="form-control content_images" type="file" name="content_images">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>File</td>
-                        <td>
-                            <input class="form-control content_images" type="file" name="content_images">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>File</td>
-                        <td>
-                            <input class="form-control content_images" type="file" name="content_images">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>File</td>
-                        <td>
-                            <input class="form-control content_images" type="file" name="content_images">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>File</td>
-                        <td>
-                            <input class="form-control" type="file" name="content_images">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="images_div">
-
-            </div>
-        </div>
-        <div class="mb-3">
             <label for="edit" class="form-label">Blog Content<b class="text-danger">*</b></label>
-            <textarea class="form-control" name="blog_content" id="edit" rows="3"></textarea>
+            <textarea class="form-control" name="blog_content" id="edit" rows="3" data-upload-url="{{ route('upload_content_image') }}"></textarea>
             <small id="content_error" class="text-danger d-none">This fied is required</small>
             @error('blog_content')
             <div class="error"><b class="text-danger">{{ $message }}</b></div>

@@ -260,6 +260,12 @@
     margin: 0px 20px;
 }
 
+button#imageManager-1 {
+    display: none;
+}
+.fr-quick-insert{
+    display: none !important;
+}
 /* .slick-slide img {
     width: 100%;
 } */
