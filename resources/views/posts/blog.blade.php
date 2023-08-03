@@ -38,7 +38,7 @@
             </div>
             <div class="col-md-2">
                 <button type="submit" class="btn btn-primary filter_blogs">Filter</button>
-                @if(isset($topic_slug) && isset($question_slug))
+                @if(isset($topic_slug) || isset($question_slug) || isset($name))
                 <a href="/blog" class="btn btn-success">Clear Filter</a>
                 @endif
             </div>

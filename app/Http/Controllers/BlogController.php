@@ -404,7 +404,7 @@ class BlogController extends Controller
             ->get();
 
         $topics = DB::table('topics')->select('*')->get();
-        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug'));
+        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug','name'));
     }
     public function blogger_filter(Request $request, $user_name)
     {
@@ -432,7 +432,7 @@ class BlogController extends Controller
             ->get();
 
         $topics = DB::table('topics')->select('*')->get();
-        return view('posts.blog', compact('posts', 'bloggers', 'topics'));
+        return view('posts.blog', compact('posts', 'bloggers', 'topics','name'));
     }
     public function searchBlogs(Request $request)
     {
