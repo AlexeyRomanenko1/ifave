@@ -20,7 +20,7 @@
                     </ol>
                     @if(count($comments) >= 5)
                     <div class="text-center top-comments-btn">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#top_comments_modal_body_for_comments" onclick="top_comments_modal_body_for_comments()">Show me more</button>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#top_comments_modal_for_comments" onclick="top_comments_modal_body_for_comments()">Show me more</button>
                     </div>
                     @endif
                 </div>
