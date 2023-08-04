@@ -31,7 +31,7 @@
         @if(count($query) > 0)
         <div class="comment-container">
             @foreach($query as $user_comment)
-            <div class="comment">
+            <div class="comment m-2">
                 <div class="comment-content">
                     <h5>Category: {{$user_comment->question}}</h5>
                     <hr>
