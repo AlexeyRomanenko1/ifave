@@ -198,14 +198,17 @@ $('#search_questions').on('keyup', function () {
         url: '/searchQuestions',
         data: { task: 'searchQuestions', search: to_search, id: id },
         success: function (data) {
-            $('#display_questions').empty();
-            $('#display_questions').html(data);
+            console.log(data)
+          //  var result = JSON.parse(data);
+            $('#display_questions').html(data.searchResults);
+            $('#pagination_links').html(data.paginationLinks);
         },
         error: function (error) {
             console.log(error)
         }
     })
 })
+
 
 $('#search_categories').on('keyup', function () {
     let to_search = $(this).val();
@@ -230,6 +233,30 @@ $('#search_categories').on('keyup', function () {
         }
     })
 })
+// Add a new event handler for pagination link clicks
+$(document).on('click', '#pagination_links a', function (e) {
+    e.preventDefault(); // Prevent the default behavior of the link click
+
+    // Extract the href attribute from the clicked pagination link
+    var pageUrl = $(this).attr('href');
+
+    // Send an AJAX request to the extracted URL
+    $.ajax({
+        type: 'GET',
+        url: pageUrl, // Use the pagination link URL
+        data: { task: 'searchQuestions', search: $('#search_questions').val(), id: $('#topic_id').val() },
+        success: function (data) {
+            // Update the search results and pagination links
+            $('#display_questions').empty();
+            $('#display_questions').html(data.searchResults);
+            $('#pagination_links').html(data.paginationLinks); // Update the pagination container
+            $("html, body").animate({ scrollTop: 0 }, "slow");
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+});
 
 $('#open_search_category_modal').on('click', function () {
     let to_search = $(this).val();

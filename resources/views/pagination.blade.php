@@ -177,7 +177,8 @@ $col_md=6;
 
 @endphp
 @endforeach
-<div class="pagination justify-content-center">
+<!-- Container for pagination links -->
+<div id="pagination_links" class="pagination justify-content-center">
     {{ $questions->links('pagination::bootstrap-5') }}
 </div>
 </div>

@@ -350,7 +350,11 @@ class indexController extends Controller
                 ->orderByDesc('posts.vote_count')
                 ->limit(4)
                 ->get();
-            return view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'));
+           // return view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'));
+           return response()->json([
+            'searchResults' => view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'))->render(),
+            'paginationLinks' => $questions->links('pagination::bootstrap-5')->render(),
+        ]);
         } else {
             // $topicName = $request->id;
             // $questions = Questions::select(
@@ -399,7 +403,11 @@ class indexController extends Controller
                 ->orderByDesc('posts.vote_count')
                 ->limit(4)
                 ->get();
-            return view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'));
+           // return view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'));
+           return response()->json([
+            'searchResults' => view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'))->render(),
+            'paginationLinks' => $questions->links('pagination::bootstrap-5')->render(),
+        ]);
         }
         // }
         // return json_encode([
