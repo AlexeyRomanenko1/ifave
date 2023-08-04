@@ -29,9 +29,9 @@
         </div>
 
         @if(count($query) > 0)
-        <div class="comment-container">
+        <div class="">
             @foreach($query as $user_comment)
-            <div class="comment m-2">
+            <div class="comment-container comment mb-2">
                 <div class="comment-content">
                     <h5>Category: {{$user_comment->question}}</h5>
                     <hr>
