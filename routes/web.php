@@ -40,6 +40,8 @@ Route::get('/get_blogger', [indexController::class, 'get_blogger']);
 Route::get('/search_bloggers', [indexController::class, 'search_bloggers']);
 Route::get('topics/{topic_name}', [indexController::class, 'topic_name'])->name('topic_name');
 Route::get('/get_comments_list', [indexController::class, 'get_comments_list'])->name('get_comments_list');
+Route::get('/get_comments_list_all', [indexController::class, 'get_comments_list_all'])->name('get_comments_list_all');
+
 Route::get('/contact-us', [App\Http\Controllers\ContactController::class, 'index'])->name('contact_us_index');
 Route::post('/contact-us', [App\Http\Controllers\ContactController::class, 'contact_us'])->name('contact_us');
 Route::get('/blog', [App\Http\Controllers\BlogController::class, 'show_blogs'])->name('blog');

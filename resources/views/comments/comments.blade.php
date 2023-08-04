@@ -20,7 +20,7 @@
                     </ol>
                     @if(count($comments) >= 5)
                     <div class="text-center top-comments-btn">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#top_comments_modal" onclick="top_comments_modal({{$topic_id}})">Show me more</button>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#top_comments_modal_body_for_comments" onclick="top_comments_modal_body_for_comments()">Show me more</button>
                     </div>
                     @endif
                 </div>
@@ -57,4 +57,21 @@
     </div>
 </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="top_comments_modal_for_comments" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Comments</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="top_comments_modal_body_for_comments">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @include('footer.footer')

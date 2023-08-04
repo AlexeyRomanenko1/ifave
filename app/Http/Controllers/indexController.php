@@ -950,4 +950,18 @@ class indexController extends Controller
 
         return json_encode(['success' => 1, 'data' => $comments]);
     }
+    public function get_comments_list_all(Request $request)
+    {
+        //$topic_id = $request->topic_id;
+
+        $comments = DB::table('comments')
+            ->select('users.name', DB::raw('SUM(comments.upvotes) as upvotes'))
+            ->join('users', 'comments.comment_by', '=', 'users.id')
+            ->join('questions', 'comments.question_id', '=', 'questions.id')
+            ->orderByDesc('upvotes')
+            ->groupBy('users.name')
+            ->get();
+
+        return json_encode(['success' => 1, 'data' => $comments]);
+    }
 }

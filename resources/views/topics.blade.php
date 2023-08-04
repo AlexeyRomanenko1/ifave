@@ -76,7 +76,7 @@
                         <p><b>Best comments in this location</b></p>
                         <ol>
                             @foreach($comments as $comment)
-                            <li>{{$comment->name}} ({{$comment->upvotes}} upvotes)</li>
+                            <li><a href="/comments/{{ str_replace(' ', '-', $comment->name)}}">{{$comment->name}} ({{$comment->upvotes}} upvotes)</a></li>
                             @endforeach
                         </ol>
                         @if(count($comments) >=5)
