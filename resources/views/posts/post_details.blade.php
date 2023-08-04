@@ -53,7 +53,7 @@
                         <h6>NEWSLETTER</h6>
                     </div>
                     <div class="card-body">
-                        <p class="card-text">Enter your email address below to subscribe to my newsletter</p>
+                        <p class="card-text">Enter your email address below to subscribe to our newsletter</p>
                         <form action="">
                             <input type="email" class="form-control" placeholder="You email address....">
                             <div class="">
