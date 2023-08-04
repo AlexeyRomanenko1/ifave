@@ -21,10 +21,6 @@
 <script src="{{ asset('js/components/search_topics.js')}}"></script>
 <script src="{{ asset('js/components/search_bloggers.js')}}"></script>
 
-
-@if (request()->route()->getName() == 'comments_route')
-<script src="{{ asset('js/components/comments.js')}}"></script>
-@endif
 @if (request()->route()->getName() == 'blog_details')
 <script src="{{ asset('js/components/posts_details.js')}}"></script>
 @endif
