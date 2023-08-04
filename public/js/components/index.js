@@ -389,7 +389,7 @@ function top_comments_modal(x) {
             let html = '<ol>';
             let obj = JSON.parse(data);
             for (let j = 0; j < obj.data.length; j++) {
-                html += '<li>' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</li>';
+                html += '<li><a href="/comments/'+ obj.data[j]['name'].replace(/ /g, '-') +'">' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</a></li>';
             }
             html += '</ol>';
             $('#top_comments_modal_body').empty();

@@ -50,6 +50,10 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('slick/slick.css?v2022') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('slick/slick-theme.css?v2022') }}">
     @endif
+    @if(request()->route()->getName()=='comments_route')
+
+    <link href="{{ asset('css/comments.css') }}" rel="stylesheet">
+    @endif
 </head>
 
 <body>

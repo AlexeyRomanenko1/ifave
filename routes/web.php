@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', [indexController::class, 'index'])->name('/');
 // Route::post('indexonloadRequest', [indexController::class, 'indexonloadRequest'])->name('indexonload.post');
 Route::get('/indexonloadRequest', [indexController::class, 'indexonloadRequest']);
+Route::get('/comments/{name}', [indexController::class, 'comments_route'])->name('comments_route');
 Route::get('/getquestionanswers', [indexController::class, 'getquestionanswers']);
 Route::get('/searchAnswers', [indexController::class, 'searchAnswers']);
 Route::post('/entervote', [indexController::class, 'entervote']);

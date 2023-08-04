@@ -350,11 +350,11 @@ class indexController extends Controller
                 ->orderByDesc('posts.vote_count')
                 ->limit(4)
                 ->get();
-           // return view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'));
-           return response()->json([
-            'searchResults' => view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'))->render(),
-            'paginationLinks' => $questions->links('pagination::bootstrap-5')->render(),
-        ]);
+            // return view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'));
+            return response()->json([
+                'searchResults' => view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'))->render(),
+                'paginationLinks' => $questions->links('pagination::bootstrap-5')->render(),
+            ]);
         } else {
             // $topicName = $request->id;
             // $questions = Questions::select(
@@ -403,11 +403,11 @@ class indexController extends Controller
                 ->orderByDesc('posts.vote_count')
                 ->limit(4)
                 ->get();
-           // return view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'));
-           return response()->json([
-            'searchResults' => view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'))->render(),
-            'paginationLinks' => $questions->links('pagination::bootstrap-5')->render(),
-        ]);
+            // return view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'));
+            return response()->json([
+                'searchResults' => view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'))->render(),
+                'paginationLinks' => $questions->links('pagination::bootstrap-5')->render(),
+            ]);
         }
         // }
         // return json_encode([
@@ -778,10 +778,10 @@ class indexController extends Controller
             ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
             ->orderByDesc('rating')
             ->get();
-            return json_encode([
-                'success' => 1,
-                'data' => $bloggers
-            ]);
+        return json_encode([
+            'success' => 1,
+            'data' => $bloggers
+        ]);
     }
     public function search_topics(Request $request)
     {
@@ -894,6 +894,29 @@ class indexController extends Controller
             ->limit(4)
             ->get();
         return view("topics", compact('header_info', 'get_topic', 'questions', 'comments', 'subQuery', 'topic_id', 'posts'));
+    }
+
+    public function comments_route(Request $request, $name)
+    {
+        $user_name = str_replace('-', " ", $name);
+        $user_id = DB::table('users')
+            ->where('name', $user_name)
+            ->pluck('id');
+        $user_id = $user_id[0];
+        $query = DB::table('comments')
+            ->select('comments.comments', 'comments.upvotes', 'questions.question', 'comments.id', 'comments.downvotes')
+            ->join('questions', 'comments.question_id', 'questions.id')
+            ->where('comments.comment_by', $user_id)
+            ->get();
+        $comments = DB::table('comments')
+            ->select('users.name', DB::raw('SUM(comments.upvotes) as upvotes'))
+            ->join('users', 'comments.comment_by', '=', 'users.id')
+            ->join('questions', 'comments.question_id', '=', 'questions.id')
+            ->orderByDesc('upvotes')
+            ->limit(5)
+            ->groupBy('users.name')
+            ->get();
+        return view("comments.comments", compact('query', 'user_name','comments'));
     }
     public function getClientIP(Request $request)
     {
