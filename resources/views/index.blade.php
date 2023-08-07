@@ -10,11 +10,11 @@
                 <div class="container">
                     <table class="table table-bordered border-blue user_faves_track">
                         <thead>
-                            <th>My faves</th>
+                            <td><p class="fs-6"><b>My faves</b></p></td>
                             @auth
-                            <td><a href="" data-bs-toggle="modal" data-bs-target="#myfavetrack">All my faves</a></td>
+                            <td><p><a href="" class="fs-6" data-bs-toggle="modal" data-bs-target="#myfavetrack">All my faves</a></p></td>
                             @else
-                            <td>Login to keep track of your faves</td>
+                            <td><p class="fs-6">Login to keep track of your faves</p></td>
                             @endauth
                         </thead>
                     </table>
@@ -58,9 +58,10 @@
                 @php
                 $answers=explode("}",$question->top_answers);
                 $question_id=$question->question_id;
-                $exists = array_reduce(array_column($array, 'question_id'), function ($carry, $item) use ($question_id) {
-                return $carry || $item == $question_id;
-                }, false);
+              //  $exists = array_reduce(array_column($array, 'question_id'), function ($carry, $item) use ($question_id) {
+               // return $carry || $item == $question_id;
+               // }, false);
+               $exists =true;
                 $question_image=strtolower($question->question);
                 $question_image=str_replace(" ","_",$question_image).".jpg";
                 @endphp
@@ -81,7 +82,7 @@
                 </div>
                 @endif
                 @endif
-                @if($main_loop == 2)
+                @if($main_loop == 5)
                 @php
                 $post_loop=1;
                 @endphp
@@ -120,7 +121,7 @@
             @endif
             @endforeach
             @endif
-            @if($main_loop == 11)
+            @if($main_loop == 14)
             @if(count($posts) == 3)
             @php
             $col_md=12;
@@ -181,19 +182,19 @@
                     @endphp
                     @foreach ($answers as &$answer)
                     @php
-                    $answer_votes = substr($answer, strpos($answer, "( Faves") + 1);
+                   // $answer_votes = substr($answer, strpos($answer, "( Faves") + 1);
                     @endphp
                     @if($lm==1)
                     <div class="p-1 mt-4">
-                        <small onclick="redirect_url({{$question->question_id}})" class="fw-normal fs-6  unselect underline"> Place ( {{$answer_votes}} </small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone float-end" onclick="copy_url('https://ifave.com/questions_details/{{$question->question_id}}' )" aria-hidden="true"></i>
+                        <small onclick="redirect_url({{$question->question_id}})" class="fw-normal fs-6  unselect underline"> Place ({{$answer_votes}} </small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone float-end" onclick="copy_url('https://ifave.com/questions_details/{{$question->question_id}}' )" aria-hidden="true"></i>
                     </div>
                     @elseif($lm==2)
                     <div class="p-1">
-                        <small onclick="redirect_url({{$question->question_id}})" class="fw-normal fs-6  unselect underline"> Place ( {{$answer_votes}} </small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share float-end" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url('https://ifave.com/questions_details/{{$question->question_id}}' )" aria-hidden="true"></i>
+                        <small onclick="redirect_url({{$question->question_id}})" class="fw-normal fs-6  unselect underline"> Place ({{$answer_votes}} </small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share float-end" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url('https://ifave.com/questions_details/{{$question->question_id}}' )" aria-hidden="true"></i>
                     </div>
                     @elseif($lm==3)
                     <div class="p-1">
-                        <small onclick="redirect_url({{$question->question_id}})" class="fw-normal fs-6  unselect underline"> Place ( {{$answer_votes}} </small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code float-end" onclick="generate_embeded_code('https://ifave.com/questions_details/{{$question->question_id}}','{{$question->question}}')" aria-hidden="true"></i>
+                        <small onclick="redirect_url({{$question->question_id}})" class="fw-normal fs-6  unselect underline"> Place ({{$answer_votes}} </small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code float-end" onclick="generate_embeded_code('https://ifave.com/questions_details/{{$question->question_id}}','{{$question->question}}')" aria-hidden="true"></i>
                     </div>
                     @endif
                     @php
@@ -201,7 +202,7 @@
                     @endphp
                     @endforeach
                     @else
-                    @for($m=0; $m < count($answers);$m++) @php preg_match('/^(.*)(\( Faves: \d+\))$/', $answers[$m], $matches); $text=$matches[1]; $faves=$matches[2]; if (strlen($text)> 18) {
+                    @for($m=0; $m < count($answers);$m++) @php preg_match('/^(.*)(\(Faves: \d+\))$/', $answers[$m], $matches); $text=$matches[1]; $faves=$matches[2]; if (strlen($text)> 18) {
                         $text = substr($text, 0, 18) . '...';
                         }
                         $to_answer = $text . $faves;

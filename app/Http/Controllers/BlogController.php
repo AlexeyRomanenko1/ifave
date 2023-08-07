@@ -54,13 +54,13 @@ class BlogController extends Controller
         $blog_content = $request->blog_content;
         $user_id = Auth::id();
         $slug = str_replace(" ", "-", $request->blog_title) . "-" . $user_id . "-" . date('m-d-Y-his');
-     
+
         if ($request->hasFile('featured_image') && $request->file('featured_image')->isValid()) {
             $file = $request->file('featured_image');
             $allowedExtensions = ['jpg', 'jpeg', 'png', 'JPG', 'JPEG', 'PNG'];
             $extension = $file->getClientOriginalExtension();
             if (!in_array($extension, $allowedExtensions)) {
-                return json_encode(['success'=>0, 'data'=>"Only JPG,JPEG,PNG entensions are allowed"]);
+                return json_encode(['success' => 0, 'data' => "Only JPG,JPEG,PNG entensions are allowed"]);
             }
             $uniqueName = date('m_d_Y_his') . $file->getClientOriginalName();
             // $file->storeAs(public_path('images/posts/'), $uniqueName);
@@ -69,16 +69,16 @@ class BlogController extends Controller
             $uniqueName = '';
         }
         // if (isset($request->topic_id) && isset($request->question_id)) {
-            $insert_blog =  DB::table('posts')->insert([
-                'user_id' => $user_id,
-                'title' => $blog_title,
-                'tags' => $tags,
-                'topic_id' => $request->topic_id,
-                'question_id' => $request->question_id,
-                'blog_content' => $blog_content,
-                'featured_image' => $uniqueName,
-                'slug' => $slug
-            ]);
+        $insert_blog =  DB::table('posts')->insert([
+            'user_id' => $user_id,
+            'title' => $blog_title,
+            'tags' => $tags,
+            'topic_id' => $request->topic_id,
+            'question_id' => $request->question_id,
+            'blog_content' => $blog_content,
+            'featured_image' => $uniqueName,
+            'slug' => $slug
+        ]);
         // } else {
         //     $insert_blog =  DB::table('posts')->insert([
         //         'user_id' => $user_id,
@@ -130,10 +130,12 @@ class BlogController extends Controller
 
         $bloggers = DB::table('users as u')
             ->join('posts as p', 'u.id', '=', 'p.user_id')
-            ->select('u.name as username', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
+            ->leftJoin('comments as c', 'u.id', '=', 'c.comment_by')
+            ->select('u.name as username', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count + IFNULL(c.upvotes, 0)) as rating'))
             ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
             ->orderByDesc('rating')
             ->get();
+
 
         $topics = DB::table('topics')->select('*')->get();
         return view('posts.blog', compact('posts', 'bloggers', 'topics'));
@@ -317,7 +319,7 @@ class BlogController extends Controller
             ->pluck('id');
 
         $topic_id = $topic_id[0];
-
+        $categories = DB::table('questions')->select('*')->where('topic_id', $topic_id)->get();
         $perPage = 20; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
         if ($question != 'All Categories') {
@@ -351,7 +353,7 @@ class BlogController extends Controller
             ->get();
 
         $topics = DB::table('topics')->select('*')->get();
-        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug'));
+        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'categories'));
     }
 
     public function blogger_location_filter(Request $request, $user_name, $topic_slug, $question_slug)
@@ -362,13 +364,13 @@ class BlogController extends Controller
         $topic_id = DB::table('topics')
             ->where('topic_name', $topic)
             ->pluck('id');
-
+        $caltegories = DB::table('questions')->select('*')->where('topic_id', $topic_id)->get();
         $user_id = DB::table('users')
             ->where('name', $name)
             ->pluck('id');
         $user_id = $user_id[0];
         $topic_id = $topic_id[0];
-
+        $categories = DB::table('questions')->select('*')->where('topic_id', $topic_id)->get();
         $perPage = 20; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
         if ($question != 'All Categories') {
@@ -404,7 +406,7 @@ class BlogController extends Controller
             ->get();
 
         $topics = DB::table('topics')->select('*')->get();
-        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug','name'));
+        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'name', 'categories'));
     }
     public function blogger_filter(Request $request, $user_name)
     {
@@ -432,7 +434,7 @@ class BlogController extends Controller
             ->get();
 
         $topics = DB::table('topics')->select('*')->get();
-        return view('posts.blog', compact('posts', 'bloggers', 'topics','name'));
+        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'name'));
     }
     public function searchBlogs(Request $request)
     {

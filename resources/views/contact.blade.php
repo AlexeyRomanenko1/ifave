@@ -28,7 +28,8 @@
         </div>
         <div class="mb-3">
             <label for="message" class="form-label">Message <b class="text-danger">*</b></label>
-            <textarea class="form-control" id="message" name="message" rows="3" value="{{ old('message') }}">{{ old('message') }}</textarea>
+            <textarea class="form-control" onpaste="return false" id="message" name="message" cols="30" rows="10" maxlength="500" value="{{ old('message') }}">{{ old('message') }}</textarea>
+            <small class="text-primary comment-warn">0/500</small><br>
             @error('message')
             <div class="error"><b class="text-danger">{{ $message }}</b></div>
             @enderror
@@ -38,4 +39,10 @@
         </div>
     </form>
 </div>
+
 @include('footer.footer')
+<script>
+    $('#message').on('keyup', function() {
+        $('.comment-warn').html($(this).val().length + '/500')
+    })
+</script>

@@ -21,8 +21,13 @@
 <script src="{{ asset('js/components/search_topics.js')}}"></script>
 <script src="{{ asset('js/components/search_bloggers.js')}}"></script>
 
+
+@if (request()->route()->getName() == 'comments_route')
+<script src="{{ asset('js/components/comments.js')}}"></script>
+@endif
 @if (request()->route()->getName() == 'blog_details')
 <script src="{{ asset('js/components/posts_details.js')}}"></script>
+
 @endif
 @if (request()->route()->getName() == 'create-blog-index' || request()->route()->getName() == 'create_blog_topic_question')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
@@ -55,12 +60,14 @@
 <script type="text/javascript" src="{{ asset('js/plugins/fullscreen.min.js')}}"></script>
 <script type="text/javascript" src="{{ asset('js/plugins/quick_insert.min.js')}}"></script>
 <script type="text/javascript" src="{{ asset('js/plugins/quote.min.js')}}"></script>
-<script src="{{ asset('select_src/jquery-customselect.js')}}"></script>
+<!-- <script src="{{ asset('select_src/jquery-customselect.js')}}"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="{{ asset('js/components/create_blog.js')}}"></script>
 @endif
 @if (request()->route()->getName() == 'blog' || request()->route()->getName() == 'filter_blog')
-<script src="{{ asset('select_src/jquery-customselect.js')}}"></script>
+<!-- <script src="{{ asset('select_src/jquery-customselect.js')}}"></script> -->
 <script src="https://code.jquery.com/jquery-migrate-3.4.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="{{ asset('slick/slick.js?v2022')}}" type="text/javascript" charset="utf-8"></script>
 <script src="{{ asset('js/components/blogs.js')}}"></script>
 @endif

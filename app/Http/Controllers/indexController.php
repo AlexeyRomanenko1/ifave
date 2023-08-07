@@ -20,7 +20,7 @@ class indexController extends Controller
     public function index(Request $request)
     {
         $topicName = "The World";
-        $perPage = 14; // Number of items per page
+        $perPage = 20; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
         $userIpAddress = $this->getClientIP($request);
         if (Auth::check()) {
@@ -51,7 +51,7 @@ class indexController extends Controller
                 'questions.id AS question_id',
                 'questions.question',
                 'questions.question_category',
-                DB::raw("SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, ' ( Faves: ', vote_count, ')') ORDER BY vote_count DESC SEPARATOR '}'), '}', 3) AS top_answers"),
+                DB::raw("SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, ' (Faves: ', vote_count, ')') ORDER BY vote_count DESC SEPARATOR '}'), '}', 3) AS top_answers"),
                 DB::raw("SUM(COALESCE(questions_answer.vote_count, 0)) AS total_votes")
             )
             ->join('topics', 'questions.topic_id', '=', 'topics.id')
@@ -278,7 +278,7 @@ class indexController extends Controller
         $tosearch = $request->search;
         $topicName = $request->id;
         //    $topicName='The World';
-        $perPage = 14; // Number of items per page
+        $perPage = 20; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
         $userIpAddress = $this->getClientIP($request);
         if (Auth::check()) {
@@ -320,7 +320,7 @@ class indexController extends Controller
                     'questions.id AS question_id',
                     'questions.question',
                     'questions.question_category',
-                    DB::raw("SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, ' ( Faves: ', vote_count, ')') ORDER BY vote_count DESC SEPARATOR '}'), '}', 3) AS top_answers"),
+                    DB::raw("SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, ' (Faves: ', vote_count, ')') ORDER BY vote_count DESC SEPARATOR '}'), '}', 3) AS top_answers"),
                     DB::raw("SUM(COALESCE(questions_answer.vote_count, 0)) AS total_votes")
                 )
                 ->join('topics', 'questions.topic_id', '=', 'topics.id')
@@ -375,7 +375,7 @@ class indexController extends Controller
                     'questions.id AS question_id',
                     'questions.question',
                     'questions.question_category',
-                    DB::raw("SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, ' ( Faves: ', vote_count, ')') ORDER BY vote_count DESC SEPARATOR '}'), '}', 3) AS top_answers"),
+                    DB::raw("SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, ' (Faves: ', vote_count, ')') ORDER BY vote_count DESC SEPARATOR '}'), '}', 3) AS top_answers"),
                     DB::raw("SUM(COALESCE(questions_answer.vote_count, 0)) AS total_votes")
                 )
                 ->join('topics', 'questions.topic_id', '=', 'topics.id')
@@ -815,7 +815,7 @@ class indexController extends Controller
         $header_info = $request->topic_name;
         $get_topic = DB::table('topics')->select('*')->where('topic_name', $request->topic_name)->first();
         $topicName = $request->topic_name;
-        $perPage = 14; // Number of items per page
+        $perPage = 20; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
         $userIpAddress = $this->getClientIP($request);
         if (Auth::check()) {
@@ -860,7 +860,7 @@ class indexController extends Controller
                 'questions.id AS question_id',
                 'questions.question',
                 'questions.question_category',
-                DB::raw("SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, ' ( Faves: ', vote_count, ')') ORDER BY vote_count DESC SEPARATOR '}'), '}', 3) AS top_answers"),
+                DB::raw("SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, ' (Faves: ', vote_count, ')') ORDER BY vote_count DESC SEPARATOR '}'), '}', 3) AS top_answers"),
                 DB::raw("SUM(COALESCE(questions_answer.vote_count, 0)) AS total_votes")
             )
             ->join('topics', 'questions.topic_id', '=', 'topics.id')

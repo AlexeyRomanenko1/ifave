@@ -1,5 +1,7 @@
 $(document).on('ready', function () {
-    $("#location").customselect();
+    // $("#location").customselect();
+    $("#location").select2();
+    $("#select_category").select2();
     // let slider_slick = $(".regular").slick({
     //     dots: true,
     //     infinite: true,
@@ -65,7 +67,7 @@ $('#location').on('change', function () {
             // $("#msg").html(data.msg);
             let obj = JSON.parse(data);
             // console.log(obj)
-            let html = '<select class="custom-select custom-select-category" id="select_category" name="question_id" aria-label="Select Category" disabled><option selected value="All Categories">All Categories</option>';
+            let html = '<select class="custom-select custom-select-category" id="select_category" name="question_id" aria-label="Select Category"><option selected value="All Categories">All Categories</option>';
 
             // let ul = '<li class="active">Select Category</li>';
             for (let j = 0; j < obj.data.length; j++) {
@@ -76,7 +78,8 @@ $('#location').on('change', function () {
             $("#select_category").attr("disabled", false);
             $('#custom-select-category').empty();
             $('#custom-select-category').html(html);
-            $("#select_category").customselect();
+            // $("#select_category").customselect();
+            $("#select_category").select2();
             // $("#select_category").customselect();
         },
         error: function (e) {

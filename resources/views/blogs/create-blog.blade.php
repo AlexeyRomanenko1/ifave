@@ -1,23 +1,36 @@
 @include('layouts.app')
 <div class="container">
-    <p>
-        Welcome our Bloggers!!! <br><br>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="justify-content-start">
+                <p>
+                    Welcome our Bloggers! <br><br>
 
-        iFave is a community of curious and open-minded people who know and love the places where they live (be it a small village, a metropolis or the whole world). Our platform is made for those who like trying new things and are proud to share their discoveries. Our bloggers are a key part of all this.<br><br>
+                    iFave is a community of curious and open-minded people who know and love the places where they live (be it a small village, a metropolis or the whole world).
+                    Our platform is made for those who like trying new things and are proud to share their discoveries. Our bloggers are a key part of all this.<br><br>
 
-        Blogging on iFave is fun because we are all about favorite things. We offer a great choice of topics. So just tell us about your faves.
-        You are welcome to give your opinions and arguments for who is the best, create your own top tens, inform the world about the news and trends within a certain category and much much more.<br><br>
+                    Blogging on iFave is fun because we are all about favorite things. We offer a great choice of topics. So just tell us about your faves.
+                    You are welcome to give your opinions and arguments for who is the best, create your own top tens, inform the world about the news and trends within a certain category and much more.<br><br>
+                </p>
+                With us, you will participate in the economic growth of your region by improving the experiences of locals and tourists. You can also support your favorite entrepreneurs by spreading the word about them. You can promote their products and discounts without forgetting to give a thorough review of the premises and of their strengths and weaknesses.
+                Our bloggers may accept payments, gifts, free services or other benefits from businesses they review. The important thing is to make proper disclosures and be honest with the readers.
+                You are free to promote your website and social media accounts. You can also use affiliate links to reputable websites as long as you provide quality and useful content.<br><br>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <img src="/images/Create-blog-page.jpg" class="img-fluid mt-5 mb-3" alt="...">
+        </div>
+        <div class="d-flex justify-content-start">
+            <p>
+                All posts are displayed on the Category pages and the best posts on the Location pages.
+                Your rating is based on views and likes of your posts. Upvotes of your comments anywhere on our website are also included into your rating. Higher ratings result in a higher visibility.<br><br>
 
-        With us, you will participate in the economic growth of your region by attracting more travelers and improving their experience. You can support your favorite local entrepreneurs by spreading the word about them. You can promote their products and discounts without forgetting to give a thorough review of the premises and of their strengths and weaknesses.
-        Our bloggers may accept payments, gifts, free services or other benefits from businesses they review. The important thing is to make proper disclosures and be honest with the readers.
-        You are free to promote your website and social media accounts. You can also use affiliate links to reputable websites as long as you provide quality and useful content.<br><br>
-
-        All posts are displayed on the Category pages and the best posts are displayed on the Location pages. iFave bloggers are rated based on views and likes they receive. Higher ratings result in a higher visibility.<br><br>
-
-        Thank you and good luck!<br>
-    </p>
+                Thank you and good luck!
+            </p>
+        </div>
+    </div>
     <div class="text-center">
-        <small><b>Note:</b> Before posting your blog please make sure your profile has your photo, location and Bio  <a href="/update-profile">Update Profile</a></small><br><br>
+        <small><b>Note:</b> Before posting your blog please make sure your profile has your photo, location and Bio <a href="/update-profile">Update Profile</a></small><br><br>
         <h4 class="">Write a Blog Post</h4><br>
         <a class="link-opacity-100" data-bs-toggle="modal" data-bs-target="#blogging_tips">
             <h4>Blogging tips</h4>
@@ -61,7 +74,7 @@
             <div class="col">
                 <div class="mb-3">
                     <label for="select_location" class="form-label">Location<b class="text-danger">*</b></label>
-                    <select class="custom-select" id="select_location" name="topic_id" aria-label="Select Location">
+                    <select class="select-2 form-control" id="select_location" name="topic_id" aria-label="Select Location">
                         <option selected disabled>Select Location</option>
                         @foreach($topics as $all_topic)
                         <option value="{{$all_topic->id}}">{{$all_topic->topic_name}}</option>
@@ -74,7 +87,7 @@
                 <div class="mb-3">
                     <div id="custom-select-category">
                         <label for="select_category" class="form-label">Category<b class="text-danger">*</b></label>
-                        <select class="custom-select custom-select-category" id="select_category" name="question_id" aria-label="Select Category" disabled>
+                        <select class="select-2 form-control custom-select-category" id="select_category" name="question_id" aria-label="Select Category" disabled>
                             <option selected disabled>Select Category</option>
                         </select>
                     </div>

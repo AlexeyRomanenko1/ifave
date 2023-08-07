@@ -52,6 +52,7 @@ Route::get('blogs/{topic_slug}/{question_slug}', [App\Http\Controllers\BlogContr
 Route::get('blogger/{user_name}/{topic_slug}/{question_slug}', [App\Http\Controllers\BlogController::class, 'blogger_location_filter'])->name('filter_blog');
 Route::get('blogger/{user_name}', [App\Http\Controllers\BlogController::class, 'blogger_filter'])->name('filter_blog');
 Route::get('/searchBlogs', [App\Http\Controllers\BlogController::class, 'searchBlogs'])->name('searchBlogs');
+Route::post('/get_categories_onchange', [App\Http\Controllers\BlogController::class, 'get_categories_onchange'])->name('get_categories_onchange');
 // Route::get('redirect/{id}', 'YourController@redirectToUrlWithId')->name('url.redirect');
 Auth::routes([
     'verify' => true
@@ -78,7 +79,6 @@ Route::post('/import_images', [App\Http\Controllers\HomeController::class, 'impo
 Route::get('/create-blog', [App\Http\Controllers\BlogController::class, 'index'])->name('create-blog-index')->middleware('verified');
 Route::post('/create_blog', [App\Http\Controllers\BlogController::class, 'create_blog'])->name('create_blog')->middleware('verified');
 Route::get('create-blog/{topic}/{question}', [App\Http\Controllers\BlogController::class, 'create_blog_topic_question'])->name('create_blog_topic_question')->middleware('verified');
-Route::post('/get_categories_onchange', [App\Http\Controllers\BlogController::class, 'get_categories_onchange'])->name('get_categories_onchange')->middleware('verified');
 Route::post('/upload_content_image', [App\Http\Controllers\BlogController::class, 'upload_content_image'])->name('upload_content_image')->middleware('verified');
 //User profiles routes
 Route::get('/update-profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('update-profile')->middleware('verified');

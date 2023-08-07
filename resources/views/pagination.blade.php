@@ -9,9 +9,10 @@
     @php
     $answers=explode("}",$question->top_answers);
     $question_id=$question->question_id;
-    $exists = array_reduce(array_column($array, 'question_id'), function ($carry, $item) use ($question_id) {
-    return $carry || $item == $question_id;
-    }, false);
+    //$exists = array_reduce(array_column($array, 'question_id'), function ($carry, $item) use ($question_id) {
+    //return $carry || $item == $question_id;
+    //}, false);
+    $exists =true;
     $question_image=strtolower($question->question);
     $question_image=str_replace(" ","_",$question_image).".jpg";
     @endphp
@@ -32,7 +33,7 @@
     </div>
     @endif
     @endif
-    @if($main_loop == 2)
+    @if($main_loop == 5)
     @php
     $post_loop=1;
     @endphp
@@ -71,7 +72,7 @@
 @endif
 @endforeach
 @endif
-@if($main_loop == 11)
+@if($main_loop == 14)
 @if(count($posts) == 3)
 @php
 $col_md=12;
@@ -152,7 +153,7 @@ $col_md=6;
             @endphp
             @endforeach
             @else
-            @for($m=0; $m < count($answers);$m++) @php preg_match('/^(.*)(\( Faves: \d+\))$/', $answers[$m], $matches); $text=$matches[1]; $faves=$matches[2]; if (strlen($text)> 18) {
+            @for($m=0; $m < count($answers);$m++) @php preg_match('/^(.*)(\(Faves: \d+\))$/', $answers[$m], $matches); $text=$matches[1]; $faves=$matches[2]; if (strlen($text)> 18) {
                 $text = substr($text, 0, 18) . '...';
                 }
                 $to_answer = $text . $faves;

@@ -21,7 +21,7 @@ $(document).ready(function () {
             // let questions_slider = '';
             if (obj.myfaves.length > 0) {
                 for (let k = 0; k < obj.myfaves.length; k++) {
-                    html += '<tr><td>' + obj.myfaves[k]['question'] + '</td><td>' + obj.myfaves[k]['topic_name'] + '</td><td>' + obj.myfaves[k]['answers'] + '</td></tr>';
+                    html += '<tr><td>' + obj.myfaves[k]['answers'] + '</td><td>' + obj.myfaves[k]['question'] + '</td><td>' + obj.myfaves[k]['topic_name'] + '</td></tr>';
                     // faves_index = faves_index + 1;
                 }
             }

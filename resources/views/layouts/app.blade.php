@@ -43,10 +43,12 @@
     <link rel="stylesheet" href="{{ asset('css/plugins/quick_insert.css') }}">
     <link rel="stylesheet" href="{{ asset('css/plugins/file.css') }}">
     <link rel="stylesheet" href="{{ asset('css/themes/dark.css') }}">
-    <link href="{{ asset('select_src/jquery-customselect.css') }}" rel="stylesheet">
+    <!-- <link href="{{ asset('select_src/jquery-customselect.css') }}" rel="stylesheet"> -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
     @endif
     @if (request()->route()->getName() == 'blog' || request()->route()->getName() == 'filter_blog')
-    <link href="{{ asset('select_src/jquery-customselect.css') }}" rel="stylesheet">
+    <!-- <link href="{{ asset('select_src/jquery-customselect.css') }}" rel="stylesheet"> -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset('slick/slick.css?v2022') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('slick/slick-theme.css?v2022') }}">
     @endif
@@ -208,9 +210,9 @@
                         <thead>
                             <tr>
                                 <!-- <th scope="col">#</th> -->
+                                <th scope="col">My Fave</th>
                                 <th scope="col">Category</th>
                                 <th scope="col">Location</th>
-                                <th scope="col">My Fave</th>
                             </tr>
                         </thead>
                         <tbody id="faves_table_body">

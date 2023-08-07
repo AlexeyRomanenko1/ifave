@@ -8,7 +8,8 @@
         $question=$details["question"];
         $blog_question=str_replace(" ", "-", $details["question"]);
         $blog_topic_name=str_replace(" ", "-", $details["topic_name"]);
-
+        $question_image=strtolower($details["question"]);
+        $question_image=str_replace(" ","_",$question_image).".jpg";
         @endphp
         <input type="hidden" id="hidden_question_id" value="{{ $details['question_category'] }}">
         @if($details["topic_name"] == 'movies')
@@ -17,6 +18,11 @@
         @else
         <a href="/topics/{{$details['topic_name']}}">Go back to best in {{ $details["topic_name"] }}</a>
         <h4 class="mt-2 p-2">{{ $details["topic_name"] }}</h4>
+        @endif
+        @if (file_exists(public_path('images/question_images/ifave_images/'.$question_image)))
+        <img src="/images/question_images/ifave_images/{{$question_image}}" class="img-fluid zoom-block" height="325px" width="325px" alt="...">
+        @else
+        <img src="/images/question_images/ifave.jpg" class="img-fluid zoom-block" height="325px" width="325px" alt="...">
         @endif
         <h3 class="p-2">
             {{ $details["question"] }}
@@ -99,11 +105,11 @@
     <div class="container mb-4">
         <div class="row">
             @foreach($posts as $post)
-            <div class="col-md-2"><img src="/images/posts/{{$post->featured_image}}" class="zoom-block img-fluid" height="300px" width="300px" alt=""></div>
-            <div class="col-md-10 pt-5">
+            <div class="col-md-2 mb-2"><img src="/images/posts/{{$post->featured_image}}" class="zoom-block img-fluid" height="300px" width="300px" alt=""></div>
+            <div class="col-md-10 pt-5 mb-2">
                 <h4><a href="/blog/{{$post->slug}}">{{$post->title}}</a></h4>
                 {!! substr(strip_tags($post->blog_content), 0, 500) !!}...
-                &nbsp;<a href=""> read more</a>
+                &nbsp;<a href="/blog/{{$post->slug}}"> read more</a>
             </div>
             @endforeach
         </div>
@@ -119,28 +125,25 @@
         </div>
         @if(count($get_comments) > 0)
         @foreach($get_comments as $user_comment)
-        <div class="comment m-2 p-2">
-            <div class="row">
-                <div class="col-md-11">
-                    <div class="border">
-                        @if(strlen($user_comment->comments) > 150)
-                        <p class="p-2">
-                            {{ substr($user_comment->comments, 0, 150) }}
-                            <a href="#" class="read-more">Read More</a>
-                            <span class="full-comment" style="display: none;">{{ $user_comment->comments }}</span>
-                        </p>
-                        @else
-                        <p class="p-2">{{ $user_comment->comments }}</p>
-                        @endif
-                    </div>
-                </div>
-                <div class="col-md-1">
-                    <small>{{$user_comment->upvotes}} Upvotes</small>
-                    <div><i class="fa fa-arrow-up" onclick="upvote_count({{$user_comment->id}},{{$user_comment->upvotes}})" aria-hidden="true"></i></div>
-                    <div><i class="fa fa-arrow-down" onclick="downvote_count({{$user_comment->id}},{{$user_comment->downvotes}})" aria-hidden="true"></i></div>
+        <div class="comment-container comment mb-2">
+            <div class="comment-content">
+                @if(strlen($user_comment->comments) > 150)
+                <p>{{ substr($user_comment->comments, 0, 150) }} <span class="read-more">... Read More</span></p>
+                <span class="full-comment" style="display: none;">{{ $user_comment->comments }}</span>
+                @else
+                <p>{{ $user_comment->comments }}</p>
+                @endif
+            </div>
+            <div class="comment-actions">
+                <small>{{$user_comment->upvotes}} Upvotes</small>
+                <div>
+                    <i class="fa fa-arrow-up upvote-icon" onclick="upvote_count({{$user_comment->id}},{{$user_comment->upvotes}})"></i>
+                    <i class="fa fa-arrow-down downvote-icon" onclick="downvote_count({{$user_comment->id}},{{$user_comment->downvotes}})"></i>
+
                 </div>
             </div>
         </div>
+
         @endforeach
         @endif
         <!-- <div class="comment m-2 p-2">
@@ -166,7 +169,11 @@
             @endforeach
             <div class="add_comments m-2 p-2">
                 <textarea name="comments" onpaste="return false" class="form-control comment-text" id="" cols="30" rows="10" placeholder="Add your comment here" maxlength="2000" required></textarea>
-                <small class="text-primary comment-warn">0/2000</small>
+                <small class="text-primary comment-warn">0/2000</small><br>
+                @auth
+                @else
+                <small><b>Login to participate in Best comments in this location or log out to comment anonymously.</b></small>
+                @endauth
             </div>
             <div class="add_comment_button p-2 m-2">
                 <button type="submit" class="btn btn-primary float-end">Add</button>

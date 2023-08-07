@@ -22,8 +22,12 @@
         <h4>Filter</h4>
         <div class="row">
             <div class="col-md-5">
-                <select class="custom-select form-control" id="location" name="topic_id" aria-label="Select Location">
+                <select class="select-2 form-control" id="location" name="topic_id" aria-label="Select Location">
+                    @if(isset($topic_slug))
+                    <option value="{{str_replace('-', " ", $topic_slug)}}" selected>{{str_replace('-', " ", $topic_slug)}}</option>
+                    @else
                     <option selected disabled>Select Location</option>
+                    @endif
                     @foreach($topics as $topic)
                     <option value="{{$topic->id}}-{{$topic->topic_name}}">{{$topic->topic_name}}</option>
                     @endforeach
@@ -31,8 +35,16 @@
             </div>
             <div class="col-md-5">
                 <div id="custom-select-category">
-                    <select class="custom-select form-control" id="select_category" name="question_id" aria-label="Select Category">
+                    <select class="select-2 form-control" id="select_category" name="question_id" aria-label="Select Category">
+                        @if(isset($categories))
+                        <option value="{{str_replace('-', " ", $question_slug)}}" selected>{{str_replace('-', " ", $question_slug)}}</option>
+                        <option value="All Categories">All Categories</option>
+                        @foreach($categories as $category)
+                        <option value="{{$category->question}}">{{$category->question}}</option>
+                        @endforeach
+                        @else
                         <option selected disabled>Select Category</option>
+                        @endif
                     </select>
                 </div>
             </div>
@@ -43,7 +55,9 @@
                 @endif
             </div>
         </div>
-        <a href="" class="nav-link mt-5" data-bs-toggle="modal" data-bs-target="#all_bloggers"><h4>All Bloggers</h4></a>
+        <a href="" class="nav-link mt-5" data-bs-toggle="modal" data-bs-target="#all_bloggers">
+            <h4>All Bloggers</h4>
+        </a>
         <div class="container mb-5">
             <section class="regular slider d-none">
                 @foreach($bloggers as $blogger)
@@ -56,7 +70,7 @@
                     <p onclick="blogger_route('{{$blogger->username}}')" class="mt-3">{{$blogger->username}}</p>
                     @if($blogger->location !='' || $blogger->location != null)
                     <p onclick="blogger_route('{{$blogger->username}}')"> {{$blogger->location}}</p>
-                    @else 
+                    @else
                     <p onclick="blogger_route('{{$blogger->username}}')">Unknown</p>
                     @endif
                     <p onclick="blogger_route('{{$blogger->username}}')">{{$blogger->rating}}</p>

@@ -27,8 +27,9 @@
         }
     })
     // $('#imageManager-1').addClass('d-none');
-    $("#select_location").customselect();
-
+    // $("#select_location").customselect();
+    $("#select_location").select2();
+    $("#select_category").select2();
     $('input')
         .on('change', function (event) {
             var $element = $(event.target);
@@ -82,7 +83,8 @@ $('#select_location').on('change', function () {
             $("#select_category").attr("disabled", false);
             $('#custom-select-category').empty();
             $('#custom-select-category').html(html);
-            $("#select_category").customselect();
+           // $("#select_category").customselect();
+           $("#select_category").select2();
         },
         error: function (e) {
             console.log(e)
