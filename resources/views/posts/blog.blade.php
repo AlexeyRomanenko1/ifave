@@ -21,7 +21,7 @@
     <div class="container">
         <h4>Filter</h4>
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-md-5 mb-3">
                 <select class="select-2 form-control" id="location" name="topic_id" aria-label="Select Location">
                     @if(isset($topic_slug))
                     <option value="{{str_replace('-', " ", $topic_slug)}}" selected>{{str_replace('-', " ", $topic_slug)}}</option>
@@ -33,7 +33,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-5 mb-3">
                 <div id="custom-select-category">
                     <select class="select-2 form-control" id="select_category" name="question_id" aria-label="Select Category">
                         @if(isset($categories))
@@ -48,7 +48,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-2 mb-3">
                 <button type="submit" class="btn btn-primary filter_blogs">Filter</button>
                 @if(isset($topic_slug) || isset($question_slug) || isset($name))
                 <a href="/blog" class="btn btn-success">Clear Filter</a>
