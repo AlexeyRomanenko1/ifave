@@ -129,18 +129,19 @@ class BlogController extends Controller
             ->paginate($perPage, ['*'], 'page', $page);
 
         $bloggers = DB::table('users as u')
-            ->join('posts as p', 'u.id', '=', 'p.user_id')
+            ->leftJoin('posts as p', 'u.id', '=', 'p.user_id')
             ->leftJoin('comments as c', 'u.id', '=', 'c.comment_by')
             ->select(
                 'u.name as username',
                 'u.image',
                 'u.bio',
                 'u.location',
-                DB::raw('SUM(p.vote_count) + IFNULL(SUM(c.upvotes), 0) as rating')
+                DB::raw('SUM(IFNULL(p.vote_count, 0) + IFNULL(c.upvotes, 0)) as rating')
             )
             ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
             ->orderByDesc('rating')
             ->get();
+
 
 
 
@@ -353,18 +354,19 @@ class BlogController extends Controller
                 ->paginate($perPage, ['*'], 'page', $page);
         }
         $bloggers = DB::table('users as u')
-            ->join('posts as p', 'u.id', '=', 'p.user_id')
+            ->leftJoin('posts as p', 'u.id', '=', 'p.user_id')
             ->leftJoin('comments as c', 'u.id', '=', 'c.comment_by')
             ->select(
                 'u.name as username',
                 'u.image',
                 'u.bio',
                 'u.location',
-                DB::raw('SUM(p.vote_count) + IFNULL(SUM(c.upvotes), 0) as rating')
+                DB::raw('SUM(IFNULL(p.vote_count, 0) + IFNULL(c.upvotes, 0)) as rating')
             )
             ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
             ->orderByDesc('rating')
             ->get();
+
 
 
         $topics = DB::table('topics')->select('*')->get();
@@ -414,18 +416,20 @@ class BlogController extends Controller
                 ->paginate($perPage, ['*'], 'page', $page);
         }
         $bloggers = DB::table('users as u')
-            ->join('posts as p', 'u.id', '=', 'p.user_id')
+            ->leftJoin('posts as p', 'u.id', '=', 'p.user_id')
             ->leftJoin('comments as c', 'u.id', '=', 'c.comment_by')
             ->select(
                 'u.name as username',
                 'u.image',
                 'u.bio',
                 'u.location',
-                DB::raw('SUM(p.vote_count) + IFNULL(SUM(c.upvotes), 0) as rating')
+                DB::raw('SUM(IFNULL(p.vote_count, 0) + IFNULL(c.upvotes, 0)) as rating')
             )
             ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
             ->orderByDesc('rating')
             ->get();
+
+
 
 
         $topics = DB::table('topics')->select('*')->get();
@@ -450,18 +454,19 @@ class BlogController extends Controller
             ->paginate($perPage, ['*'], 'page', $page);
 
         $bloggers = DB::table('users as u')
-            ->join('posts as p', 'u.id', '=', 'p.user_id')
+            ->leftJoin('posts as p', 'u.id', '=', 'p.user_id')
             ->leftJoin('comments as c', 'u.id', '=', 'c.comment_by')
             ->select(
                 'u.name as username',
                 'u.image',
                 'u.bio',
                 'u.location',
-                DB::raw('SUM(p.vote_count) + IFNULL(SUM(c.upvotes), 0) as rating')
+                DB::raw('SUM(IFNULL(p.vote_count, 0) + IFNULL(c.upvotes, 0)) as rating')
             )
             ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
             ->orderByDesc('rating')
             ->get();
+
 
 
         $topics = DB::table('topics')->select('*')->get();
