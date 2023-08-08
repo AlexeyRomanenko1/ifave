@@ -151,7 +151,6 @@ class BlogController extends Controller
         //     }
         // }
         $bloggers = [];
-        // $bloggers = [];
         $bloggers_rating = DB::table('users as u')
             ->join('posts as p', 'u.id', '=', 'p.user_id')
             ->select('u.name as username', 'u.id as user_id', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
@@ -405,13 +404,46 @@ class BlogController extends Controller
                 ->orderByDesc('posts.vote_count')
                 ->paginate($perPage, ['*'], 'page', $page);
         }
-        $bloggers = DB::table('users as u')
+        // $bloggers = DB::table('users as u')
+        //     ->join('posts as p', 'u.id', '=', 'p.user_id')
+        //     ->select('u.name as username', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
+        //     ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
+        //     ->orderByDesc('rating')
+        //     ->get();
+        $bloggers = [];
+        $bloggers_rating = DB::table('users as u')
             ->join('posts as p', 'u.id', '=', 'p.user_id')
-            ->select('u.name as username', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
+            ->select('u.name as username', 'u.id as user_id', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
             ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
             ->orderByDesc('rating')
             ->get();
 
+        foreach ($bloggers_rating as $blogger) {
+            $total_rating = $blogger->rating;
+
+            $comments = DB::table('comments')
+                ->select(DB::raw('SUM(comments.upvotes) as upvotes'))
+                ->where('comments.comment_by', $blogger->user_id)
+                ->first();
+
+            if ($comments) {
+                $total_rating += $comments->upvotes;
+            }
+
+            $bloggers[] = [
+                'username' => $blogger->username,
+                'user_id' => $blogger->user_id,
+                'image' => $blogger->image,
+                'bio' => $blogger->bio,
+                'location' => $blogger->location,
+                'rating' => $total_rating,
+            ];
+        }
+
+        // Sort bloggers by rating in descending order
+        usort($bloggers, function ($a, $b) {
+            return $b['rating'] - $a['rating'];
+        });
 
 
         $topics = DB::table('topics')->select('*')->get();
@@ -460,14 +492,47 @@ class BlogController extends Controller
                 ->orderByDesc('posts.vote_count')
                 ->paginate($perPage, ['*'], 'page', $page);
         }
-        $bloggers = DB::table('users as u')
+        // $bloggers = DB::table('users as u')
+        //     ->join('posts as p', 'u.id', '=', 'p.user_id')
+        //     ->select('u.name as username', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
+        //     ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
+        //     ->orderByDesc('rating')
+        //     ->get();
+
+        $bloggers = [];
+        $bloggers_rating = DB::table('users as u')
             ->join('posts as p', 'u.id', '=', 'p.user_id')
-            ->select('u.name as username', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
+            ->select('u.name as username', 'u.id as user_id', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
             ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
             ->orderByDesc('rating')
             ->get();
 
+        foreach ($bloggers_rating as $blogger) {
+            $total_rating = $blogger->rating;
 
+            $comments = DB::table('comments')
+                ->select(DB::raw('SUM(comments.upvotes) as upvotes'))
+                ->where('comments.comment_by', $blogger->user_id)
+                ->first();
+
+            if ($comments) {
+                $total_rating += $comments->upvotes;
+            }
+
+            $bloggers[] = [
+                'username' => $blogger->username,
+                'user_id' => $blogger->user_id,
+                'image' => $blogger->image,
+                'bio' => $blogger->bio,
+                'location' => $blogger->location,
+                'rating' => $total_rating,
+            ];
+        }
+
+        // Sort bloggers by rating in descending order
+        usort($bloggers, function ($a, $b) {
+            return $b['rating'] - $a['rating'];
+        });
 
         $topics = DB::table('topics')->select('*')->get();
         return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'name', 'categories'));
@@ -490,13 +555,46 @@ class BlogController extends Controller
             ->orderByDesc('posts.vote_count')
             ->paginate($perPage, ['*'], 'page', $page);
 
-        $bloggers = DB::table('users as u')
+        // $bloggers = DB::table('users as u')
+        //     ->join('posts as p', 'u.id', '=', 'p.user_id')
+        //     ->select('u.name as username', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
+        //     ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
+        //     ->orderByDesc('rating')
+        //     ->get();
+        $bloggers = [];
+        $bloggers_rating = DB::table('users as u')
             ->join('posts as p', 'u.id', '=', 'p.user_id')
-            ->select('u.name as username', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
+            ->select('u.name as username', 'u.id as user_id', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
             ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
             ->orderByDesc('rating')
             ->get();
 
+        foreach ($bloggers_rating as $blogger) {
+            $total_rating = $blogger->rating;
+
+            $comments = DB::table('comments')
+                ->select(DB::raw('SUM(comments.upvotes) as upvotes'))
+                ->where('comments.comment_by', $blogger->user_id)
+                ->first();
+
+            if ($comments) {
+                $total_rating += $comments->upvotes;
+            }
+
+            $bloggers[] = [
+                'username' => $blogger->username,
+                'user_id' => $blogger->user_id,
+                'image' => $blogger->image,
+                'bio' => $blogger->bio,
+                'location' => $blogger->location,
+                'rating' => $total_rating,
+            ];
+        }
+
+        // Sort bloggers by rating in descending order
+        usort($bloggers, function ($a, $b) {
+            return $b['rating'] - $a['rating'];
+        });
 
         $topics = DB::table('topics')->select('*')->get();
         return view('posts.blog', compact('posts', 'bloggers', 'topics', 'name'));
