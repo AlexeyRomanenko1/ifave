@@ -128,20 +128,50 @@ class BlogController extends Controller
             ->orderByDesc('posts.vote_count')
             ->paginate($perPage, ['*'], 'page', $page);
 
-        $bloggers = DB::table('users as u')
+        // $bloggers = DB::table('users as u')
+        //     ->leftJoin('posts as p', 'u.id', '=', 'p.user_id')
+        //     ->leftJoin('comments as c', 'u.id', '=', 'c.comment_by')
+        //     ->select(
+        //         'u.name as username',
+        //         'u.image',
+        //         'u.bio',
+        //         'u.location',
+        //         DB::raw('SUM(IFNULL(p.vote_count, 0) + IFNULL(c.upvotes, 0)) as rating')
+        //     )
+        //     ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
+        //     ->orderByDesc('rating')
+        //     ->get();
+
+        $individualSums = DB::table('users as u')
             ->leftJoin('posts as p', 'u.id', '=', 'p.user_id')
             ->leftJoin('comments as c', 'u.id', '=', 'c.comment_by')
+            ->select(
+                'u.id',
+                DB::raw('SUM(IFNULL(p.vote_count, 0)) as post_sum'),
+                DB::raw('SUM(IFNULL(c.upvotes, 0)) as comment_sum')
+            )
+            ->groupBy('u.id')
+            ->get();
+        $bloggers = collect($individualSums)->map(function ($user) {
+            return [
+                'user_id' => $user->id,
+                'rating' => $user->post_sum + $user->comment_sum,
+            ];
+        });
+
+        $bloggers = DB::table('users as u')
+            ->joinSub($bloggers, 'ratings', function ($join) {
+                $join->on('u.id', '=', 'ratings.user_id');
+            })
             ->select(
                 'u.name as username',
                 'u.image',
                 'u.bio',
                 'u.location',
-                DB::raw('SUM(IFNULL(p.vote_count, 0) + IFNULL(c.upvotes, 0)) as rating')
+                'ratings.rating'
             )
-            ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
-            ->orderByDesc('rating')
+            ->orderByDesc('ratings.rating')
             ->get();
-
 
 
 
