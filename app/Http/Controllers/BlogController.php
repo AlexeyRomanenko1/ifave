@@ -142,6 +142,7 @@ class BlogController extends Controller
         //     ->orderByDesc('rating')
         //     ->get();
 
+        // Step 1: Retrieve Individual Sums
         $individualSums = DB::table('users as u')
             ->leftJoin('posts as p', 'u.id', '=', 'p.user_id')
             ->leftJoin('comments as c', 'u.id', '=', 'c.comment_by')
@@ -152,26 +153,35 @@ class BlogController extends Controller
             )
             ->groupBy('u.id')
             ->get();
-        $bloggers = collect($individualSums)->map(function ($user) {
-            return [
-                'user_id' => $user->id,
-                'rating' => $user->post_sum + $user->comment_sum,
-            ];
+
+        // Step 2: Calculate Total Rating and Retrieve Blogger Info
+        $bloggers = [];
+        foreach ($individualSums as $user) {
+            $totalRating = $user->post_sum + $user->comment_sum;
+
+            $blogger = DB::table('users as u')
+                ->where('u.id', $user->id)
+                ->select(
+                    'u.name as username',
+                    'u.image',
+                    'u.bio',
+                    'u.location',
+                    DB::raw($totalRating . ' as rating')
+                )
+                ->first();
+
+            if ($blogger) {
+                $bloggers[] = $blogger;
+            }
+        }
+
+        // Step 3: Sort the Bloggers by Rating
+        usort($bloggers, function ($a, $b) {
+            return $b->rating - $a->rating;
         });
 
-        $bloggers = DB::table('users as u')
-            ->joinSub($bloggers, 'ratings', function ($join) {
-                $join->on('u.id', '=', 'ratings.user_id');
-            })
-            ->select(
-                'u.name as username',
-                'u.image',
-                'u.bio',
-                'u.location',
-                'ratings.rating'
-            )
-            ->orderByDesc('ratings.rating')
-            ->get();
+        // Resulting $bloggers array contains bloggers sorted by rating
+
 
 
 
