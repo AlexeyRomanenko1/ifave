@@ -1,6 +1,6 @@
-document.addEventListener('copy', function (e) {
-    e.preventDefault();
-});
+// document.addEventListener('copy', function (e) {
+//     e.preventDefault();
+// });
 var currentPage = 1;
 var questionsPerPage = 40;
 var allQuestions = []; // Variable to store all the questions retrieved from the API
