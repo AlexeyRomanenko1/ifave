@@ -904,8 +904,9 @@ class indexController extends Controller
             ->pluck('id');
         $user_id = $user_id[0];
         $query = DB::table('comments')
-            ->select('comments.comments', 'comments.upvotes', 'questions.question', 'comments.id', 'comments.downvotes')
+            ->select('comments.comments', 'comments.upvotes', 'questions.question', 'comments.id', 'comments.downvotes','topics.topic_name')
             ->join('questions', 'comments.question_id', 'questions.id')
+            ->join('topics','questions.topic_id','topics.id')
             ->where('comments.comment_by', $user_id)
             ->get();
         $comments = DB::table('comments')

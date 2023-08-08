@@ -33,7 +33,7 @@
             @foreach($query as $user_comment)
             <div class="comment-container comment mb-2">
                 <div class="comment-content">
-                    <h5>Category: {{$user_comment->question}}</h5>
+                    <h5>Location: {{$user_comment->topic_name}} | Category: {{$user_comment->question}}</h5>
                     <hr>
                     @if(strlen($user_comment->comments) > 150)
                     <p>{{ substr($user_comment->comments, 0, 150) }} <span class="read-more">... Read More</span></p>
