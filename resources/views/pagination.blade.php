@@ -153,6 +153,7 @@ $col_md=6;
             @endphp
             @endforeach
             @else
+            @if(count($answers) > 1)
             @for($m=0; $m < count($answers);$m++) @php preg_match('/^(.*)(\(Faves: \d+\))$/', $answers[$m], $matches); $text=$matches[1]; $faves=$matches[2]; if (strlen($text)> 18) {
                 $text = substr($text, 0, 18) . '...';
                 }
@@ -169,6 +170,7 @@ $col_md=6;
                 </div>
                 @endif
                 @endfor
+                @endif
                 @endif
                 <!-- <div class="text-center"><a href="/questions_details/{{$question->question_id}}" class="btn btn-primary m-2">Show me more</a></div> -->
         </div>
