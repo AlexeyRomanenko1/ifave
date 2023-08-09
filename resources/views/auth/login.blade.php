@@ -53,7 +53,7 @@
 
                         <div class="row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary login-btn" id="login-button">
                                     {{ __('Login') }}
                                 </button>
 
@@ -75,4 +75,21 @@
         </div>
     </div>
 </div>
+@include('footer.footer')
+<script>
+    // Prevent multiple form submissions
+    document.getElementById("login-form").addEventListener("submit", function(event) {
+        var loginButton = document.getElementById("login-button");
+        if (!loginButton.disabled) {
+            loginButton.disabled = true;
+            
+            // Re-enable the button after a delay (for example, 3 seconds)
+            setTimeout(function() {
+                loginButton.disabled = false;
+            }, 3000); // Adjust the delay as needed
+        } else {
+            event.preventDefault(); // Prevent form submission if button is already disabled
+        }
+    });
+</script>
 @endsection

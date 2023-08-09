@@ -497,6 +497,3 @@ $('.zoom-block').hover(
         $(this).removeClass('hover');
     }
 );
-$('#login-form').on('submit',function(e){
-    $('#login-btn').prop('disabled', true);
-})
