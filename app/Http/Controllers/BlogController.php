@@ -153,21 +153,21 @@ class BlogController extends Controller
         $bloggers = [];
         $bloggers_rating = DB::table('users as u')
             ->join('posts as p', 'u.id', '=', 'p.user_id')
-            ->select('u.name as username', 'u.id as user_id', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
+            ->select('u.name as username', 'u.id as user_id', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count - p.down_votes) as post_rating'))
             ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
-            ->orderByDesc('rating')
+            ->orderByDesc('post_rating')
             ->get();
 
         foreach ($bloggers_rating as $blogger) {
-            $total_rating = $blogger->rating;
+            $total_rating = $blogger->post_rating;
 
             $comments = DB::table('comments')
-                ->select(DB::raw('SUM(comments.upvotes) as upvotes'))
+                ->select(DB::raw('SUM(upvotes - downvotes) as comment_rating'))
                 ->where('comments.comment_by', $blogger->user_id)
                 ->first();
 
             if ($comments) {
-                $total_rating += $comments->upvotes;
+                $total_rating += $comments->comment_rating;
             }
 
             $bloggers[] = [
@@ -184,14 +184,6 @@ class BlogController extends Controller
         usort($bloggers, function ($a, $b) {
             return $b['rating'] - $a['rating'];
         });
-
-
-        // Sort bloggers by rating in descending order
-        usort($bloggers, function ($a, $b) {
-            return $b['rating'] - $a['rating'];
-        });
-
-
         // foreach($bloggers as $blogger){
         //     echo $blogger['username'].'<br>';
         // }
@@ -413,21 +405,21 @@ class BlogController extends Controller
         $bloggers = [];
         $bloggers_rating = DB::table('users as u')
             ->join('posts as p', 'u.id', '=', 'p.user_id')
-            ->select('u.name as username', 'u.id as user_id', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
+            ->select('u.name as username', 'u.id as user_id', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count - p.down_votes) as post_rating'))
             ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
-            ->orderByDesc('rating')
+            ->orderByDesc('post_rating')
             ->get();
 
         foreach ($bloggers_rating as $blogger) {
-            $total_rating = $blogger->rating;
+            $total_rating = $blogger->post_rating;
 
             $comments = DB::table('comments')
-                ->select(DB::raw('SUM(comments.upvotes) as upvotes'))
+                ->select(DB::raw('SUM(upvotes - downvotes) as comment_rating'))
                 ->where('comments.comment_by', $blogger->user_id)
                 ->first();
 
             if ($comments) {
-                $total_rating += $comments->upvotes;
+                $total_rating += $comments->comment_rating;
             }
 
             $bloggers[] = [
@@ -500,23 +492,24 @@ class BlogController extends Controller
         //     ->get();
 
         $bloggers = [];
+        $bloggers = [];
         $bloggers_rating = DB::table('users as u')
             ->join('posts as p', 'u.id', '=', 'p.user_id')
-            ->select('u.name as username', 'u.id as user_id', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
+            ->select('u.name as username', 'u.id as user_id', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count - p.down_votes) as post_rating'))
             ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
-            ->orderByDesc('rating')
+            ->orderByDesc('post_rating')
             ->get();
 
         foreach ($bloggers_rating as $blogger) {
-            $total_rating = $blogger->rating;
+            $total_rating = $blogger->post_rating;
 
             $comments = DB::table('comments')
-                ->select(DB::raw('SUM(comments.upvotes) as upvotes'))
+                ->select(DB::raw('SUM(upvotes - downvotes) as comment_rating'))
                 ->where('comments.comment_by', $blogger->user_id)
                 ->first();
 
             if ($comments) {
-                $total_rating += $comments->upvotes;
+                $total_rating += $comments->comment_rating;
             }
 
             $bloggers[] = [
@@ -564,21 +557,21 @@ class BlogController extends Controller
         $bloggers = [];
         $bloggers_rating = DB::table('users as u')
             ->join('posts as p', 'u.id', '=', 'p.user_id')
-            ->select('u.name as username', 'u.id as user_id', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
+            ->select('u.name as username', 'u.id as user_id', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count - p.down_votes) as post_rating'))
             ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
-            ->orderByDesc('rating')
+            ->orderByDesc('post_rating')
             ->get();
 
         foreach ($bloggers_rating as $blogger) {
-            $total_rating = $blogger->rating;
+            $total_rating = $blogger->post_rating;
 
             $comments = DB::table('comments')
-                ->select(DB::raw('SUM(comments.upvotes) as upvotes'))
+                ->select(DB::raw('SUM(upvotes - downvotes) as comment_rating'))
                 ->where('comments.comment_by', $blogger->user_id)
                 ->first();
 
             if ($comments) {
-                $total_rating += $comments->upvotes;
+                $total_rating += $comments->comment_rating;
             }
 
             $bloggers[] = [

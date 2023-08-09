@@ -213,7 +213,8 @@
                         @endphp
                         @endforeach
                         @else
-                        @for($m=0; $m < count($answers);$m++) @php preg_match('/^(.*)(\(Faves: \d+\))$/', $answers[$m], $matches); $text=$matches[1]; $faves=$matches[2]; if (strlen($text)> 18) {
+                        @if(count($answers) > 1)
+                        @for($m=0; $m < count($answers);$m++) @php  preg_match('/^(.*)(\(Faves: \d+\))$/', $answers[$m], $matches); $text=$matches[1]; $faves=$matches[2]; if (strlen($text)> 18) {
                             $text = substr($text, 0, 18) . '...';
                             }
                             $to_answer = $text . $faves;
@@ -228,7 +229,8 @@
                             <div class="p-1"> <small onclick="redirect_url({{$question->question_id}})" class="fw-normal fs-6  unselect underline"> {{$to_answer}}</small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code float-end" onclick="generate_embeded_code('https://ifave.com/questions_details/{{$question->question_id}}','{{$question->question}}')" aria-hidden="true"></i>
                             </div>
                             @endif
-                            @endfor
+                            @endfor 
+                            @endif
                             @endif
                             <!-- <div class="text-center"><a href="/questions_details/{{$question->question_id}}" class="btn btn-primary m-2">Show me more</a></div> -->
                     </div>

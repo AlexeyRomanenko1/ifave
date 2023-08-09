@@ -21,13 +21,16 @@ $(document).ready(function () {
             // let questions_slider = '';
             if (obj.myfaves.length > 0) {
                 for (let k = 0; k < obj.myfaves.length; k++) {
-                    html += '<tr><td>' + obj.myfaves[k]['answers'] + '</td><td>' + obj.myfaves[k]['question'] + '</td><td>' + obj.myfaves[k]['topic_name'] + '</td></tr>';
+                    html += '<tr><td class="fs-5"><b>' + obj.myfaves[k]['answers'] + '</b></td><td>' + obj.myfaves[k]['question'] + '</td><td>' + obj.myfaves[k]['topic_name'] + '</td></tr>';
                     // faves_index = faves_index + 1;
                 }
             }
             $('#faves_table_body').empty();
             $('#faves_table_body').html(html);
-            $('#faves_table').DataTable();
+            $('#faves_table').DataTable( {
+                "lengthMenu": [50, 100 ],
+                searching: false,
+              });
             $('#display_topic_name').empty()
             $('#display_topic_name').html('<img class="mb-3" src="/images/question_images/ifave_page.jpg" height="50px" width="50px" alt=""> Best in ' + obj.topic_name.charAt(0).toUpperCase() + obj.topic_name.slice(1))
             // for (let j = 0; j < obj.questions_slider.length; j++) {
