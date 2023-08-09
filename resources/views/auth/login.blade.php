@@ -86,7 +86,7 @@
             // Re-enable the button after a delay (for example, 3 seconds)
             setTimeout(function() {
                 loginButton.disabled = false;
-            }, 3000); // Adjust the delay as needed
+            }, 10000); // Adjust the delay as needed
         } else {
             event.preventDefault(); // Prevent form submission if button is already disabled
         }
