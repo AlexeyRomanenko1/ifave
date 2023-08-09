@@ -128,7 +128,7 @@
         <div class="comment-container comment mb-2">
             <div class="comment-content">
                 @if(strlen($user_comment->comments) > 150)
-                <p>{{ substr($user_comment->comments, 0, 150) }} <span class="read-more">... Read More</span></p>
+                <p class="half-comment">{{ substr($user_comment->comments, 0, 150) }} <span class="read-more">... Read More</span></p>
                 <span class="full-comment" style="display: none;">{{ $user_comment->comments }}</span>
                 @else
                 <p>{{ $user_comment->comments }}</p>

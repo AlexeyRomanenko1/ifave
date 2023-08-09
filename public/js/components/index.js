@@ -6,8 +6,12 @@ var questionsPerPage = 40;
 var allQuestions = []; // Variable to store all the questions retrieved from the API
 $('.read-more').on('click', function (e) {
     e.preventDefault();
-    $(this).hide();
-    $(this).siblings('.full-comment').show();
+     $(this).hide();
+     var halfCommentElement = $(this).closest('.comment-content').find('.half-comment');
+    // $(this).siblings('.full-comment').show();
+    var fullCommentElement = $(this).closest('.comment-content').find('.full-comment');
+    halfCommentElement.hide();
+    fullCommentElement.show();
 });
 $(document).ready(function () {
     $.ajax({
