@@ -16,7 +16,7 @@
         <a href="/">Go back to best in {{ $details["topic_name"] }}</a>
         <h4 class="mt-2 p-2">{{ $details["topic_name"] }}</h4>
         @else
-        <a href="/topics/{{$details['topic_name']}}">Go back to best in {{ $details["topic_name"] }}</a>
+        <a href="/location/{{str_replace(' ','-',$details['topic_name'])}}">Go back to best in {{ $details["topic_name"] }}</a>
         <h4 class="mt-2 p-2">{{ $details["topic_name"] }}</h4>
         @endif
         @if (file_exists(public_path('images/question_images/ifave_images/'.$question_image)))
