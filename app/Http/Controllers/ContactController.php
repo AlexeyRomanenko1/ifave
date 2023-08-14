@@ -11,7 +11,10 @@ class ContactController extends Controller
     //
     public function index(Request $request)
     {
-        return view('contact');
+        $keywords='ifave, ifave contact';
+        $meta_description = 'Explore a world of insights and opinions at ifave.com. Engage in vibrant question surveys spanning diverse categories, and cast your vote on answers that resonate with you. Discover thought-provoking blogs and articles on trending topics within unique locations. Join the conversation, express your views, and be part of a dynamic online community.';
+        $page_title='iFave - Contact';
+        return view('contact',compact('keywords','meta_description','page_title'));
     }
     public function contact_us(Request $request)
     {

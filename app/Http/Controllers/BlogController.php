@@ -14,7 +14,8 @@ use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\File;
 use PDO;
 use ZipArchive;
-
+use Mews\Purifier\Facades\Purifier;
+use Illuminate\Support\Str;
 class BlogController extends Controller
 {
     //
@@ -32,7 +33,10 @@ class BlogController extends Controller
             return redirect()->route('/');
         }
         $topics = DB::table('topics')->select('*')->get();
-        return view('blogs.create-blog', compact('topics'));
+        $keywords = 'ifave, ifave blogging, blogging';
+        $meta_description = 'Explore a world of insights and opinions at ifave.com. Engage in vibrant question surveys spanning diverse categories, and cast your vote on answers that resonate with you. Discover thought-provoking blogs and articles on trending topics within unique locations. Join the conversation, express your views, and be part of a dynamic online community.';
+        $page_title='iFave - Blogs';
+        return view('blogs.create-blog', compact('topics', 'keywords', 'meta_description','page_title'));
     }
     public function create_blog(Request $request)
     {
@@ -188,8 +192,11 @@ class BlogController extends Controller
         //     echo $blogger['username'].'<br>';
         // }
         // return;
+        $keywords = 'ifave, ifave blogs, bloggers';
+        $meta_description = 'Explore a world of insights and opinions at ifave.com. Engage in vibrant question surveys spanning diverse categories, and cast your vote on answers that resonate with you. Discover thought-provoking blogs and articles on trending topics within unique locations. Join the conversation, express your views, and be part of a dynamic online community.';
+        $page_title='iFave - Blogs';
         $topics = DB::table('topics')->select('*')->get();
-        return view('posts.blog', compact('posts', 'bloggers', 'topics'));
+        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'keywords', 'meta_description','page_title'));
     }
     public function blog_details(Request $request, $slug)
     {
@@ -223,9 +230,17 @@ class BlogController extends Controller
             ->join('users', 'users.id', 'posts.user_id')
             ->where('posts.slug', $slug)
             ->get();
-
+        $keywords = DB::table('posts')->where('slug', $slug)->pluck('tags');
+        $keywords = $keywords[0];
+        $meta_description = DB::table('posts')->where('slug', $slug)->pluck('blog_content');
+        $meta_description = Purifier::clean($meta_description[0]);
+        // Extract the plain text content
+        $meta_description = strip_tags($meta_description);
+        $meta_description =  Str::limit($meta_description, 160, '...');
         $latest_posts = DB::table('posts')->select('*')->orderByDesc('created_at')->limit(5)->get();
-        return view('posts.post_details', compact('posts', 'latest_posts'));
+        $blog_title=DB::table('posts')->where('slug', $slug)->pluck('title');
+        $page_title='iFave Blog - '. $blog_title[0];
+        return view('posts.post_details', compact('posts', 'latest_posts', 'keywords','meta_description','page_title'));
     }
     public function upvote_post(Request $request)
     {
@@ -437,9 +452,11 @@ class BlogController extends Controller
             return $b['rating'] - $a['rating'];
         });
 
-
+        $keywords = 'ifave, ifave blogging, blogging';
+        $meta_description = 'Explore a world of insights and opinions at ifave.com. Engage in vibrant question surveys spanning diverse categories, and cast your vote on answers that resonate with you. Discover thought-provoking blogs and articles on trending topics within unique locations. Join the conversation, express your views, and be part of a dynamic online community.';
+        $page_title='iFave - Blogs - '.$topic.' - '.$question;
         $topics = DB::table('topics')->select('*')->get();
-        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'categories'));
+        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'categories','page_title','keywords','meta_description'));
     }
 
     public function blogger_location_filter(Request $request, $user_name, $topic_slug, $question_slug)
@@ -526,9 +543,11 @@ class BlogController extends Controller
         usort($bloggers, function ($a, $b) {
             return $b['rating'] - $a['rating'];
         });
-
+        $keywords = 'ifave, ifave blogging, blogging';
+        $meta_description = 'Explore a world of insights and opinions at ifave.com. Engage in vibrant question surveys spanning diverse categories, and cast your vote on answers that resonate with you. Discover thought-provoking blogs and articles on trending topics within unique locations. Join the conversation, express your views, and be part of a dynamic online community.';
+        $page_title='iFave - Blogger '.$name.' - '.$topic.' - '.$question;
         $topics = DB::table('topics')->select('*')->get();
-        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'name', 'categories'));
+        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'name', 'categories','keywords','metadescription','page_title'));
     }
     public function blogger_filter(Request $request, $user_name)
     {
@@ -588,9 +607,11 @@ class BlogController extends Controller
         usort($bloggers, function ($a, $b) {
             return $b['rating'] - $a['rating'];
         });
-
+        $keywords = 'ifave, ifave blogging, blogging';
+        $meta_description = 'Explore a world of insights and opinions at ifave.com. Engage in vibrant question surveys spanning diverse categories, and cast your vote on answers that resonate with you. Discover thought-provoking blogs and articles on trending topics within unique locations. Join the conversation, express your views, and be part of a dynamic online community.';
+        $page_title='iFave - Blogger - '.$name;
         $topics = DB::table('topics')->select('*')->get();
-        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'name'));
+        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'name','keywords','meta_description','page_title'));
     }
     public function searchBlogs(Request $request)
     {

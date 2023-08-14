@@ -19,16 +19,16 @@ $(document).ready(function () {
             // let questions_slider = '';
             if (obj.myfaves.length > 0) {
                 for (let k = 0; k < obj.myfaves.length; k++) {
-                    html += '<tr><td class="fs-5"><b>' + obj.myfaves[k]['answers'] + '</b></td><td>' + obj.myfaves[k]['question'] + '</td><td>'+ obj.myfaves[k]['topic_name'] +'</td></tr>';
+                    html += '<tr><td class="fs-5"><b>' + obj.myfaves[k]['answers'] + '</b></td><td>' + obj.myfaves[k]['question'] + '</td><td>' + obj.myfaves[k]['topic_name'] + '</td></tr>';
                     // faves_index = faves_index + 1;
                 }
             }
             $('#faves_table_body').empty();
             $('#faves_table_body').html(html);
-            $('#faves_table').DataTable( {
-                "lengthMenu": [50, 100 ],
+            $('#faves_table').DataTable({
+                "lengthMenu": [50, 100],
                 searching: false,
-              });
+            });
             $('#display_topic_name').empty();
             // $('#display_topic_name').text(obj.topic_name.toUpperCase())
             $('#display_topic_name').html('<img class="mb-3" src="/images/question_images/ifave_page.jpg" height="50px" width="50px" alt=""> Best in ' + obj.topic_name.charAt(0).toUpperCase() + obj.topic_name.slice(1))
@@ -207,14 +207,15 @@ $('#search_question_topics').on('keyup', function () {
 $('#search_questions').on('keyup', function () {
     let to_search = $(this).val();
     let id = $('#topic_id').val();
+    let topicName = $('#topicName').val();
     $.ajax({
         type: 'GET',
         url: '/searchQuestions',
-        data: { task: 'searchQuestions', search: to_search, id: id },
+        data: { task: 'searchQuestions', search: to_search, id: id, topicName: topicName },
         success: function (data) {
             //  var result = JSON.parse(data);
-              $('#display_questions').html(data.searchResults);
-              $('#pagination_links').html(data.paginationLinks);
+            $('#display_questions').html(data.searchResults);
+            $('#pagination_links').html(data.paginationLinks);
         },
         error: function (error) {
             console.log(error)
@@ -231,7 +232,7 @@ $(document).on('click', '#pagination_links a', function (e) {
     $.ajax({
         type: 'GET',
         url: pageUrl, // Use the pagination link URL
-        data: { task: 'searchQuestions', search: $('#search_questions').val(), id: $('#topic_id').val() },
+        data: { task: 'searchQuestions', search: $('#search_questions').val(), id: $('#topic_id').val(), topicName: $('#topicName').val() },
         success: function (data) {
             // Update the search results and pagination links
             $('#display_questions').empty();
@@ -380,7 +381,7 @@ $('#search_categories').on('keyup', function () {
             let obj = JSON.parse(data);
             if (obj.data.length > 0) {
                 for (let j = 0; j < obj.data.length; j++) {
-                    html += '<div class="col-md-6"><ul><li> <h6><a href="/questions_details/' + obj.data[j]['id'] + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
+                    html += '<div class="col-md-6"><ul><li> <h6><a href="category/'+ $('#topicName').val().replace(/ /g, "-") +'/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
                 }
             }
             $('#on_search_category').empty();
@@ -404,7 +405,7 @@ $('#open_search_category_modal').on('click', function () {
             let obj = JSON.parse(data);
             if (obj.data.length > 0) {
                 for (let j = 0; j < obj.data.length; j++) {
-                    html += '<div class="col-md-6"><ul><li> <h6><a href="/questions_details/' + obj.data[j]['id'] + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
+                    html += '<div class="col-md-6"><ul><li> <h6><a href="category/'+ $('#topicName').val().replace(/ /g, "-") +'/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
                 }
             }
             $('#on_search_category').empty();
@@ -416,7 +417,7 @@ $('#open_search_category_modal').on('click', function () {
     })
 })
 function redirect_url(x) {
-    window.location.replace("/questions_details/" + x);
+    window.location.replace("/" + x);
 }
 
 
@@ -431,13 +432,13 @@ function generate_embeded_code(url, questionName) {
 
 $(document).on('click', '.ajax-pagination .page-link', function (event) {
     event.preventDefault(); // Prevent default link behavior
-     let pageUrl = $(this).attr('href');; // Get the URL of the clicked page
+    let pageUrl = $(this).attr('href');; // Get the URL of the clicked page
     let to_search = $('#search_questions').val();
     let id = $('#topic_id').val();
     $.ajax({
         type: 'GET',
         url: pageUrl,
-        data: { task: 'searchQuestions', search: to_search, id: id },
+        data: { task: 'searchQuestions', search: to_search, id: id, topicName: $('#topicName').val() },
         success: function (data) {
             $('#display_questions').empty();
             $('#display_questions').html(data);

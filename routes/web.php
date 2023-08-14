@@ -27,7 +27,7 @@ Route::post('/entervote', [indexController::class, 'entervote']);
 Route::get('/searchQuestionsTopics', [indexController::class, 'searchQuestionsTopics']);
 Route::get('/searchQuestions', [indexController::class, 'searchQuestions']);
 Route::get('/searchcategories', [indexController::class, 'searchcategories']);
-Route::get('questions_details/{question}', [indexController::class, 'questions_details'])->name('questions_details');
+//Route::get('questions_details/{question}', [indexController::class, 'questions_details'])->name('questions_details');
 Route::post('/delete_vote', [indexController::class, 'delete_vote']);
 Route::post('/add_user_answer', [App\Http\Controllers\indexController::class, 'add_user_answer'])->name('add_user_answer');
 Route::post('/add_user_comments', [App\Http\Controllers\indexController::class, 'add_user_comments'])->name('add_user_comments');
@@ -38,7 +38,6 @@ Route::get('/get_topics', [indexController::class, 'get_topics']);
 Route::get('/search_topics', [indexController::class, 'search_topics']);
 Route::get('/get_blogger', [indexController::class, 'get_blogger']);
 Route::get('/search_bloggers', [indexController::class, 'search_bloggers']);
-Route::get('topics/{topic_name}', [indexController::class, 'topic_name'])->name('topic_name');
 Route::get('/get_comments_list', [indexController::class, 'get_comments_list'])->name('get_comments_list');
 Route::get('/get_comments_list_all', [indexController::class, 'get_comments_list_all'])->name('get_comments_list_all');
 
@@ -53,6 +52,8 @@ Route::get('blogger/{user_name}/{topic_slug}/{question_slug}', [App\Http\Control
 Route::get('blogger/{user_name}', [App\Http\Controllers\BlogController::class, 'blogger_filter'])->name('filter_blog');
 Route::get('/searchBlogs', [App\Http\Controllers\BlogController::class, 'searchBlogs'])->name('searchBlogs');
 Route::post('/get_categories_onchange', [App\Http\Controllers\BlogController::class, 'get_categories_onchange'])->name('get_categories_onchange');
+Route::get('/location/{topic_name}', [indexController::class, 'topic_name'])->name('topic_name');
+Route::get('category/{location}/{category}', [indexController::class, 'questions_details'])->name('questions_details');
 // Route::get('redirect/{id}', 'YourController@redirectToUrlWithId')->name('url.redirect');
 Auth::routes([
     'verify' => true

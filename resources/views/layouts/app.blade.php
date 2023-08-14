@@ -6,9 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="/images/question_images/IFAVE_PNG.png">
     <!-- CSRF Token -->
+    @if(isset($keywords))
+    <meta name="keywords" content="{{$keywords}}">
+    <meta name="description" content="{{$meta_description}}" />
+    @endif
+    <meta property="og:title" content="Ifave - Explore Surveys and Blogs on ifave.com" />
+    <meta property="og:description" content="Engage in surveys, vote on answers, and explore insightful blogs on ifave.com. Join a dynamic online community of opinions and ideas." />
+    <meta property="og:url" content="https://www.ifave.com" />
+    <meta property="og:image" content="https://www.ifave.com/images/question_images/IFAVE_PNG.png" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @if(isset($page_title))
+    <title>{{$page_title}}</title>
+    @else
     <title>Questions Survey</title>
-
+    @endif
     <!-- Fonts -->
     <!-- <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet"> -->

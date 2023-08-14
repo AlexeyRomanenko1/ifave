@@ -200,12 +200,13 @@ $('#search_question_topics').on('keyup', function () {
 $('#search_questions').on('keyup', function () {
     let to_search = $(this).val();
     let id = $('#topic_id').val();
+    let topicName=$('#topicName').val();
     $.ajax({
         type: 'GET',
         url: '/searchQuestions',
-        data: { task: 'searchQuestions', search: to_search, id: id },
+        data: { task: 'searchQuestions', search: to_search, id: id,topicName:topicName },
         success: function (data) {
-            console.log(data)
+            // console.log(data)
           //  var result = JSON.parse(data);
             $('#display_questions').html(data.searchResults);
             $('#pagination_links').html(data.paginationLinks);
@@ -229,7 +230,7 @@ $('#search_categories').on('keyup', function () {
             let obj = JSON.parse(data);
             if (obj.data.length > 0) {
                 for (let j = 0; j < obj.data.length; j++) {
-                    html += '<div class="col-md-6"><ul><li> <h6><a href="/questions_details/' + obj.data[j]['id'] + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
+                    html += '<div class="col-md-6"><ul><li> <h6><a href="category/'+ $('#topicName').val().replace(/ /g, "-") +'/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
                 }
             }
             $('#on_search_category').empty();
@@ -251,7 +252,7 @@ $(document).on('click', '#pagination_links a', function (e) {
     $.ajax({
         type: 'GET',
         url: pageUrl, // Use the pagination link URL
-        data: { task: 'searchQuestions', search: $('#search_questions').val(), id: $('#topic_id').val() },
+        data: { task: 'searchQuestions', search: $('#search_questions').val(), id: $('#topic_id').val(),topicName:$('#topicName').val() },
         success: function (data) {
             // Update the search results and pagination links
             $('#display_questions').empty();
@@ -277,7 +278,7 @@ $('#open_search_category_modal').on('click', function () {
             let obj = JSON.parse(data);
             if (obj.data.length > 0) {
                 for (let j = 0; j < obj.data.length; j++) {
-                    html += '<div class="col-md-6"><ul><li> <h6><a href="/questions_details/' + obj.data[j]['id'] + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
+                    html += '<div class="col-md-6"><ul><li> <h6><a href="category/'+ $('#topicName').val().replace(/ /g, "-") +'/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
                 }
             }
             $('#on_search_category').empty();
@@ -440,7 +441,7 @@ function share_url(url) {
 
 
 function redirect_url(x) {
-    window.location.replace("/questions_details/" + x);
+    window.location.replace("/" + x);
 }
 function scrollRight() {
     const scrollContainer = document.getElementById("scrollContainer");
@@ -464,13 +465,13 @@ function generate_embeded_code(url, questionName) {
 
 $(document).on('click', '.ajax-pagination .page-link', function (event) {
     event.preventDefault(); // Prevent default link behavior
-    let pageUrl = $(this).attr('href');; // Get the URL of the clicked page
+    let pageUrl = $(this).attr('href'); // Get the URL of the clicked page
     let to_search = $('#search_questions').val();
     let id = $('#topic_id').val();
     $.ajax({
         type: 'GET',
         url: pageUrl,
-        data: { task: 'searchQuestions', search: to_search, id: id },
+        data: { task: 'searchQuestions', search: to_search, id: id,topicName:$('#topicName').val() },
         success: function (data) {
             $('#display_questions').empty();
             $('#display_questions').html(data);

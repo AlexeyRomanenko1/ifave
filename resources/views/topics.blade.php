@@ -2,6 +2,7 @@
 
 <input type="hidden" value="{{$get_topic->id}}" name="topic_id" id="topic_id">
 <input type="hidden" value="{{$header_info}}" name="topic_name" id="topic_name">
+<input type="hidden" value="{{str_replace(' ','-',$topicName)}}" name="topicName" id="topicName">
 <!-- {{ Route::currentRouteName() }} -->
 <div class="container mt-5">
     <div class="text-center">
@@ -68,6 +69,8 @@
                 <!-- Display question information -->
                 @php
                 $answers=explode("}",$question->top_answers);
+                $TopicName=str_replace(' ','-',$topicName);
+                $questionName=str_replace(' ','-',$question->question);
                 $question_id=$question->question_id;
                 //$exists = array_reduce(array_column($array, 'question_id'), function ($carry, $item) use ($question_id) {
                 //return $carry || $item == $question_id;
@@ -175,16 +178,16 @@
                             $question->question=substr($question->question, 0, 40) . '...';
                             @endphp
                             @endif
-                            <div class="text-center" onclick="redirect_url({{$question->question_id}})">
+                            <div class="text-center" onclick="redirect_url('category/{{$TopicName}}/{{$questionName}}')">
                                 <h3 class="underline">{{ $question->question }} <small class="fs-6 fw-normal fst-italic"> ({{ $question->total_votes }} faves)</small></h3>
                             </div>
                         </div>
                         <div class="suggestions p-1"></div>
                         <div class="text-center">
                             @if (file_exists(public_path('images/question_images/ifave_images/'.$question_image)))
-                            <img onclick="redirect_url({{$question->question_id}})" src="/images/question_images/ifave_images/{{$question_image}}" class="img-fluid zoom-block" height="325px" width="325px" alt="...">
+                            <img onclick="redirect_url('category/{{$TopicName}}/{{$questionName}}')" src="/images/question_images/ifave_images/{{$question_image}}" class="img-fluid zoom-block" height="325px" width="325px" alt="...">
                             @else
-                            <img onclick="redirect_url({{$question->question_id}})" src="/images/question_images/ifave.jpg" class="img-fluid zoom-block" height="325px" width="325px" alt="...">
+                            <img onclick="redirect_url('category/{{$TopicName}}/{{$questionName}}')" src="/images/question_images/ifave.jpg" class="img-fluid zoom-block" height="325px" width="325px" alt="...">
                             @endif
                         </div>
                         @if(!$exists)
@@ -197,15 +200,15 @@
                         @endphp
                         @if($lm==1)
                         <div class="p-1 mt-4">
-                            <small onclick="redirect_url({{$question->question_id}})" class="fw-normal fs-6  unselect underline"> Place ( {{$answer_votes}} </small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone float-end" onclick="copy_url('https://ifave.com/questions_details/{{$question->question_id}}' )" aria-hidden="true"></i>
+                            <small onclick="redirect_url('category/{{$TopicName}}/{{$questionName}}')" class="fw-normal fs-6  unselect underline"> Place ( {{$answer_votes}} </small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone float-end" onclick="copy_url('https://ifave.com/category/{{$TopicName}}/{{$questionName}}')" aria-hidden="true"></i>
                         </div>
                         @elseif($lm==2)
                         <div class="p-1">
-                            <small onclick="redirect_url({{$question->question_id}})" class="fw-normal fs-6  unselect underline"> Place ( {{$answer_votes}} </small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share float-end" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url('https://ifave.com/questions_details/{{$question->question_id}}' )" aria-hidden="true"></i>
+                            <small onclick="redirect_url('category/{{$TopicName}}/{{$questionName}}')" class="fw-normal fs-6  unselect underline"> Place ( {{$answer_votes}} </small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share float-end" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url('https://ifave.com/category/{{$TopicName}}/{{$questionName}}')" aria-hidden="true"></i>
                         </div>
                         @elseif($lm==3)
                         <div class="p-1">
-                            <small onclick="redirect_url({{$question->question_id}})" class="fw-normal fs-6  unselect underline"> Place ( {{$answer_votes}} </small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code float-end" onclick="generate_embeded_code('https://ifave.com/questions_details/{{$question->question_id}}','{{$question->question}}')" aria-hidden="true"></i>
+                            <small onclick="redirect_url('category/{{$TopicName}}/{{$questionName}}')" class="fw-normal fs-6  unselect underline"> Place ( {{$answer_votes}} </small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code float-end" onclick="generate_embeded_code('https://ifave.com/category/{{$TopicName}}/{{$questionName}}')" aria-hidden="true"></i>
                         </div>
                         @endif
                         @php
@@ -220,13 +223,13 @@
                             $to_answer = $text . $faves;
                             @endphp
                             @if($m==0)
-                            <div class="p-1 mt-4"> <small onclick="redirect_url({{$question->question_id}})" class="fw-normal fs-6  unselect underline"> {{$to_answer}}</small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone float-end" onclick="copy_url('https://ifave.com/questions_details/{{$question->question_id}}')" aria-hidden="true"></i>
+                            <div class="p-1 mt-4"> <small onclick="redirect_url('category/{{$TopicName}}/{{$questionName}}')" class="fw-normal fs-6  unselect underline"> {{$to_answer}}</small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone float-end" onclick="copy_url('https://ifave.com/category/{{$TopicName}}/{{$questionName}}')" aria-hidden="true"></i>
                             </div>
                             @elseif($m==1)
-                            <div class="p-1"> <small onclick="redirect_url({{$question->question_id}})" class="fw-normal fs-6  unselect underline"> {{$to_answer}}</small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share float-end" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url('https://ifave.com/questions_details/{{$question->question_id}}')" aria-hidden="true"></i>
+                            <div class="p-1"> <small onclick="redirect_url('category/{{$TopicName}}/{{$questionName}}')" class="fw-normal fs-6  unselect underline"> {{$to_answer}}</small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share float-end" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url('https://ifave.com/category/{{$TopicName}}/{{$questionName}}')" aria-hidden="true"></i>
                             </div>
                             @elseif($m==2)
-                            <div class="p-1"> <small onclick="redirect_url({{$question->question_id}})" class="fw-normal fs-6  unselect underline"> {{$to_answer}}</small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code float-end" onclick="generate_embeded_code('https://ifave.com/questions_details/{{$question->question_id}}','{{$question->question}}')" aria-hidden="true"></i>
+                            <div class="p-1"> <small onclick="redirect_url('category/{{$TopicName}}/{{$questionName}}')" class="fw-normal fs-6  unselect underline"> {{$to_answer}}</small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code float-end" onclick="generate_embeded_code('https://ifave.com/category/{{$TopicName}}/{{$questionName}}','{{$question->question}}')" aria-hidden="true"></i>
                             </div>
                             @endif
                             @endfor 

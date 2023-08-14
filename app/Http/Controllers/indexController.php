@@ -87,7 +87,17 @@ class indexController extends Controller
             ->orderByDesc('posts.vote_count')
             ->limit(4)
             ->get();
-        return view('index', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'));
+
+        $keywords = 'ifave,' . $topicName;
+        $meta_description = 'Top 50 categories in ' . $topicName . ':';
+        foreach ($questions as $index => $description) {
+            if ($index <= 5) {
+                $meta_description .= $index + 1 . '. ' . $description->question . ' (' . $description->total_votes . ' faves) ';
+            }
+        }
+        $meta_description = substr($meta_description, 0, -1);
+        $page_title='iFave - '.$topicName;
+        return view('index', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts', 'keywords', 'topicName', 'meta_description','page_title'));
     }
     public function indexonloadRequest(Request $request)
     {
@@ -116,7 +126,6 @@ class indexController extends Controller
             foreach ($get_topic_details as $get_topic_detail) {
                 $topic_id = $get_topic_detail['id'];
             }
-
             $questions_slider = Questions::select('*')->where('topic_id', $topic_id)->get();
             return json_encode(['success' => 1, 'topic_name' => $topicName, 'questions_slider' => $questions_slider, 'myfaves' => $get_this_user_votes, 'topic_id' => $topic_id]);
         }
@@ -276,7 +285,8 @@ class indexController extends Controller
     {
         // if ($request->task == 'searchQuestions') {
         $tosearch = $request->search;
-        $topicName = $request->id;
+        $topicId = $request->id;
+        $topicName = $request->topicName;
         //    $topicName='The World';
         $perPage = 20; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
@@ -327,17 +337,17 @@ class indexController extends Controller
                 ->leftJoin('questions_answer', function ($join) {
                     $join->on('questions.question_category', '=', 'questions_answer.questions_category');
                 })
-                ->where('topics.id', '=', $topicName)
+                ->where('topics.id', '=', $topicId)
                 ->where('questions.question', 'like', '%' . $tosearch . '%')
                 ->groupBy('questions.id', 'questions.question', 'questions.question_category')
                 ->orderBy('total_votes', 'DESC')
                 ->paginate($perPage);
-            $topic_id = $topicName;
+            $topic_id = $topicId;
             $comments = DB::table('comments')
                 ->select('users.name', DB::raw('SUM(comments.upvotes) as upvotes'))
                 ->join('users', 'comments.comment_by', '=', 'users.id')
                 ->join('questions', 'comments.question_id', '=', 'questions.id')
-                ->where('questions.topic_id', '=', $topicName)
+                ->where('questions.topic_id', '=', $topicId)
                 ->orderByDesc('upvotes')
                 ->limit(5)
                 ->groupBy('users.name')
@@ -352,7 +362,7 @@ class indexController extends Controller
                 ->get();
             // return view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'));
             return response()->json([
-                'searchResults' => view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'))->render(),
+                'searchResults' => view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts', 'topicName'))->render(),
                 'paginationLinks' => $questions->links('pagination::bootstrap-5')->render(),
             ]);
         } else {
@@ -382,16 +392,16 @@ class indexController extends Controller
                 ->leftJoin('questions_answer', function ($join) {
                     $join->on('questions.question_category', '=', 'questions_answer.questions_category');
                 })
-                ->where('topics.id', '=', $topicName)
+                ->where('topics.id', '=', $topicId)
                 ->groupBy('questions.id', 'questions.question', 'questions.question_category')
                 ->orderBy('total_votes', 'DESC')
                 ->paginate($perPage);
-            $topic_id = $topicName;
+            $topic_id = $topicId;
             $comments = DB::table('comments')
                 ->select('users.name', DB::raw('SUM(comments.upvotes) as upvotes'))
                 ->join('users', 'comments.comment_by', '=', 'users.id')
                 ->join('questions', 'comments.question_id', '=', 'questions.id')
-                ->where('questions.topic_id', '=', $topicName)
+                ->where('questions.topic_id', '=', $topicId)
                 ->orderByDesc('upvotes')
                 ->limit(5)
                 ->groupBy('users.name')
@@ -405,7 +415,7 @@ class indexController extends Controller
                 ->get();
             // return view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'));
             return response()->json([
-                'searchResults' => view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts'))->render(),
+                'searchResults' => view('pagination', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts', 'topicName'))->render(),
                 'paginationLinks' => $questions->links('pagination::bootstrap-5')->render(),
             ]);
         }
@@ -429,7 +439,7 @@ class indexController extends Controller
             'data' => $query
         ]);
     }
-    public function questions_details(Request $request, $id)
+    public function questions_details(Request $request, $location, $category)
     {
         if (Auth::check()) {
             // User is logged in
@@ -443,13 +453,19 @@ class indexController extends Controller
             $clientIP = $this->getClientIP($request);
         }
         // return $id;
+        $category = str_replace('-', ' ', $category);
+        $location = str_replace('-', ' ', $location);
+        $topic_id = DB::table('topics')->where('topic_name', $location)->pluck('id');
+        $topic_id = $topic_id[0];
+        $question_id = DB::table('questions')->where('question', $category)->where('topic_id', $topic_id)->pluck('id');
+        $id = $question_id[0];
         $question_id = $id;
         $get_user_answers = UsersAnswer::select('user_answers.id', 'questions_answer.answers', 'user_answers.answer_id')->join('questions_answer', 'user_answers.answer_id', 'questions_answer.id')->where('user_answers.user_ip_address', '=', $clientIP)->where('user_answers.question_id', '=', $id)->get();
         $question_answers = Questions::select('questions.id', 'questions.question')
             ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
             ->where('questions.id', '=', $question_id)
-            ->orderBy('questions_answer.answers', 'desc')
             ->select('questions_answer.id as answer_id', 'questions_answer.answers', 'questions_answer.vote_count')
+            ->orderBy('questions_answer.vote_count', 'desc')
             ->get();
 
         $question_details = Questions::select('topic_id', 'id')
@@ -463,7 +479,19 @@ class indexController extends Controller
                 ->get();
         }
         //$get_comments = DB::table('comments')->select('*')->where('question_id', $question_id)->get();
-
+        $keywords = '';
+        foreach ($header_info as $keys) {
+            $keywords .= $keys->question . ',' . $keys->topic_name;
+        }
+        $question_answers = $question_answers->sortByDesc('vote_count');
+        $meta_description = 'Top faves in ' . $category . ':';
+        foreach ($question_answers as $index => $description) {
+            if ($index <= 4) {
+                $meta_description .= $index + 1 . '. ' . $description->answers . ' faves(' . $description->vote_count . ') ';
+            }
+        }
+        $page_title='iFave - '.$category;
+        $meta_description = substr($meta_description, 0, -1);
         $get_comments = DB::table('comments')->select('*')
             ->selectRaw('(upvotes - downvotes) as difference')
             ->where('question_id', $question_id)
@@ -475,7 +503,8 @@ class indexController extends Controller
         //     'question_answers'=>$question_answers
         // ];
         $posts = DB::table('posts')->select('*')->where('question_id', $question_id)->orderBy('created_at', 'DESC')->get();
-        return view('questions', compact('header_info', 'question_answers', 'get_user_answers', 'get_comments', 'posts'));
+
+        return view('questions', compact('header_info', 'question_answers', 'get_user_answers', 'get_comments', 'posts', 'keywords','meta_description','page_title'));
     }
     public function delete_vote(Request $request)
     {
@@ -812,9 +841,9 @@ class indexController extends Controller
 
     public function topic_name(Request $request)
     {
-        $header_info = $request->topic_name;
-        $get_topic = DB::table('topics')->select('*')->where('topic_name', $request->topic_name)->first();
-        $topicName = $request->topic_name;
+        $header_info = str_replace('-', ' ', $request->topic_name);
+        $get_topic = DB::table('topics')->select('*')->where('topic_name', $header_info)->first();
+        $topicName = str_replace('-', ' ', $request->topic_name);
         $perPage = 20; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
         $userIpAddress = $this->getClientIP($request);
@@ -893,7 +922,16 @@ class indexController extends Controller
             ->orderByDesc('posts.vote_count')
             ->limit(4)
             ->get();
-        return view("topics", compact('header_info', 'get_topic', 'questions', 'comments', 'subQuery', 'topic_id', 'posts'));
+        $keywords = 'ifave,' . $topicName;
+        $meta_description = 'Top categories in ' . $topicName . ':';
+        foreach ($questions as $index => $description) {
+            if ($index <= 5) {
+                $meta_description .= $index + 1 . '. ' . $description->question . ' (' . $description->total_votes . ' faves) ';
+            }
+        }
+        $meta_description = substr($meta_description, 0, -1);
+        $page_title='iFave - '.$topicName;
+        return view("topics", compact('header_info', 'get_topic', 'questions', 'comments', 'subQuery', 'topic_id', 'posts', 'keywords', 'topicName', 'meta_description','page_title'));
     }
 
     public function comments_route(Request $request, $name)
@@ -904,9 +942,9 @@ class indexController extends Controller
             ->pluck('id');
         $user_id = $user_id[0];
         $query = DB::table('comments')
-            ->select('comments.comments', 'comments.upvotes', 'questions.question', 'comments.id', 'comments.downvotes','topics.topic_name')
+            ->select('comments.comments', 'comments.upvotes', 'questions.question', 'comments.id', 'comments.downvotes', 'topics.topic_name')
             ->join('questions', 'comments.question_id', 'questions.id')
-            ->join('topics','questions.topic_id','topics.id')
+            ->join('topics', 'questions.topic_id', 'topics.id')
             ->where('comments.comment_by', $user_id)
             ->get();
         $comments = DB::table('comments')
@@ -917,7 +955,7 @@ class indexController extends Controller
             ->limit(5)
             ->groupBy('users.name')
             ->get();
-        return view("comments.comments", compact('query', 'user_name','comments'));
+        return view("comments.comments", compact('query', 'user_name', 'comments'));
     }
     public function getClientIP(Request $request)
     {
