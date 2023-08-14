@@ -547,7 +547,7 @@ class BlogController extends Controller
         $meta_description = 'Explore a world of insights and opinions at ifave.com. Engage in vibrant question surveys spanning diverse categories, and cast your vote on answers that resonate with you. Discover thought-provoking blogs and articles on trending topics within unique locations. Join the conversation, express your views, and be part of a dynamic online community.';
         $page_title='iFave - Blogger '.$name.' - '.$topic.' - '.$question;
         $topics = DB::table('topics')->select('*')->get();
-        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'name', 'categories','keywords','metadescription','page_title'));
+        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'name', 'categories','keywords','meta_description','page_title'));
     }
     public function blogger_filter(Request $request, $user_name)
     {
