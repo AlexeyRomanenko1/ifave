@@ -56,14 +56,14 @@ class SitemapGenerator
                 ->setChangeFrequency('monthly')); // Adjust change frequency as needed
         }
         //questions 
-        $questionsUrls = $this->questionUrls(); // Implement this method
-        foreach ($questionsUrls as $url) {
-            $url->topic_name = str_replace(' ', '-', $url->topic_name);
-            $url->question = str_replace(' ', '-', $url->question);
-            $sitemap->add(Url::create("/category/{$url->topic_name}/{$url->question}")
-                ->setPriority(0.8) // Adjust priority as needed
-                ->setChangeFrequency('monthly')); // Adjust change frequency as needed
-        }
+        // $questionsUrls = $this->questionUrls(); // Implement this method
+        // foreach ($questionsUrls as $url) {
+        //     $url->topic_name = str_replace(' ', '-', $url->topic_name);
+        //     $url->question = str_replace(' ', '-', $url->question);
+        //     $sitemap->add(Url::create("/category/{$url->topic_name}/{$url->question}")
+        //         ->setPriority(0.8) // Adjust priority as needed
+        //         ->setChangeFrequency('monthly')); // Adjust change frequency as needed
+        // }
 
 
         // Write the sitemap to a file
