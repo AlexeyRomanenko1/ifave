@@ -151,7 +151,7 @@ class SitemapGenerator
         }
 
         // Write the sitemap to a file
-        $sitemap->writeToFile(public_path('sitemap-questions.xml'));
+        $sitemap->writeToFile(public_path('sitemap-questions-1.xml'));
     }
 
     protected function generateSitemapIndex()
@@ -200,7 +200,7 @@ class SitemapGenerator
         $questions = DB::table('questions')
             ->select('topics.topic_name', 'questions.question')
             ->join('topics', 'questions.topic_id', '=', 'topics.id')
-            ->where('questions.id','<',2904093)
+            ->where('questions.id','<',883571)
             ->get();
         return $questions;
     }
