@@ -200,7 +200,7 @@ class SitemapGenerator
         $questions = DB::table('questions')
             ->select('topics.topic_name', 'questions.question')
             ->join('topics', 'questions.topic_id', '=', 'topics.id')
-            ->where('questions.id','<',883571)
+            ->where('questions.id','<',283571)
             ->get();
         return $questions;
     }
