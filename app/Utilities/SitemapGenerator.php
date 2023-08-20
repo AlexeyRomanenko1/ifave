@@ -71,9 +71,9 @@ class SitemapGenerator
         // $sitemap->writeToFile(public_path('sitemap.xml'));
 
         // Generate smaller sitemap files
-        $this->generateBlogsSitemap();
-        $this->generateBloggersSitemap();
-        $this->generateTopicsSitemap();
+        // $this->generateBlogsSitemap();
+        // $this->generateBloggersSitemap();
+        // $this->generateTopicsSitemap();
         $this->generateQuestionsSitemap();
 
         // Generate sitemap index file
