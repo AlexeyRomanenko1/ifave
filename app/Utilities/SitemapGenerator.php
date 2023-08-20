@@ -77,7 +77,7 @@ class SitemapGenerator
         $this->generateQuestionsSitemap();
 
         // Generate sitemap index file
-        $this->generateSitemapIndex();
+        // $this->generateSitemapIndex();
     }
 
 
