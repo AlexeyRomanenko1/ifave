@@ -136,23 +136,39 @@ class SitemapGenerator
 
     protected function generateQuestionsSitemap()
     {
+        $chunkSize = 1000; // Set an appropriate chunk size
+
+        // Count the total number of questions
+        $totalQuestions = DB::table('questions')->count();
+
+        // Calculate the number of iterations needed
+        $iterations = ceil($totalQuestions / $chunkSize);
+
+        // Initialize a variable to track the current offset
+        $offset = 0;
+
         $sitemap = Sitemap::create();
 
-        // Generate URLs for questions and add them to the sitemap
-        // ...
-        //questions 
-        $questionsUrls = $this->questionUrls(); // Implement this method
-        foreach ($questionsUrls as $url) {
-            $url->topic_name = str_replace(' ', '-', $url->topic_name);
-            $url->question = str_replace(' ', '-', $url->question);
-            $sitemap->add(Url::create("/category/{$url->topic_name}/{$url->question}")
-                ->setPriority(0.8) // Adjust priority as needed
-                ->setChangeFrequency('monthly')); // Adjust change frequency as needed
-        }
+        for ($i = 1; $i <= $iterations; $i++) {
+            $questions = $this->questionUrls($chunkSize, $offset);
 
-        // Write the sitemap to a file
-        $sitemap->writeToFile(public_path('sitemap-questions-1.xml'));
+            foreach ($questions as $url) {
+                $topicSlug = str_replace(' ', '-', $url->topic_name);
+                $questionSlug = str_replace(' ', '-', $url->question);
+
+                $sitemap->add(Url::create("/category/{$topicSlug}/{$questionSlug}")
+                    ->setPriority(0.8)
+                    ->setChangeFrequency('monthly'));
+            }
+
+            // Write the sitemap to a file for each iteration
+            $sitemap->writeToFile(public_path("sitemap-questions-{$i}.xml"));
+
+            // Move the offset for the next iteration
+            $offset += $chunkSize;
+        }
     }
+
 
     protected function generateSitemapIndex()
     {
@@ -163,28 +179,27 @@ class SitemapGenerator
         $sitemapBloggers = Sitemap::create();
         $sitemapTopics = Sitemap::create();
         $sitemapQuestions = Sitemap::create();
-        
+
         // Add URLs to individual sitemaps
         $sitemapBlogs->add('/blogs');
         $sitemapBloggers->add('/bloggers');
         $sitemapTopics->add('/topics');
         $sitemapQuestions->add('/questions');
-        
+
         // Write individual sitemaps to files
         $sitemapBlogs->writeToFile(public_path('sitemap-blogs.xml'));
         $sitemapBloggers->writeToFile(public_path('sitemap-bloggers.xml'));
         $sitemapTopics->writeToFile(public_path('sitemap-topics.xml'));
         $sitemapQuestions->writeToFile(public_path('sitemap-questions.xml'));
-        
+
         // Add references to individual sitemaps to the sitemap index
         $sitemapIndex->add('/sitemap-blogs.xml');
         $sitemapIndex->add('/sitemap-bloggers.xml');
         $sitemapIndex->add('/sitemap-topics.xml');
         $sitemapIndex->add('/sitemap-questions.xml');
-        
+
         // Write the sitemap index to a file
         $sitemapIndex->writeToFile(public_path('sitemap-index.xml'));
-
     }
 
     protected function getNewBlogUrls()
@@ -195,16 +210,18 @@ class SitemapGenerator
         return $blogs;
     }
 
-    protected function questionUrls()
+    protected function questionUrls($chunkSize, $offset)
     {
         $questions = DB::table('questions')
             ->select('topics.topic_name', 'questions.question')
             ->join('topics', 'questions.topic_id', '=', 'topics.id')
-            ->where('questions.id','<',283570)
-            ->where('questions.id','>',567140)
+            ->where('questions.id', '>=', $offset + 1) // Adjust the condition for starting ID
+            ->where('questions.id', '<=', $offset + $chunkSize) // Adjust the condition for ending ID
             ->get();
+
         return $questions;
     }
+
     protected function topicsUrls()
     {
         $topics = DB::table('topics')->select('topic_name')->get();
