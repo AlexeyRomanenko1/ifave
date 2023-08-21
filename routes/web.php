@@ -57,35 +57,7 @@ Route::get('/searchBlogs', [App\Http\Controllers\BlogController::class, 'searchB
 Route::post('/get_categories_onchange', [App\Http\Controllers\BlogController::class, 'get_categories_onchange'])->name('get_categories_onchange');
 Route::get('/location/{topic_name}', [indexController::class, 'topic_name'])->name('topic_name');
 Route::get('category/{location}/{category}', [indexController::class, 'questions_details'])->name('questions_details');
-
-// Route::get('/sitemaps', function () {
-//     $sitemaps = Sitemap::create();
-
-//     // Add existing URLs to the sitemap
-//     $sitemaps->add(Url::create('/')
-//         ->setPriority(1.0)
-//         ->setChangeFrequency('daily'));
-//     $sitemaps->add(Url::create('/contact-us')
-//         ->setPriority(0.9)
-//         ->setChangeFrequency('monthly'));
-//         $newBlogUrls = getNewBlogUrls(); // Implement this method
-//         foreach ($newBlogUrls as $url) {
-//             $sitemaps->add(Url::create("/blog/{{$url->slug}}")
-//                 ->setPriority(0.8) // Adjust priority as needed
-//                 ->setChangeFrequency('monthly')); // Adjust change frequency as needed
-//         }
-
-//         // Write the sitemap to a file
-//     $sitemaps->writeToFile(public_path('sitemap.xml'));
-// });
-// function getNewBlogUrls()
-// {
-//     // Fetch and return new blog URLs from your database
-//     // Implement the logic to query your database for new blog posts
-//     $blogs = DB::table('posts')->select('slug')->where('status', 1)->get();
-//     return $blogs;
-// }
-// Route::get('redirect/{id}', 'YourController@redirectToUrlWithId')->name('url.redirect');
+Route::get('/test', [App\Http\Controllers\BlogController::class, 'test_controller'])->name('test_controller');
 Auth::routes([
     'verify' => true
 ]);

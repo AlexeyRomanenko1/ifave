@@ -667,4 +667,15 @@ class BlogController extends Controller
         $ip = $request->getClientIp();
         return $ip;
     }
+
+    public function test_controller(Request $request){
+        $chunkSize = 50000; // Set an appropriate chunk size
+
+        // Count the total number of questions
+        $totalQuestions = DB::table('questions')->count();
+
+        // Calculate the number of iterations needed
+        $iterations = ceil($totalQuestions / $chunkSize);
+        echo $iterations; 
+    }
 }
