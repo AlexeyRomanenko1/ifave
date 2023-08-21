@@ -145,11 +145,11 @@ class SitemapGenerator
         $iterations = ceil($totalQuestions / $chunkSize);
 
         // Initialize a variable to track the current offset
-        $offset = 450009;
+        $offset = 650013;
         
         $sitemap = Sitemap::create();
 
-        for ($i = 10; $i <= $iterations; $i++) {
+        for ($i = 14; $i <= $iterations; $i++) {
             $questions = $this->questionUrls($chunkSize, $offset);
 
             foreach ($questions as $url) {
