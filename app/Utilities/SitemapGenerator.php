@@ -136,7 +136,7 @@ class SitemapGenerator
 
     protected function generateQuestionsSitemap()
     {
-        $chunkSize = 1000; // Set an appropriate chunk size
+        $chunkSize = 10000; // Set an appropriate chunk size
 
         // Count the total number of questions
         $totalQuestions = DB::table('questions')->count();
