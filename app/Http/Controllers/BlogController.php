@@ -703,7 +703,9 @@ class BlogController extends Controller
                 //     ->setPriority(0.8)
                 //     ->setChangeFrequency('monthly'));
                 echo $i . '<br>';
-                print_r($questions);
+                echo $offset . '<br>';
+                echo $chunkSize . '<br>';
+                print_r($questions). '<br>';
            // }
 
             // Write the sitemap to a file for each iteration
