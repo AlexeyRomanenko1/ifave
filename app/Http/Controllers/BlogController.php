@@ -693,7 +693,7 @@ class BlogController extends Controller
        // $sitemap = Sitemap::create();
 
         for ($i = 36; $i <= $iterations; $i++) {
-            $questions = questionUrls($chunkSize, $offset);
+            $questions = $this->questionUrls($chunkSize, $offset);
 
             // foreach ($questions as $url) {
             //     $topicSlug = str_replace(' ', '-', $url->topic_name);
