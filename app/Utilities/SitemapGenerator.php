@@ -71,13 +71,13 @@ class SitemapGenerator
         // $sitemap->writeToFile(public_path('sitemap.xml'));
 
         // Generate smaller sitemap files
-        // $this->generateBlogsSitemap();
-        // $this->generateBloggersSitemap();
-        // $this->generateTopicsSitemap();
-        $this->generateQuestionsSitemap();
+        $this->generateBlogsSitemap();
+        $this->generateBloggersSitemap();
+        $this->generateTopicsSitemap();
+        // $this->generateQuestionsSitemap();
 
         // Generate sitemap index file
-        // $this->generateSitemapIndex();
+        $this->generateSitemapIndex();
     }
 
 
@@ -177,25 +177,45 @@ class SitemapGenerator
         $sitemapBlogs = Sitemap::create();
         $sitemapBloggers = Sitemap::create();
         $sitemapTopics = Sitemap::create();
-        $sitemapQuestions = Sitemap::create();
 
-        // Add URLs to individual sitemaps
+        // Total number of question sitemaps
+        $totalQuestionSitemaps = 152;
+
+        // Create an array to hold references to question sitemaps
+        $questionSitemaps = [];
+
+        // Loop to create and add URLs to individual question sitemaps
+        for ($i = 1; $i <= $totalQuestionSitemaps; $i++) {
+            $sitemapQuestions = Sitemap::create();
+
+            // Add URLs to the current question sitemap
+            $sitemapQuestions->add('/questions-' . $i);
+
+            // Write the current question sitemap to a file
+            $sitemapFilename = 'sitemap-questions-' . $i . '.xml';
+            $sitemapQuestions->writeToFile(public_path($sitemapFilename));
+
+            // Add reference to the current question sitemap to the index
+            $sitemapIndex->add('/' . $sitemapFilename);
+
+            // Store the reference for later use
+            $questionSitemaps[] = $sitemapQuestions;
+        }
+
+        // Add URLs to other individual sitemaps
         $sitemapBlogs->add('/blogs');
         $sitemapBloggers->add('/bloggers');
         $sitemapTopics->add('/topics');
-        $sitemapQuestions->add('/questions');
 
-        // Write individual sitemaps to files
+        // Write other individual sitemaps to files
         $sitemapBlogs->writeToFile(public_path('sitemap-blogs.xml'));
         $sitemapBloggers->writeToFile(public_path('sitemap-bloggers.xml'));
         $sitemapTopics->writeToFile(public_path('sitemap-topics.xml'));
-        $sitemapQuestions->writeToFile(public_path('sitemap-questions.xml'));
 
-        // Add references to individual sitemaps to the sitemap index
+        // Add references to other individual sitemaps to the sitemap index
         $sitemapIndex->add('/sitemap-blogs.xml');
         $sitemapIndex->add('/sitemap-bloggers.xml');
         $sitemapIndex->add('/sitemap-topics.xml');
-        $sitemapIndex->add('/sitemap-questions.xml');
 
         // Write the sitemap index to a file
         $sitemapIndex->writeToFile(public_path('sitemap-index.xml'));
