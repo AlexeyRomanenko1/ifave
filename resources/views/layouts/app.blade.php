@@ -101,7 +101,9 @@
                         <li class="nav-item">
                             <a href="{{ url('/create-blog') }}" class="nav-link">Create Blog</a>
                         </li>
-
+                        <li class="nav-item">
+                            <a href="{{ url('/about-us') }}" class="nav-link">About Us</a>
+                        </li>
                         <li class="nav-item">
                             <a href="{{ url('/contact-us') }}" class="nav-link">Contact</a>
                         </li>
@@ -265,8 +267,17 @@
                     <h5 class="modal-title" id="exampleModalLabel">Comments</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="top_comments_modal_body">
-
+                <div class="modal-body">
+                    <small>(Upvotes here are the total of all upvotes in this location minus all downvotes.)</small>
+                    <div class="row height d-flex justify-content-center align-items-center mb-3">
+                        <div class="col-md-8">
+                            <div class="search">
+                                <i class="fa fa-search"></i>
+                                <input type="text" id="search_users_comments" class="form-control" placeholder="Search">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="top_comments_modal_body"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

@@ -6,8 +6,8 @@ var questionsPerPage = 40;
 var allQuestions = []; // Variable to store all the questions retrieved from the API
 $('.read-more').on('click', function (e) {
     e.preventDefault();
-     $(this).hide();
-     var halfCommentElement = $(this).closest('.comment-content').find('.half-comment');
+    $(this).hide();
+    var halfCommentElement = $(this).closest('.comment-content').find('.half-comment');
     // $(this).siblings('.full-comment').show();
     var fullCommentElement = $(this).closest('.comment-content').find('.full-comment');
     halfCommentElement.hide();
@@ -31,10 +31,10 @@ $(document).ready(function () {
             }
             $('#faves_table_body').empty();
             $('#faves_table_body').html(html);
-            $('#faves_table').DataTable( {
-                "lengthMenu": [50, 100 ],
-                searching: false,
-              });
+            $('#faves_table').DataTable({
+                "lengthMenu": [50, 100],
+                searching: true,
+            });
             $('#display_topic_name').empty()
             $('#display_topic_name').html('<img class="mb-3" src="/images/question_images/ifave_page.jpg" height="50px" width="50px" alt=""> Best in ' + obj.topic_name.charAt(0).toUpperCase() + obj.topic_name.slice(1))
             // for (let j = 0; j < obj.questions_slider.length; j++) {
@@ -200,14 +200,14 @@ $('#search_question_topics').on('keyup', function () {
 $('#search_questions').on('keyup', function () {
     let to_search = $(this).val();
     let id = $('#topic_id').val();
-    let topicName=$('#topicName').val();
+    let topicName = $('#topicName').val();
     $.ajax({
         type: 'GET',
         url: '/searchQuestions',
-        data: { task: 'searchQuestions', search: to_search, id: id,topicName:topicName },
+        data: { task: 'searchQuestions', search: to_search, id: id, topicName: topicName },
         success: function (data) {
             // console.log(data)
-          //  var result = JSON.parse(data);
+            //  var result = JSON.parse(data);
             $('#display_questions').html(data.searchResults);
             $('#pagination_links').html(data.paginationLinks);
         },
@@ -230,7 +230,7 @@ $('#search_categories').on('keyup', function () {
             let obj = JSON.parse(data);
             if (obj.data.length > 0) {
                 for (let j = 0; j < obj.data.length; j++) {
-                    html += '<div class="col-md-6"><ul><li> <h6><a href="category/'+ $('#topicName').val().replace(/ /g, "-") +'/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
+                    html += '<div class="col-md-6"><ul><li> <h6><a href="/category/' + $('#topicName').val().replace(/ /g, "-") + '/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
                 }
             }
             $('#on_search_category').empty();
@@ -252,7 +252,7 @@ $(document).on('click', '#pagination_links a', function (e) {
     $.ajax({
         type: 'GET',
         url: pageUrl, // Use the pagination link URL
-        data: { task: 'searchQuestions', search: $('#search_questions').val(), id: $('#topic_id').val(),topicName:$('#topicName').val() },
+        data: { task: 'searchQuestions', search: $('#search_questions').val(), id: $('#topic_id').val(), topicName: $('#topicName').val() },
         success: function (data) {
             // Update the search results and pagination links
             $('#display_questions').empty();
@@ -278,7 +278,7 @@ $('#open_search_category_modal').on('click', function () {
             let obj = JSON.parse(data);
             if (obj.data.length > 0) {
                 for (let j = 0; j < obj.data.length; j++) {
-                    html += '<div class="col-md-6"><ul><li> <h6><a href="category/'+ $('#topicName').val().replace(/ /g, "-") +'/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
+                    html += '<div class="col-md-6"><ul><li> <h6><a href="category/' + $('#topicName').val().replace(/ /g, "-") + '/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
                 }
             }
             $('#on_search_category').empty();
@@ -397,7 +397,10 @@ function top_comments_modal(x) {
             let html = '<ol>';
             let obj = JSON.parse(data);
             for (let j = 0; j < obj.data.length; j++) {
-                html += '<li><a href="/comments/'+ obj.data[j]['name'].replace(/ /g, '-') +'">' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</a></li>';
+                if (obj.data[j]['upvotes'] < 0) {
+                    obj.data[j]['upvotes'] = 0;
+                }
+                html += '<li><a href="/comments/' + obj.data[j]['name'].replace(/ /g, '-') + '">' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</a></li>';
             }
             html += '</ol>';
             $('#top_comments_modal_body').empty();
@@ -410,17 +413,46 @@ function top_comments_modal(x) {
     })
 }
 
-function top_comments_modal_body_for_comments(){
+$('#search_users_comments').on('keyup', function (e) {
     $.ajax({
         type: 'GET',
-        url: '/get_comments_list_all',
-        data: { task: 'comments_list'},
+        url: '/get_comments_list_by_name',
+        data: { task: 'comments_list', topic_id: $('#topic_id').val(), user_name: $(this).val() },
         success: function (data) {
             // console.log(data);
             let html = '<ol>';
             let obj = JSON.parse(data);
             for (let j = 0; j < obj.data.length; j++) {
-                html += '<li><a href="/comments/'+ obj.data[j]['name'].replace(/ /g, '-') +'">' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</a></li>';
+                if (obj.data[j]['upvotes'] < 0) {
+                    obj.data[j]['upvotes'] = 0;
+                }
+                html += '<li><a href="/comments/' + obj.data[j]['name'].replace(/ /g, '-') + '">' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</a></li>';
+            }
+            html += '</ol>';
+            $('#top_comments_modal_body').empty();
+            $('#top_comments_modal_body').html(html);
+
+        },
+        error: function (e) {
+            console.log(e)
+        }
+    })
+})
+
+function top_comments_modal_body_for_comments() {
+    $.ajax({
+        type: 'GET',
+        url: '/get_comments_list_all',
+        data: { task: 'comments_list' },
+        success: function (data) {
+            // console.log(data);
+            let html = '<ol>';
+            let obj = JSON.parse(data);
+            for (let j = 0; j < obj.data.length; j++) {
+                if (obj.data[j]['upvotes'] < 0) {
+                    obj.data[j]['upvotes'] = 0;
+                }
+                html += '<li><a href="/comments/' + obj.data[j]['name'].replace(/ /g, '-') + '">' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</a></li>';
             }
             html += '</ol>';
             $('#top_comments_modal_body_for_comments').empty();
@@ -455,9 +487,9 @@ function scrollLeftcont() {
 
 function generate_embeded_code(url, questionName) {
     // Customize the embedded code template with the question link and name
-    var embeddedCode = '<a href="' + url + '"><img src="https://ifave.com/images/question_images/ifave_page.jpg" height="30px" width="30px">' + questionName + '</a>';
+    var embeddedCode = '<a href="' + url + '"><img src="https://ifave.com/images/question_images/user_images/IFAVE_PNG.png" height="30px" width="30px">' + questionName + '</a>';
     navigator.clipboard.writeText(embeddedCode);
-    toastr.success('Embeded code copied!')
+    toastr.success('Embed code copied! This embed code is a link back to the category on iFave that you can place on your website. By doing so you can invite your website visitors to upvote your entry on iFave or just share it. Links to quality content enrich your website and offer added value to your users.')
     // Display or use the generated embed code as needed
     // console.log(embeddedCode);
 }
@@ -471,7 +503,7 @@ $(document).on('click', '.ajax-pagination .page-link', function (event) {
     $.ajax({
         type: 'GET',
         url: pageUrl,
-        data: { task: 'searchQuestions', search: to_search, id: id,topicName:$('#topicName').val() },
+        data: { task: 'searchQuestions', search: to_search, id: id, topicName: $('#topicName').val() },
         success: function (data) {
             $('#display_questions').empty();
             $('#display_questions').html(data);

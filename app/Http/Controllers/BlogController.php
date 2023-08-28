@@ -34,7 +34,7 @@ class BlogController extends Controller
         }
         $topics = DB::table('topics')->select('*')->get();
         $keywords = 'ifave, ifave blogging, blogging';
-        $meta_description = 'Explore a world of insights and opinions at ifave.com. Engage in vibrant question surveys spanning diverse categories, and cast your vote on answers that resonate with you. Discover thought-provoking blogs and articles on trending topics within unique locations. Join the conversation, express your views, and be part of a dynamic online community.';
+        $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title='iFave - Blogs';
         return view('blogs.create-blog', compact('topics', 'keywords', 'meta_description','page_title'));
     }
@@ -193,7 +193,7 @@ class BlogController extends Controller
         // }
         // return;
         $keywords = 'ifave, ifave blogs, bloggers';
-        $meta_description = 'Explore a world of insights and opinions at ifave.com. Engage in vibrant question surveys spanning diverse categories, and cast your vote on answers that resonate with you. Discover thought-provoking blogs and articles on trending topics within unique locations. Join the conversation, express your views, and be part of a dynamic online community.';
+        $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title='iFave - Blogs';
         $topics = DB::table('topics')->select('*')->get();
         return view('posts.blog', compact('posts', 'bloggers', 'topics', 'keywords', 'meta_description','page_title'));
@@ -453,7 +453,7 @@ class BlogController extends Controller
         });
 
         $keywords = 'ifave, ifave blogging, blogging';
-        $meta_description = 'Explore a world of insights and opinions at ifave.com. Engage in vibrant question surveys spanning diverse categories, and cast your vote on answers that resonate with you. Discover thought-provoking blogs and articles on trending topics within unique locations. Join the conversation, express your views, and be part of a dynamic online community.';
+        $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title='iFave - Blogs - '.$topic.' - '.$question;
         $topics = DB::table('topics')->select('*')->get();
         return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'categories','page_title','keywords','meta_description'));
@@ -544,7 +544,7 @@ class BlogController extends Controller
             return $b['rating'] - $a['rating'];
         });
         $keywords = 'ifave, ifave blogging, blogging';
-        $meta_description = 'Explore a world of insights and opinions at ifave.com. Engage in vibrant question surveys spanning diverse categories, and cast your vote on answers that resonate with you. Discover thought-provoking blogs and articles on trending topics within unique locations. Join the conversation, express your views, and be part of a dynamic online community.';
+        $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title='iFave - Blogger '.$name.' - '.$topic.' - '.$question;
         $topics = DB::table('topics')->select('*')->get();
         return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'name', 'categories','keywords','meta_description','page_title'));
@@ -608,7 +608,7 @@ class BlogController extends Controller
             return $b['rating'] - $a['rating'];
         });
         $keywords = 'ifave, ifave blogging, blogging';
-        $meta_description = 'Explore a world of insights and opinions at ifave.com. Engage in vibrant question surveys spanning diverse categories, and cast your vote on answers that resonate with you. Discover thought-provoking blogs and articles on trending topics within unique locations. Join the conversation, express your views, and be part of a dynamic online community.';
+        $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title='iFave - Blogger - '.$name;
         $topics = DB::table('topics')->select('*')->get();
         return view('posts.blog', compact('posts', 'bloggers', 'topics', 'name','keywords','meta_description','page_title'));

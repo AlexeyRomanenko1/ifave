@@ -1,5 +1,5 @@
 @include('layouts.app')
-<input type="hidden" value="1" name="topic_id" id="topic_id">
+<input type="hidden" value="1" name="topic_id" id="topic_id" value="{{$topic_id}}">
 <input type="hidden" value="{{str_replace(' ','-',$topicName)}}" name="topicName" id="topicName">
 <div class="container mt-5">
     <div class="text-center">
@@ -75,6 +75,11 @@
                         <p><b>Best comments in this location</b></p>
                         <ol>
                             @foreach($comments as $comment)
+                            @if($comment->upvotes < 0)
+                            @php
+                            $comment->upvotes=0;
+                            @endphp
+                            @endif
                             <li><a href="/comments/{{ str_replace(' ', '-', $comment->name)}}">{{$comment->name}} ({{$comment->upvotes}} upvotes)</a></li>
                             @endforeach
                         </ol>

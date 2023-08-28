@@ -357,7 +357,10 @@ function top_comments_modal(x) {
             let html = '<ol>';
             let obj = JSON.parse(data);
             for (let j = 0; j < obj.data.length; j++) {
-                html += '<li>' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</li>';
+                if (obj.data[j]['upvotes'] < 0) {
+                    obj.data[j]['upvotes'] = 0;
+                }
+                html += '<li><a href="/comments/' + obj.data[j]['name'].replace(/ /g, '-') + '">' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</a></li>';
             }
             html += '</ol>';
             $('#top_comments_modal_body').empty();
@@ -369,6 +372,31 @@ function top_comments_modal(x) {
         }
     })
 }
+$('#search_users_comments').on('keyup', function (e) {
+    $.ajax({
+        type: 'GET',
+        url: '/get_comments_list_by_name',
+        data: { task: 'comments_list', topic_id: $('#topic_id').val(), user_name: $(this).val() },
+        success: function (data) {
+            // console.log(data);
+            let html = '<ol>';
+            let obj = JSON.parse(data);
+            for (let j = 0; j < obj.data.length; j++) {
+                if (obj.data[j]['upvotes'] < 0) {
+                    obj.data[j]['upvotes'] = 0;
+                }
+                html += '<li><a href="/comments/' + obj.data[j]['name'].replace(/ /g, '-') + '">' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</a></li>';
+            }
+            html += '</ol>';
+            $('#top_comments_modal_body').empty();
+            $('#top_comments_modal_body').html(html);
+
+        },
+        error: function (e) {
+            console.log(e)
+        }
+    })
+})
 $('#search_categories').on('keyup', function () {
     let to_search = $(this).val();
     let id = $('#topic_id').val();
@@ -381,7 +409,7 @@ $('#search_categories').on('keyup', function () {
             let obj = JSON.parse(data);
             if (obj.data.length > 0) {
                 for (let j = 0; j < obj.data.length; j++) {
-                    html += '<div class="col-md-6"><ul><li> <h6><a href="category/'+ $('#topicName').val().replace(/ /g, "-") +'/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
+                    html += '<div class="col-md-6"><ul><li> <h6><a href="/category/' + $('#topicName').val().replace(/ /g, "-") + '/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
                 }
             }
             $('#on_search_category').empty();
@@ -405,7 +433,7 @@ $('#open_search_category_modal').on('click', function () {
             let obj = JSON.parse(data);
             if (obj.data.length > 0) {
                 for (let j = 0; j < obj.data.length; j++) {
-                    html += '<div class="col-md-6"><ul><li> <h6><a href="category/'+ $('#topicName').val().replace(/ /g, "-") +'/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
+                    html += '<div class="col-md-6"><ul><li> <h6><a href="/category/' + $('#topicName').val().replace(/ /g, "-") + '/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
                 }
             }
             $('#on_search_category').empty();
@@ -423,9 +451,9 @@ function redirect_url(x) {
 
 function generate_embeded_code(url, questionName) {
     // Customize the embedded code template with the question link and name
-    var embeddedCode = '<a href="' + url + '">' + questionName + '</a>';
+    var embeddedCode = '<a href="' + url + '"><img src="https://ifave.com/images/question_images/user_images/IFAVE_PNG.png" height="30px" width="30px">' + questionName + '</a>';
     navigator.clipboard.writeText(embeddedCode);
-    toastr.success('Embeded code copied!')
+    toastr.success('Embed code copied! This embed code is a link back to the category on iFave that you can place on your website. By doing so you can invite your website visitors to upvote your entry on iFave or just share it. Links to quality content enrich your website and offer added value to your users.')
     // Display or use the generated embed code as needed
     // console.log(embeddedCode);
 }

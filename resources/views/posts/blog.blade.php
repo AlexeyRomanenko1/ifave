@@ -67,14 +67,14 @@
                     @else
                     <img onclick="blogger_route('{{$blogger['username']}}')" src="/images/user_images/default_profile_picture.jpg">
                     @endif
-                    <p onclick="blogger_route('{{$blogger['username']}}')" class="mt-3">{{$blogger['username']}}</p>
+                    <p onclick="blogger_route('{{$blogger['username']}}')" class="lh-1 m-0-p">{{$blogger['username']}}</p>
                     @if($blogger['location'] !='' || $blogger['location']!= null)
-                    <p onclick="blogger_route('{{$blogger['username']}}')"> {{$blogger['location']}}</p>
+                    <p onclick="blogger_route('{{$blogger['username']}}')" class="lh-1 m-0-p"> {{$blogger['location']}}</p>
                     @else
-                    <p onclick="blogger_route('{{$blogger['username']}}')">Unknown</p>
+                    <p onclick="blogger_route('{{$blogger['username']}}')" class="lh-1 m-0-p">Unknown</p>
                     @endif
-                    <p onclick="blogger_route('{{$blogger['username']}}')">{{$blogger['rating']}}</p>
-                    <button onclick="blogger_bio('{{$blogger['bio']}}','{{$blogger['username']}}')" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bio_modal" id="open_bio">bio</button>
+                    <p onclick="blogger_route('{{$blogger['username']}}')" class="lh-1 m-0-p">Rating {{$blogger['rating']}}</p>
+                    <button onclick="blogger_bio('{{$blogger['bio']}}','{{$blogger['username']}}')" class="btn btn-primary mt-1" data-bs-toggle="modal" data-bs-target="#bio_modal" id="open_bio">bio</button>
                 </div>
                 @endforeach
             </section>
@@ -89,8 +89,8 @@
             <div class="col-md-9">
                 <h4 class="mt-2"><a href="/blog/{{$post->slug}}">{{$post->title}}</a></h4>
                 {!! substr(strip_tags($post->blog_content), 0, 700) !!}... <br><br>
-                <small><b>Date:</b> {{ date('d-m-Y', strtotime($post->created_at)) }}</small><br>
-                <small><b>Author:</b> {{$post->name}}</small>
+                <small> {{ date('d-m-Y', strtotime($post->created_at)) }}</small><br>
+                <small> {{$post->name}}</small>
             </div>
         </div>
         @endforeach

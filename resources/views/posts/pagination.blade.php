@@ -5,9 +5,9 @@
     </div>
     <div class="col-md-9">
         <h4 class="mt-2"><a href="/blog/{{$post->slug}}">{{$post->title}}</a></h4>
-        {!! substr(strip_tags($post->blog_content), 0, 700) !!}... <br><br>
-        <small><b>Date:</b> {{ date('d-m-Y', strtotime($post->created_at)) }}</small><br>
-        <small><b>Author:</b> {{$post->name}}</small>
+        {!! substr(strip_tags($post->blog_content), 0, 300) !!}... <br><br>
+        <small> {{ date('d-m-Y', strtotime($post->created_at)) }}</small><br>
+        <small> {{$post->name}}</small>
     </div>
 </div>
 @endforeach

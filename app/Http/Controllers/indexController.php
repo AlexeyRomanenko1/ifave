@@ -70,7 +70,7 @@ class indexController extends Controller
         }
 
         $comments = DB::table('comments')
-            ->select('users.name', DB::raw('SUM(comments.upvotes) as upvotes'))
+            ->select('users.name', DB::raw('SUM(comments.upvotes  - comments.downvotes) as upvotes'))
             ->join('users', 'comments.comment_by', '=', 'users.id')
             ->join('questions', 'comments.question_id', '=', 'questions.id')
             ->where('questions.topic_id', '=', $topic_id)
@@ -84,15 +84,16 @@ class indexController extends Controller
             ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
             ->join('users', 'posts.user_id', 'users.id')
             ->where('posts.topic_id', $topic_id)
+            ->where('posts.status',1)
             ->orderByDesc('posts.vote_count')
             ->limit(4)
             ->get();
 
         $keywords = 'ifave,' . $topicName;
-        $meta_description = 'Top 50 categories in ' . $topicName . ':';
+        $meta_description = 'Rank and compare the best of everything in ' . $topicName . '. Save and share your faves among :';
         foreach ($questions as $index => $description) {
             if ($index <= 5) {
-                $meta_description .= $index + 1 . '. ' . $description->question . ' (' . $description->total_votes . ' faves) ';
+                $meta_description .= $index + 1 . '. ' . $description->question .' ';
             }
         }
         $meta_description = substr($meta_description, 0, -1);
@@ -344,7 +345,7 @@ class indexController extends Controller
                 ->paginate($perPage);
             $topic_id = $topicId;
             $comments = DB::table('comments')
-                ->select('users.name', DB::raw('SUM(comments.upvotes) as upvotes'))
+                ->select('users.name', DB::raw('SUM(comments.upvotes  - comments.downvotes) as upvotes'))
                 ->join('users', 'comments.comment_by', '=', 'users.id')
                 ->join('questions', 'comments.question_id', '=', 'questions.id')
                 ->where('questions.topic_id', '=', $topicId)
@@ -357,6 +358,7 @@ class indexController extends Controller
                 ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
+                ->where('posts.status',1)
                 ->orderByDesc('posts.vote_count')
                 ->limit(4)
                 ->get();
@@ -398,7 +400,7 @@ class indexController extends Controller
                 ->paginate($perPage);
             $topic_id = $topicId;
             $comments = DB::table('comments')
-                ->select('users.name', DB::raw('SUM(comments.upvotes) as upvotes'))
+                ->select('users.name', DB::raw('SUM(comments.upvotes  - comments.downvotes) as upvotes'))
                 ->join('users', 'comments.comment_by', '=', 'users.id')
                 ->join('questions', 'comments.question_id', '=', 'questions.id')
                 ->where('questions.topic_id', '=', $topicId)
@@ -410,6 +412,7 @@ class indexController extends Controller
                 ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
+                ->where('posts.status',1)
                 ->orderByDesc('posts.vote_count')
                 ->limit(4)
                 ->get();
@@ -484,10 +487,10 @@ class indexController extends Controller
             $keywords .= $keys->question . ',' . $keys->topic_name;
         }
         $question_answers = $question_answers->sortByDesc('vote_count');
-        $meta_description = 'Top faves in ' . $category . ':';
+        $meta_description = 'Top '.$category.' in ' . $location . ': ';
         foreach ($question_answers as $index => $description) {
             if ($index <= 4) {
-                $meta_description .= $index + 1 . '. ' . $description->answers . ' faves(' . $description->vote_count . ') ';
+                $meta_description .= $index + 1 . '. ' . $description->answers . ' ';
             }
         }
         $page_title='iFave - '.$category;
@@ -502,7 +505,7 @@ class indexController extends Controller
         //     'question_details'=>$question_details,
         //     'question_answers'=>$question_answers
         // ];
-        $posts = DB::table('posts')->select('*')->where('question_id', $question_id)->orderBy('created_at', 'DESC')->get();
+        $posts = DB::table('posts')->select('*')->where('question_id', $question_id)->where('status',1)->orderBy('created_at', 'DESC')->get();
 
         return view('questions', compact('header_info', 'question_answers', 'get_user_answers', 'get_comments', 'posts', 'keywords','meta_description','page_title'));
     }
@@ -906,7 +909,7 @@ class indexController extends Controller
         }
 
         $comments = DB::table('comments')
-            ->select('users.name', DB::raw('SUM(comments.upvotes) as upvotes'))
+            ->select('users.name', DB::raw('SUM(comments.upvotes  - comments.downvotes) as upvotes'))
             ->join('users', 'comments.comment_by', '=', 'users.id')
             ->join('questions', 'comments.question_id', '=', 'questions.id')
             ->where('questions.topic_id', '=', $topic_id)
@@ -919,14 +922,15 @@ class indexController extends Controller
             ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
             ->join('users', 'posts.user_id', 'users.id')
             ->where('posts.topic_id', $topic_id)
+            ->where('posts.status',1)
             ->orderByDesc('posts.vote_count')
             ->limit(4)
             ->get();
         $keywords = 'ifave,' . $topicName;
-        $meta_description = 'Top categories in ' . $topicName . ':';
+        $meta_description = 'Rank and compare the best of everything in ' . $topicName . '. Save and share your faves among :';
         foreach ($questions as $index => $description) {
             if ($index <= 5) {
-                $meta_description .= $index + 1 . '. ' . $description->question . ' (' . $description->total_votes . ' faves) ';
+                $meta_description .= $index + 1 . '. ' . $description->question . ' ';
             }
         }
         $meta_description = substr($meta_description, 0, -1);
@@ -948,7 +952,7 @@ class indexController extends Controller
             ->where('comments.comment_by', $user_id)
             ->get();
         $comments = DB::table('comments')
-            ->select('users.name', DB::raw('SUM(comments.upvotes) as upvotes'))
+            ->select('users.name', DB::raw('SUM(comments.upvotes  - comments.downvotes) as upvotes'))
             ->join('users', 'comments.comment_by', '=', 'users.id')
             ->join('questions', 'comments.question_id', '=', 'questions.id')
             ->orderByDesc('upvotes')
@@ -979,7 +983,7 @@ class indexController extends Controller
         $topic_id = $request->topic_id;
 
         $comments = DB::table('comments')
-            ->select('users.name', DB::raw('SUM(comments.upvotes) as upvotes'))
+            ->select('users.name', DB::raw('SUM(comments.upvotes  - comments.downvotes) as upvotes'))
             ->join('users', 'comments.comment_by', '=', 'users.id')
             ->join('questions', 'comments.question_id', '=', 'questions.id')
             ->where('questions.topic_id', '=', $topic_id)
@@ -989,18 +993,42 @@ class indexController extends Controller
 
         return json_encode(['success' => 1, 'data' => $comments]);
     }
+    public function get_comments_list_by_name(Request $request){
+        $comments = DB::table('comments')
+        ->select('users.name', DB::raw('SUM(comments.upvotes - comments.downvotes) as upvotes'))
+        ->join('users', 'comments.comment_by', '=', 'users.id')
+        ->join('questions', 'comments.question_id', '=', 'questions.id')
+        ->where('questions.topic_id', '=', $request->topic_id)
+        ->where('users.name', 'like', '%' . $request->user_name . '%')
+        ->orderByDesc('upvotes')
+        ->groupBy('users.name')
+        ->get();
+
+    return json_encode(['success' => 1, 'data' => $comments]);  
+    }
     public function get_comments_list_all(Request $request)
     {
         //$topic_id = $request->topic_id;
 
         $comments = DB::table('comments')
-            ->select('users.name', DB::raw('SUM(comments.upvotes) as upvotes'))
+            ->select('users.name', DB::raw('SUM(comments.upvotes - comments.downvotes) as upvotes'))
             ->join('users', 'comments.comment_by', '=', 'users.id')
             ->join('questions', 'comments.question_id', '=', 'questions.id')
             ->orderByDesc('upvotes')
             ->groupBy('users.name')
             ->get();
 
+        return json_encode(['success' => 1, 'data' => $comments]);
+    }
+    public function comments_list_by_username_all(Request $request){
+        $comments = DB::table('comments')
+        ->select('users.name', DB::raw('SUM(comments.upvotes  - comments.downvotes) as upvotes'))
+        ->join('users', 'comments.comment_by', '=', 'users.id')
+        ->join('questions', 'comments.question_id', '=', 'questions.id')
+        ->where('users.name', 'like', '%' . $request->user_name . '%')
+        ->orderByDesc('upvotes')
+        ->groupBy('users.name')
+        ->get(); 
         return json_encode(['success' => 1, 'data' => $comments]);
     }
 }

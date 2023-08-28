@@ -12,7 +12,9 @@
 
 
 }
-
+.m-0-p{
+    margin: 4px;
+}
 .unselect {
     user-select: none;
 }

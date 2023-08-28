@@ -29,8 +29,10 @@
                 <div class="mb-3">
                     <label for="bio">Bio</label>
                     <textarea name="bio" id="bio" cols="114" rows="10" maxlength="700" value="{{$info->bio}}" required> {{$info->bio}}</textarea>
-                    <small class="text-danger text-bio">0/700</small>
+                    <small class="text-danger text-bio">0/700</small> <br>
+                    <small><b>Note </b>Please write your bio in the third person (John has a background in sports). You may write about your background, expertise, passions, mission and accomplishments. Add a personal touch. Use this section as an opportunity to connect with your audience and give them a glimpse into your personality and expertise.</small>
                 </div>
+
                 @endforeach
                 <button type="submit" class="btn btn-primary">Update</button>
             </form>
@@ -39,8 +41,8 @@
 </div>
 @include('footer.footer')
 <script>
-    $('#bio').on('keyup',function(){
+    $('#bio').on('keyup', function() {
         $('.text-bio').empty();
-        $('.text-bio').html($(this).val().length+"/700");
+        $('.text-bio').html($(this).val().length + "/700");
     })
 </script>

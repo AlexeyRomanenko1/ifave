@@ -1,6 +1,6 @@
 @include('layouts.app')
 
-<input type="hidden" value="{{$get_topic->id}}" name="topic_id" id="topic_id">
+<input type="hidden" value="{{$get_topic->id}}" name="topic_id" id="topic_id" value="{{$topic_id}}">
 <input type="hidden" value="{{$header_info}}" name="topic_name" id="topic_name">
 <input type="hidden" value="{{str_replace(' ','-',$topicName)}}" name="topicName" id="topicName">
 <!-- {{ Route::currentRouteName() }} -->
@@ -86,6 +86,11 @@
                         <p><b>Best comments in this location</b></p>
                         <ol>
                             @foreach($comments as $comment)
+                            @if($comment->upvotes < 0)
+                            @php
+                            $comment->upvotes=0;
+                            @endphp
+                            @endif
                             <li><a href="/comments/{{ str_replace(' ', '-', $comment->name)}}">{{$comment->name}} ({{$comment->upvotes}} upvotes)</a></li>
                             @endforeach
                         </ol>

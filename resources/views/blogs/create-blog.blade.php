@@ -30,7 +30,7 @@
         </div>
     </div>
     <div class="text-center">
-        <small><b>Note:</b> Before posting your blog please make sure your profile has your photo, location and Bio <a href="/update-profile">Update Profile</a></small><br><br>
+        <small><b>Note:</b> Before posting your blog, we kindly request you to update your profile with a photo, location, and bio. <a href="/update-profile">Update Profile</a><br>Your profile is a representation of yourself and helps our readers connect with you better. Adding a photo and your location adds a personal touch to your blog posts.</small><br><br>
         <h4 class="">Write a Blog Post</h4><br>
         <a class="link-opacity-100" data-bs-toggle="modal" data-bs-target="#blogging_tips">
             <h4>Blogging tips</h4>
@@ -98,7 +98,7 @@
 
         <div class="mb-3"></div>
         <div class="mb-3">
-            <label for="formFile" class="form-label">Featured Image<b class="text-danger"> ( 1000x1000 )*</b></label>
+            <label for="formFile" class="form-label">Featured Image<b class="text-danger"> ( 600x600 )*</b></label>
             <input class="form-control" type="file" id="formFile" name="featured_image" required>
             @error('featured_image')
             <div class="error"><b class="text-danger">{{ $message }}</b></div>
@@ -126,23 +126,29 @@
             </div>
             <div class="modal-body">
 
-                <h5>Tips for writing an awesome blog post</h5>
+                <h4>Blogging Guidelines and Tips</h4>
+                <h5>General posting guidelines</h5>
                 <ul>
-                    <li>Blog posts from 1000 to 3000 words rank higher in search engines.</li>
-                    <li>All articles must be originally written for iFave.</li>
-                    <li>Keep your content fresh and up to date. Periodically review your posts.</li>
-                    <li>Blog tags (or keywords) are words or phrases that describe a blog post. They help search engines to find your post. Keep them short (usually 1-2 words). Do not use more than 10 tags.</li>
-                    <li>Use titles, subtitles and headings to facilitate reading.</li>
+                    <li>We recommend posting articles of at least 1000 words (6000 characters) which rank higher in search engines.</li>
+                    <li>All posts must be originally written for iFave.</li>
+                    <li>Respect copywrite of text and images.</li>
+                    <li>Blog tags (or keywords) are words or phrases that describe a blog post. They help search engines to find your post. Keep them short (usually 1-2 words). Do not use more than 7-8 tags.</li>
                     <li>Use rel=”sponsored” or rel=”nofollow” attributes on affiliate links.</li>
                 </ul>
 
-                <h5>Blog writing in 5 Steps by Dan Shewan</h5>
-
-                Step 1: Plan your blog post by choosing a topic, creating an outline, conducting research, and checking facts. <br>
-                Step 2: Craft a headline that is both informative and will capture readers’ attentions.<br>
-                Step 3: Write your post, either writing a draft in a single session or gradually word on parts of it.<br>
-                Step 4: Use images to enhance your post, improve its flow, add humor, and explain complex topics.<br>
-                Step 5: Edit your blog post. Make sure to avoid repetition, read your post aloud to check its flow, have someone else read it and provide feedback, keep sentences and paragraphs short, don’t be a perfectionist, don’t be afraid to cut out text or adapt your writing last minute.<br>
+                <h5>Tips for writing an awesome blog post</h5>
+                <ul>
+                    <li><b>Engaging Headline:</b> Craft a catchy and informative headline that grabs readers' attention and encourages them to click and read your blog.</li>
+                    <li><b>Clear Structure:</b> Organize your blog with clear headings, subheadings, and paragraphs. Use bullet points or numbered lists for easy readability.</li>
+                    <li><b>Start Strong:</b> Begin your blog with a compelling introduction that hooks the reader and sets the tone for the rest of the post.</li>
+                    <li><b>Use Conversational Tone:</b> Write in a friendly and conversational tone to make your blog relatable and engaging.</li>
+                    <li><b>Add Visuals:</b> Include relevant images, infographics, or videos to break up the text and make your blog visually appealing.</li>
+                    <li><b>Provide Value:</b> Offer valuable and actionable information, tips, or insights that benefit your readers.</li>
+                    <li><b>Be Original:</b> Provide a unique perspective or angle on the topic to make your blog stand out from others in the same niche.</li>
+                    <li><b>Edit and Proofread:</b> Before publishing, carefully edit and proofread your blog to ensure it is free of errors and flows smoothly.</li>
+                    <li><b>Optimize for SEO:</b> Use relevant keywords and phrases naturally throughout your blog to improve its visibility on search engines.</li>
+                    <li><b>Keep your content fresh and up to date.</b> Periodically review your posts.</li>
+                </ul>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

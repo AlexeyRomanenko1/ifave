@@ -114,8 +114,8 @@ $("#formFile").on('change', function () {
                 var height = this.height;
 
                 // Display the dimensions (you can do whatever you want with them)
-                if (width !== 1000 && height !== 1000) {
-                    toastr.error('Image size should be 1000 x 1000 pixels. Provided size is ' + height + ' x ' + width);
+                if (width !== 600 && height !== 600) {
+                    toastr.error('Image size should be 600 x 600 pixels. Provided size is ' + height + ' x ' + width);
                     $("#formFile").val("");
                 }
             });
