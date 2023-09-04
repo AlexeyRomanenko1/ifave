@@ -91,7 +91,9 @@ Route::post('/upload_content_image', [App\Http\Controllers\BlogController::class
 Route::get('/update-profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('update-profile')->middleware('verified');
 Route::post('/update-user-profile', [App\Http\Controllers\ProfileController::class, 'user_profile_update'])->name('user_profile_update')->middleware('verified');
 
-
+Route::get('/edit/blog/{username}/{slug}/{blog_id}', [App\Http\Controllers\BlogController::class, 'editBlog'])->name('editBlog')->middleware('verified');
+Route::post('/edit_blog', [App\Http\Controllers\BlogController::class, 'edit_blog'])->name('edit_blog')->middleware('verified');
+Route::post('/add_thoughts', [indexController::class, 'add_thoughts']);
 
 // Route::get('/verify_notification', [App\Http\Controllers\HomeController::class, 'verify_notification'])->name('verify_notification')->middleware('verified');
 

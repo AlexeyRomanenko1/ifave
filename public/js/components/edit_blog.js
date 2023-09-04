@@ -51,6 +51,36 @@
             );
         })
         .trigger('change');
+        $.ajax({
+            type: 'POST',
+            url: '/get_categories_onchange',
+            data: { '_token': $('meta[name="csrf-token"]').attr('content'), topic_id: $('#hidden_topic_id').val() },
+            success: function (data) {
+                // $("#msg").html(data.msg);
+                // console.log(data)
+                let obj = JSON.parse(data);
+                let html = '  <label for="select_category" class="form-label">Category<b class="text-danger">*</b></label> <select class="custom-select custom-select-category" id="select_category" name="question_id" aria-label="Select Category"><option>Select Category</option>';
+    
+                // let ul = '<li class="active">Select Category</li>';
+                for (let j = 0; j < obj.data.length; j++) {
+                    if(obj.data[j]['id']==$('#hidden_question_id').val()){
+                        html += '<option value="' + obj.data[j]['id'] + '" selected>' + obj.data[j]['question'] + '</option>';
+                    }else{
+                    html += '<option value="' + obj.data[j]['id'] + '">' + obj.data[j]['question'] + '</option>';
+                    }
+                    // ul = '<li class="active" data-value="' + obj.data[j]['id'] + '">' + obj.data[j]['question'] + '</li>';
+                }
+                html += '</select>';
+                $("#select_category").attr("disabled", false);
+                $('#custom-select-category').empty();
+                $('#custom-select-category').html(html);
+               // $("#select_category").customselect();
+               $("#select_category").select2();
+            },
+            error: function (e) {
+                console.log(e)
+            }
+        });
 })()
 
 // $('#blog_form').on('submit',function(e){
@@ -159,7 +189,7 @@ $('#blog_form').on('submit', function (e) {
     }
     $.ajax({
         type: 'POST',
-        url: '/create_blog',
+        url: '/edit_blog',
         data: new FormData(this),
         contentType: false,
         cache: false,
@@ -176,7 +206,6 @@ $('#blog_form').on('submit', function (e) {
             if (obj.success == 3) {
                 toastr.error('Please verify your account in order to add blogs')
             }
-            $('#blog_form').reset();
         },
         error: function (e) {
             console.log(e)

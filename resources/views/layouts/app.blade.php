@@ -57,6 +57,46 @@
     <!-- <link href="{{ asset('select_src/jquery-customselect.css') }}" rel="stylesheet"> -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
     @endif
+    @if(request()->route()->getName() == 'editBlog' )
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" rel="stylesheet" />
+    <!-- <link href="{{ asset('src/richtext.min.css') }}" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css">
+    <link rel="stylesheet" href="{{ asset('css/froala_editor.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/froala_style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/code_view.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/colors.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/emoticons.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/image_manager.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/image.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/line_breaker.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/table.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/char_counter.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/video.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/fullscreen.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/quick_insert.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/file.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/themes/dark.css') }}">
+    <!-- <link href="{{ asset('select_src/jquery-customselect.css') }}" rel="stylesheet"> -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+    @endif
+    @if(request()->route()->getName()=='questions_details')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css">
+    <link rel="stylesheet" href="{{ asset('css/froala_editor.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/froala_style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/code_view.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/colors.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/emoticons.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/image_manager.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/image.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/line_breaker.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/table.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/char_counter.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/video.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/fullscreen.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/quick_insert.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/file.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/themes/dark.css') }}">
+    @endif
     @if (request()->route()->getName() == 'blog' || request()->route()->getName() == 'filter_blog')
     <!-- <link href="{{ asset('select_src/jquery-customselect.css') }}" rel="stylesheet"> -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">

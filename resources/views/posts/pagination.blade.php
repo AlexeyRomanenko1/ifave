@@ -8,6 +8,13 @@
         {!! substr(strip_tags($post->blog_content), 0, 300) !!}... <br><br>
         <small> {{ date('d-m-Y', strtotime($post->created_at)) }}</small><br>
         <small> {{$post->name}}</small>
+        @if(auth()->check())
+        @if( auth()->user()->id == $post->user_id)
+        <div class="mt-3">
+            <a href="/edit/blog/{{str_replace(' ','-',$post->name)}}/{{$post->slug}}/{{$post->id}}" class="btn btn-success">Edit Blog</a>
+        </div>
+        @endif
+        @endif
     </div>
 </div>
 @endforeach

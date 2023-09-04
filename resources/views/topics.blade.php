@@ -31,7 +31,14 @@
                 </div>
             </div>
         </div>
-        <h3 class="mb-3" id="display_topic_name"></h3>
+        <h3 class="" id="display_topic_name"></h3>
+        @if(count($get_last_three_locations) > 0)
+        <div class="mb-3">
+        @foreach($get_last_three_locations as $recent_links)
+        <a class="mt-2 mb-3" href="/location/{{$recent_links->location_link}}">{{$recent_links->location}}</a>&nbsp;
+        @endforeach
+        </div>
+        @endif
     </div>
     <!-- <div class="container position-relative mb-4 mt-5">
         <i onclick="scrollRight()" class="fa fa-4x fa-angle-double-right position-absolute right-scroll-btn" aria-hidden="true"></i>
@@ -128,8 +135,8 @@
                                 @elseif($col_md==12)
                                 {!! substr(strip_tags($post->blog_content), 0, 700) !!}... <br><br>
                                 @endif
-                                <small><b>Date:</b> {{ date('d-m-Y', strtotime($post->created_at)) }}</small><br>
-                                <small><b>Author:</b> {{$post->name}}</small>
+                                <small> {{ date('d-m-Y', strtotime($post->created_at)) }}</small><br>
+                                <small> {{$post->name}}</small>
                             </div>
                         </div>
                     </div>

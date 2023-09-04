@@ -67,6 +67,9 @@
                     <p class="">
                         <i class="fa fa-2x fa-clone float-center p-2 m-2" aria-hidden="true" onclick="copy_url('https://ifave.com/questions_details/'+{{ $question_id }})"></i> <i class="fa fa-2x fa-share float-center p-2 m-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url('https://ifave.com/questions_details/' + {{$question_id}})"></i> <i class="fa fa-2x fa-code float-center p-2 m-2" aria-hidden="true" onclick="generate_embeded_code('https://ifave.com/questions_details/' +{{ $question_id }}, '{{ $question }}')"></i>
                     </p>
+                    @if($user_status==1)
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#thoughts_modal">Thoughts</button>
+                    @endif
                 </div>
                 <div class="col-md-4">
                     <p class="p-1 mt-2"> <b>Click to fave</b></p>
@@ -101,6 +104,11 @@
             </div>
         </div>
     </div>
+    @if($thoughts !=='' || $thoughts !='' || $thoughts != NULL)
+    <div class="container mb-4 mt-2">
+        {!! $thoughts !!}
+    </div>
+    @endif
     @if(count($posts) > 0)
     <div class="container mb-4">
         <div class="row">
@@ -235,6 +243,29 @@
                 </div>
             </form>
             @endforeach
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="thoughts_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thoughts</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="submit_thoughts">
+                @csrf
+                <div class="modal-body">
+                    <input type="hidden" name="question_id" value="{{$question_id}}">
+                    <textarea class="form-control" name="thoughts" id="thoughts" rows="3" data-upload-url="{{ route('upload_content_image') }}" value="{!! $thoughts !!}">{!! $thoughts !!}</textarea>
+                    <small id="content_error" class="text-danger d-none">This fied is required</small>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

@@ -39,12 +39,24 @@ class indexController extends Controller
                 ->join('questions_answer', 'user_answers.answer_id', 'questions_answer.id')
                 ->where('user_answers.user_ip_address', $userId)
                 ->get();
+            $get_last_three_locations = DB::table('recent_locations')
+                ->where('user_id', $userId)
+                ->orderBy('id', 'desc')
+                ->offset(0)
+                ->limit(3)
+                ->get();
         } else {
             // User is not logged in
             $subQuery = UsersAnswer::select('question_id')
                 ->where('user_ip_address', $userIpAddress)
                 ->get();
             $get_this_user_votes = '';
+            $get_last_three_locations = DB::table('recent_locations')
+                ->where('user_id', $userIpAddress)
+                ->orderBy('id', 'desc')
+                ->offset(0)
+                ->limit(3)
+                ->get();
         }
         $questions = DB::table('questions')
             ->select(
@@ -84,7 +96,7 @@ class indexController extends Controller
             ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
             ->join('users', 'posts.user_id', 'users.id')
             ->where('posts.topic_id', $topic_id)
-            ->where('posts.status',1)
+            ->where('posts.status', 1)
             ->orderByDesc('posts.vote_count')
             ->limit(4)
             ->get();
@@ -93,12 +105,13 @@ class indexController extends Controller
         $meta_description = 'Rank and compare the best of everything in ' . $topicName . '. Save and share your faves among :';
         foreach ($questions as $index => $description) {
             if ($index <= 5) {
-                $meta_description .= $index + 1 . '. ' . $description->question .' ';
+                $meta_description .= $index + 1 . '. ' . $description->question . ' ';
             }
         }
         $meta_description = substr($meta_description, 0, -1);
-        $page_title='iFave - '.$topicName;
-        return view('index', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts', 'keywords', 'topicName', 'meta_description','page_title'));
+        $page_title = 'iFave - ' . $topicName;
+
+        return view('index', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts', 'keywords', 'topicName', 'meta_description', 'page_title', 'get_last_three_locations'));
     }
     public function indexonloadRequest(Request $request)
     {
@@ -358,7 +371,7 @@ class indexController extends Controller
                 ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
-                ->where('posts.status',1)
+                ->where('posts.status', 1)
                 ->orderByDesc('posts.vote_count')
                 ->limit(4)
                 ->get();
@@ -412,7 +425,7 @@ class indexController extends Controller
                 ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
-                ->where('posts.status',1)
+                ->where('posts.status', 1)
                 ->orderByDesc('posts.vote_count')
                 ->limit(4)
                 ->get();
@@ -451,9 +464,14 @@ class indexController extends Controller
                 // User is not verified, redirect to a new route
                 return redirect()->route('verification.notice');
             }
+            $user_details = DB::table('users')->select('*')->where('id', $clientIP)->get();
+            foreach ($user_details as $user_detail) {
+                $user_status = $user_detail->user_type;
+            }
         } else {
             // User is not logged in
             $clientIP = $this->getClientIP($request);
+            $user_status = 0;
         }
         // return $id;
         $category = str_replace('-', ' ', $category);
@@ -487,13 +505,13 @@ class indexController extends Controller
             $keywords .= $keys->question . ',' . $keys->topic_name;
         }
         $question_answers = $question_answers->sortByDesc('vote_count');
-        $meta_description = 'Top '.$category.' in ' . $location . ': ';
+        $meta_description = 'Top ' . $category . ' in ' . $location . ': ';
         foreach ($question_answers as $index => $description) {
             if ($index <= 4) {
                 $meta_description .= $index + 1 . '. ' . $description->answers . ' ';
             }
         }
-        $page_title='iFave - '.$category;
+        $page_title = 'iFave - ' . $category;
         $meta_description = substr($meta_description, 0, -1);
         $get_comments = DB::table('comments')->select('*')
             ->selectRaw('(upvotes - downvotes) as difference')
@@ -505,9 +523,16 @@ class indexController extends Controller
         //     'question_details'=>$question_details,
         //     'question_answers'=>$question_answers
         // ];
-        $posts = DB::table('posts')->select('*')->where('question_id', $question_id)->where('status',1)->orderBy('created_at', 'DESC')->get();
+        $posts = DB::table('posts')->select('*')->where('question_id', $question_id)->where('status', 1)->orderBy('created_at', 'DESC')->get();
 
-        return view('questions', compact('header_info', 'question_answers', 'get_user_answers', 'get_comments', 'posts', 'keywords','meta_description','page_title'));
+        $thoughts_details = DB::table('question_thoughts')->where('question_id', $question_id)->pluck('thoughts');
+        //$thoughts=$thoughts_details[0];
+        if (count($thoughts_details) > 0) {
+            $thoughts = $thoughts_details[0];
+        } else {
+            $thoughts = '';
+        }
+        return view('questions', compact('header_info', 'question_answers', 'get_user_answers', 'get_comments', 'posts', 'keywords', 'meta_description', 'page_title', 'user_status', 'question_id', 'thoughts'));
     }
     public function delete_vote(Request $request)
     {
@@ -853,6 +878,25 @@ class indexController extends Controller
         if (Auth::check()) {
             // User is logged in
             $userId = Auth::id();
+            $get_last_three_locations = DB::table('recent_locations')
+                ->where('user_id', $userId)
+                ->orderBy('id', 'desc')
+                ->offset(0)
+                ->limit(3)
+                ->get();
+            $link_exsistance = 0;
+            foreach ($get_last_three_locations as $recent_location) {
+                if ($recent_location->location == $header_info) {
+                    $link_exsistance = 1;
+                }
+            }
+            if ($link_exsistance == 0) {
+                $recent_location = DB::table('recent_locations')->insert([
+                    'user_id' => $userId,
+                    'location' => $header_info,
+                    'location_link' => $request->topic_name
+                ]);
+            }
             if (!Auth::user()->hasVerifiedEmail()) {
                 // User is not verified, redirect to a new route
                 return redirect()->route('verification.notice');
@@ -872,7 +916,27 @@ class indexController extends Controller
                 ->where('user_ip_address', $userIpAddress)
                 ->get();
             $get_this_user_votes = '';
+            $get_last_three_locations = DB::table('recent_locations')
+                ->where('user_id', $userIpAddress)
+                ->orderBy('id', 'desc')
+                ->offset(0)
+                ->limit(3)
+                ->get();
+            $link_exsistance = 0;
+            foreach ($get_last_three_locations as $recent_location) {
+                if ($recent_location->location == $header_info) {
+                    $link_exsistance = 1;
+                }
+            }
+            if ($link_exsistance == 0) {
+                $recent_location = DB::table('recent_locations')->insert([
+                    'user_id' => $userIpAddress,
+                    'location' => $request->topic_name,
+                    'location_link' => $header_info
+                ]);
+            }
         }
+
         // $questions = Questions::select(
         //     'questions.id AS question_id',
         //     'questions.question',
@@ -922,7 +986,7 @@ class indexController extends Controller
             ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
             ->join('users', 'posts.user_id', 'users.id')
             ->where('posts.topic_id', $topic_id)
-            ->where('posts.status',1)
+            ->where('posts.status', 1)
             ->orderByDesc('posts.vote_count')
             ->limit(4)
             ->get();
@@ -934,8 +998,8 @@ class indexController extends Controller
             }
         }
         $meta_description = substr($meta_description, 0, -1);
-        $page_title='iFave - '.$topicName;
-        return view("topics", compact('header_info', 'get_topic', 'questions', 'comments', 'subQuery', 'topic_id', 'posts', 'keywords', 'topicName', 'meta_description','page_title'));
+        $page_title = 'iFave - ' . $topicName;
+        return view("topics", compact('header_info', 'get_topic', 'questions', 'comments', 'subQuery', 'topic_id', 'posts', 'keywords', 'topicName', 'meta_description', 'page_title', 'get_last_three_locations'));
     }
 
     public function comments_route(Request $request, $name)
@@ -993,18 +1057,19 @@ class indexController extends Controller
 
         return json_encode(['success' => 1, 'data' => $comments]);
     }
-    public function get_comments_list_by_name(Request $request){
+    public function get_comments_list_by_name(Request $request)
+    {
         $comments = DB::table('comments')
-        ->select('users.name', DB::raw('SUM(comments.upvotes - comments.downvotes) as upvotes'))
-        ->join('users', 'comments.comment_by', '=', 'users.id')
-        ->join('questions', 'comments.question_id', '=', 'questions.id')
-        ->where('questions.topic_id', '=', $request->topic_id)
-        ->where('users.name', 'like', '%' . $request->user_name . '%')
-        ->orderByDesc('upvotes')
-        ->groupBy('users.name')
-        ->get();
+            ->select('users.name', DB::raw('SUM(comments.upvotes - comments.downvotes) as upvotes'))
+            ->join('users', 'comments.comment_by', '=', 'users.id')
+            ->join('questions', 'comments.question_id', '=', 'questions.id')
+            ->where('questions.topic_id', '=', $request->topic_id)
+            ->where('users.name', 'like', '%' . $request->user_name . '%')
+            ->orderByDesc('upvotes')
+            ->groupBy('users.name')
+            ->get();
 
-    return json_encode(['success' => 1, 'data' => $comments]);  
+        return json_encode(['success' => 1, 'data' => $comments]);
     }
     public function get_comments_list_all(Request $request)
     {
@@ -1020,15 +1085,41 @@ class indexController extends Controller
 
         return json_encode(['success' => 1, 'data' => $comments]);
     }
-    public function comments_list_by_username_all(Request $request){
+    public function add_thoughts(Request $request)
+    {
+        $query = DB::table('question_thoughts')->select('*')->where('question_id', $request->question_id)->get();
+        if (count($query) > 0) {
+            $add_though = DB::table('question_thoughts')->where('question_id', $request->question_id)->update([
+                'thoughts' => $request->thoughts,
+            ]);
+        } else {
+            $add_though = DB::table('question_thoughts')->insert([
+                'question_id' => $request->question_id,
+                'thoughts' => $request->thoughts,
+            ]);
+        }
+        if ($add_though) {
+            return json_encode([
+                'success' => 1,
+                'data' => 'Thoughts added successfully'
+            ]);
+        } else {
+            return json_encode([
+                'success' => 0,
+                'data' => 'Something went wrong'
+            ]);
+        }
+    }
+    public function comments_list_by_username_all(Request $request)
+    {
         $comments = DB::table('comments')
-        ->select('users.name', DB::raw('SUM(comments.upvotes  - comments.downvotes) as upvotes'))
-        ->join('users', 'comments.comment_by', '=', 'users.id')
-        ->join('questions', 'comments.question_id', '=', 'questions.id')
-        ->where('users.name', 'like', '%' . $request->user_name . '%')
-        ->orderByDesc('upvotes')
-        ->groupBy('users.name')
-        ->get(); 
+            ->select('users.name', DB::raw('SUM(comments.upvotes  - comments.downvotes) as upvotes'))
+            ->join('users', 'comments.comment_by', '=', 'users.id')
+            ->join('questions', 'comments.question_id', '=', 'questions.id')
+            ->where('users.name', 'like', '%' . $request->user_name . '%')
+            ->orderByDesc('upvotes')
+            ->groupBy('users.name')
+            ->get();
         return json_encode(['success' => 1, 'data' => $comments]);
     }
 }
