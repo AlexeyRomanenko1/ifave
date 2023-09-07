@@ -116,7 +116,7 @@
         </div>
         <div class="mb-3">
             <label for="edit" class="form-label">Blog Content<b class="text-danger">*</b></label>
-            <textarea class="form-control" name="blog_content" id="edit" rows="3" data-upload-url="{{ route('upload_content_image') }}" value="{!! $postArray[0]['blog_content'] !!}">{!! $postArray[0]['blog_content'] !!}</textarea>
+            <textarea class="form-control" name="blog_content" id="edit" rows="3" data-upload-url="{{ route('upload_content_image') }}" value="{!! $postArray[0]['blog_content'] !!}"></textarea>
             <small id="content_error" class="text-danger d-none">This fied is required</small>
             @error('blog_content')
             <div class="error"><b class="text-danger">{{ $message }}</b></div>
@@ -141,7 +141,7 @@
                 <ul>
                     <li>We recommend posting articles of at least 1000 words (6000 characters) which rank higher in search engines.</li>
                     <li>All posts must be originally written for iFave.</li>
-                    <li>Respect copywrite of text and images.</li>
+                    <li>Respect copyright of text and images.</li>
                     <li>Blog tags (or keywords) are words or phrases that describe a blog post. They help search engines to find your post. Keep them short (usually 1-2 words). Do not use more than 7-8 tags.</li>
                     <li>Use rel=”sponsored” or rel=”nofollow” attributes on affiliate links.</li>
                 </ul>

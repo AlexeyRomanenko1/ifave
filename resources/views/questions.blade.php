@@ -258,7 +258,7 @@
                 @csrf
                 <div class="modal-body">
                     <input type="hidden" name="question_id" value="{{$question_id}}">
-                    <textarea class="form-control" name="thoughts" id="thoughts" rows="3" data-upload-url="{{ route('upload_content_image') }}" value="{!! $thoughts !!}">{!! $thoughts !!}</textarea>
+                    <textarea class="form-control" name="thoughts" id="thoughts" rows="3" data-upload-url="{{ route('upload_content_image') }}" value="{!! $thoughts !!}"></textarea>
                     <small id="content_error" class="text-danger d-none">This fied is required</small>
                 </div>
                 <div class="modal-footer">
