@@ -67,7 +67,7 @@
                     <p class="">
                         <i class="fa fa-2x fa-clone float-center p-2 m-2" aria-hidden="true" onclick="copy_url('https://ifave.com/questions_details/'+{{ $question_id }})"></i> <i class="fa fa-2x fa-share float-center p-2 m-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url('https://ifave.com/questions_details/' + {{$question_id}})"></i> <i class="fa fa-2x fa-code float-center p-2 m-2" aria-hidden="true" onclick="generate_embeded_code('https://ifave.com/questions_details/' +{{ $question_id }}, '{{ $question }}')"></i>
                     </p>
-                    @if($user_status==1)
+                    @if($user_status==1 || $user_status==2)
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#thoughts_modal">Thoughts</button>
                     @endif
                 </div>
