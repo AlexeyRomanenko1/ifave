@@ -23,13 +23,17 @@
                 <img src="/images/posts/{{$post->featured_image}}" class="img-fluid mt-3" alt="...">
             </div>
             <div class="mt-3">
-                @php 
+                @php
                 $content = $post->blog_content;
                 $dom = new DOMDocument();
                 $dom->loadHTML($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
                 $images = $dom->getElementsByTagName('img');
                 foreach ($images as $image) {
+                $style = $image->getAttribute('style');
+                // Remove the width property from the style attribute
+                $style = preg_replace('/\bwidth\s*:\s*[^;]+;/', '', $style);
+                $image->setAttribute('style', $style);
                 $currentClasses = $image->getAttribute('class');
                 $image->setAttribute('class', trim("$currentClasses img-fluid"));
                 }
