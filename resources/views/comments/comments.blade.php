@@ -74,7 +74,7 @@
                     <div class="col-md-8">
                         <div class="search">
                             <i class="fa fa-search"></i>
-                            <input type="text" id="search_users_comments" class="form-control" placeholder="Search">
+                            <input type="text" id="search_users_comments_on_comments_page" class="form-control" placeholder="Search">
                         </div>
                     </div>
                 </div>

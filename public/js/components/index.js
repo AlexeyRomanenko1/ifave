@@ -13,6 +13,17 @@ $('.read-more').on('click', function (e) {
     halfCommentElement.hide();
     fullCommentElement.show();
 });
+
+
+$('.read-more-thoughts').on('click', function (e) {
+    e.preventDefault();
+    $(this).hide();
+    let halfCommentElement = $(this).closest('.thoughts-content').find('.half-comment');
+    // $(this).siblings('.full-comment').show();
+    let fullCommentElement = $(this).closest('.thoughts-content').find('.full-comment');
+    halfCommentElement.hide();
+    fullCommentElement.show();
+});
 $(document).ready(function () {
     $.ajax({
         type: 'GET',

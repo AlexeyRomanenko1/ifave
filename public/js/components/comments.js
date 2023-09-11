@@ -20,8 +20,7 @@ function top_comments_modal_body_for_comments(){
         }
     })
 }
-
-$('#search_users_comments').on('keyup',function(){
+$('#search_users_comments_on_comments_page').on('keyup', function (e) {
     $.ajax({
         type: 'GET',
         url: '/get_comments_list_by_username_all',

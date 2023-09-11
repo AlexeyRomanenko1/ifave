@@ -12,9 +12,11 @@
 
 
 }
-.m-0-p{
+
+.m-0-p {
     margin: 4px;
 }
+
 .unselect {
     user-select: none;
 }
@@ -128,7 +130,8 @@
     bottom: 25px;
     /* margin:auto; */
     height: 60px;
-    width: 400px;
+    /* width: 400px; */
+    width: auto;
     font-size: x-large;
 }
 
@@ -337,6 +340,11 @@ button#imageManager-1 {
     cursor: pointer;
 }
 
+.read-more-thoughts {
+    color: #007bff;
+    cursor: pointer;
+}
+
 .upvote-icon,
 .downvote-icon {
     color: #333;
@@ -348,6 +356,7 @@ button#imageManager-1 {
 .downvote-icon:hover {
     color: #007bff;
 }
+
 .comment-actions {
     display: flex;
     justify-content: space-between;
@@ -357,10 +366,10 @@ button#imageManager-1 {
 .top-comments-btn {
     margin-top: 10px;
 }
+
 /* Style the Select2 dropdown */
-.select2-container--default .select2-selection--single {
-   
-}
+.select2-container--default .select2-selection--single {}
+
 .select2-container--default .select2-selection--single .select2-selection__rendered {
     display: block;
     width: 100%;
@@ -376,7 +385,7 @@ button#imageManager-1 {
     -moz-appearance: none;
     appearance: none;
     border-radius: .25rem;
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 
 /* Style the Select2 search input (optional) */
@@ -386,12 +395,15 @@ button#imageManager-1 {
 
 /* Style the Select2 dropdown arrow */
 .select2-container--default .select2-selection--single .select2-selection__arrow {
-    height: 36px;  /* Adjust the height as needed */
+    height: 36px;
+    /* Adjust the height as needed */
     border-left: none;
 }
+
 .select2-container--default .select2-selection--single {
     border: none !important;
 }
+
 @media screen and (max-width: 1200px) {
     .fav_tracks_parent {
         /* margin-top: 5rem;
@@ -441,6 +453,7 @@ button#imageManager-1 {
 
     .fav_tracks {
         width: auto;
+        bottom: 230px !important;
     }
 
     .h-fixed-30 {
@@ -460,15 +473,20 @@ button#imageManager-1 {
         justify-content: center;
         flex-direction: column;
         align-items: center;
-        width: 700px;
+        /* width: 700px; */
+    }
+    .fav_tracks {
+        width: auto;
+        bottom: 186px !important;
     }
 }
 
 @media screen and (max-width: 768px) and (min-width: 415px) {
     .fav_tracks_parent {
-        left: -90px;
+        /* left: -90px; */
+        left: -130px;
         right: 0;
-        top: 28px;
+        top: 22px;
         margin-right: 50px;
         margin-bottom: 2rem;
         margin-top: 2rem;

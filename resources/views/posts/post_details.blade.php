@@ -23,7 +23,31 @@
                 <img src="/images/posts/{{$post->featured_image}}" class="img-fluid mt-3" alt="...">
             </div>
             <div class="mt-3">
-                {!! $post->blog_content !!}
+                @php 
+                $content = $post->blog_content;
+                $dom = new DOMDocument();
+                $dom->loadHTML($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+
+                $images = $dom->getElementsByTagName('img');
+                foreach ($images as $image) {
+                $currentClasses = $image->getAttribute('class');
+                $image->setAttribute('class', trim("$currentClasses img-fluid"));
+                }
+
+                $modifiedContent = $dom->saveHTML();
+                @endphp
+                {!! $modifiedContent !!}
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex">
+                    <div class="text-center mx-3">
+                        <i class="fa fa-2x fa-thumbs-up text-success post-thumbs-up" aria-hidden="true"></i>
+                        <div><small>Likes: {{ number_format($post->vote_count,0,'.',',') }}</small></div>
+                    </div>
+                    <div class="text-center mx-3">
+                        <i class="fa fa-2x fa-thumbs-down text-danger post-thumbs-down" aria-hidden="true"></i>
+                    </div>
+                </div>
             </div>
             <hr>
             <div class="mt-2">
@@ -40,6 +64,18 @@
         </div>
         <div class="col-md-4">
             <div class="container">
+                <div class="card mt-5">
+                    <div class="card-header text-center">
+                        <h6>POPULAR CATEGORIES</h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            @foreach($popular_questions as $popular_question)
+                            <li class="list-group-item"><a href="/category/{{str_replace(' ','-',$popular_question->topic_name)}}/{{str_replace(' ','-',$popular_question->question)}}">{{$popular_question->question}}</a></li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
                 <div class="card mt-5">
                     <div class="card-header text-center">
                         <h6>CONNECT & FOLLOW</h6>
@@ -82,20 +118,26 @@
                     </div>
                 </div>
                 @endif
-                <div class="card mt-5">
-                    <div class="card-header text-center">
-                        <h6>POPULAR CATEGORIES</h6>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group list-group-flush">
-                            @foreach($popular_questions as $popular_question)
-                            <li class="list-group-item"><a href="/category/{{str_replace(' ','-',$popular_question->topic_name)}}/{{str_replace(' ','-',$popular_question->question)}}">{{$popular_question->question}}</a></li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
 </div>
 @include('footer.footer')
+<script>
+    function handleScreenWidthChange(mq) {
+        if (mq.matches) {
+            // Remove the class from the small element for mobile devices
+            $(".col-md-4 small").removeClass("float-end");
+        }
+    }
+
+    // Define the media query for mobile devices (screen width less than 768px)
+    var mq = window.matchMedia("(max-width: 767px)");
+
+    // Call the function initially to check the screen width
+    handleScreenWidthChange(mq);
+
+    // Add a listener for screen width changes
+    mq.addListener(handleScreenWidthChange);
+</script>

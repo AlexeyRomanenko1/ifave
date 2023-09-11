@@ -513,17 +513,30 @@ class indexController extends Controller
         }
         $page_title = 'iFave - ' . $category;
         $meta_description = substr($meta_description, 0, -1);
-        $get_comments = DB::table('comments')->select('*')
+        // $get_comments = DB::table('comments')->select('*')
+        //     ->selectRaw('(upvotes - downvotes) as difference')
+        //     ->where('question_id', $question_id)
+        //     ->orderBy('difference', 'DESC')
+        //     ->limit(5)
+        //     ->get();
+        $get_comments = DB::table('comments')
+            ->select('comments.*', 'users.id as user_id', 'users.name')
             ->selectRaw('(upvotes - downvotes) as difference')
-            ->where('question_id', $question_id)
+            ->leftJoin('users', 'comments.comment_by', '=', 'users.id')
+            ->where('comments.question_id', $question_id)
             ->orderBy('difference', 'DESC')
             ->limit(5)
             ->get();
+        $replies = DB::table('comments')->select('comments.*', 'users.id as user_id', 'users.name')->leftJoin('users', 'comments.comment_by', '=', 'users.id')->where('question_id', $question_id)->where('parent_comment_id', '<>', 0)->get();
         // $data=[
         //     'question_details'=>$question_details,
         //     'question_answers'=>$question_answers
         // ];
-        $posts = DB::table('posts')->select('*')->where('question_id', $question_id)->where('status', 1)->orderBy('created_at', 'DESC')->get();
+        $posts = DB::table('posts')->select('*')->where('question_id', $question_id)->where('status', 1)->orderBy('created_at', 'DESC')->limit(2)->get();
+        $perPage = 9; // Number of items per page
+        $page = request()->get('page', 1); // Get the current page from the request
+        $all_posts = DB::table('posts')->select('*')->where('question_id', $question_id)->where('status', 1)->orderBy('created_at', 'DESC')->paginate($perPage, ['*'], 'page', $page);
+
 
         $thoughts_details = DB::table('question_thoughts')->where('question_id', $question_id)->pluck('thoughts');
         //$thoughts=$thoughts_details[0];
@@ -532,7 +545,7 @@ class indexController extends Controller
         } else {
             $thoughts = '';
         }
-        return view('questions', compact('header_info', 'question_answers', 'get_user_answers', 'get_comments', 'posts', 'keywords', 'meta_description', 'page_title', 'user_status', 'question_id', 'thoughts'));
+        return view('questions', compact('header_info', 'question_answers', 'get_user_answers', 'get_comments', 'posts', 'keywords', 'meta_description', 'page_title', 'user_status', 'question_id', 'thoughts', 'replies','all_posts'));
     }
     public function delete_vote(Request $request)
     {
@@ -682,7 +695,7 @@ class indexController extends Controller
             return redirect()->back()->with('error', 'You can not add email addresses in comments.');
         }
         if (strlen($comments) > 2000) {
-            return redirect()->back()->with('error', 'You comments length is exceeding the limit of 1000 characters!');
+            return redirect()->back()->with('error', 'You comments length is exceeding the limit of 2000 characters!');
         } else {
             $insert_comments = DB::table('comments')->insert([
                 'comments' => $comments,
@@ -697,7 +710,56 @@ class indexController extends Controller
             }
         }
     }
+    //store replty to comment
+    public function storeReply(Request $request)
+    {
+        // Validation for replies
+        $this->validate($request, [
+            'parent_comment_id' => 'required|exists:comments,id',
+            'reply_text' => 'required|max:2000',
+        ]);
+        if (Auth::check()) {
+            // User is logged in
+            $clientIP = Auth::id();
+        } else {
+            // User is not logged in
+            $clientIP = $this->getClientIP($request);
+        }
+        // $comments = $request->comments;
+        // $question_id = $request->question_id;
+        if ($this->isURLComment($request->input('reply_text')) == true) {
+            return redirect()->back()->with('error', 'external website links are not allowed to add!');
+        }
+        $pattern = '/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/';
 
+        if (preg_match($pattern, $request->input('reply_text'))) {
+            // Email address found in textarea, handle the error
+            return redirect()->back()->with('error', 'You can not add email addresses in comments.');
+        }
+        if (strlen($request->input('reply_text')) > 2000) {
+            return redirect()->back()->with('error', 'You reply length is exceeding the limit of 2000 characters!');
+        } else {
+            $insert_comments = DB::table('comments')->insert([
+                'parent_comment_id' => $request->input('parent_comment_id'),
+                'comments' => $request->input('reply_text'),
+                'comment_by' => $clientIP,
+                'question_id' => $request->question_id
+            ]);
+        }
+        if ($insert_comments) {
+            return redirect()->back()->with('success', 'Reply added successfully!');
+        } else {
+            return redirect()->back()->with('error', 'Something went wrong!');
+        }
+        // Storing the reply in the database
+        // $comment = new Comment();
+        // $comment->parent_comment_id = $request->input('parent_comment_id');
+        // $comment->comments = $request->input('reply_text');
+        // Add other fields like user ID, etc.
+        // $comment->save();
+
+        // return redirect()->back()->with('success', 'Reply added successfully!');
+    }
     public function upvote_comment(Request $request)
     {
         if (Auth::check()) {

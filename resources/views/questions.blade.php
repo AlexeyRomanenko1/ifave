@@ -106,18 +106,42 @@
     </div>
     @if($thoughts !=='' || $thoughts !='' || $thoughts != NULL)
     <div class="container mb-4 mt-2">
-        {!! $thoughts !!}
+        <div class="thoughts-content">
+            <div class="half-comment half-thoughts">{!! substr($thoughts, 0, 450) !!} <span class="read-more-thoughts">... Read More</span></div>
+            <span class="full-comment" style="display: none;">{!! $thoughts !!}</span>
+        </div>
     </div>
     @endif
     @if(count($posts) > 0)
+    @if(count($posts) == 1)
+    @php
+    $col_md=12;
+    @endphp
+    @elseif(count($posts) > 1)
+    @php
+    $col_md=6;
+    @endphp
+    @endif
     <div class="container mb-4">
         <div class="row">
-            @foreach($posts as $post)
-            <div class="col-md-2 mb-2"><img src="/images/posts/{{$post->featured_image}}" class="zoom-block img-fluid" height="300px" width="300px" alt=""></div>
-            <div class="col-md-10 pt-5 mb-2">
-                <h4><a href="/blog/{{$post->slug}}">{{$post->title}}</a></h4>
-                {!! substr(strip_tags($post->blog_content), 0, 500) !!}...
-                &nbsp;<a href="/blog/{{$post->slug}}"> read more</a>
+            @foreach($posts as $index=>$post)
+            <div class="col-md-{{$col_md}}">
+                <div class="container mt-3 p-2 m-2">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img src="/images/posts/{{$post->featured_image}}" class="zoom-block img-fluid" alt="">
+                        </div>
+                        <div class="col-md-9">
+                            <h4 class="mt-2"><a href="/blog/{{$post->slug}}">{{substr(strip_tags($post->title), 0, 100) }}</a></h4>
+                            @if($col_md==6)
+                            {!! substr(strip_tags($post->blog_content), 0, 150) !!}... <br><br>
+                            @elseif($col_md==12)
+                            {!! substr(strip_tags($post->blog_content), 0, 700) !!}... <br><br>
+                            @endif
+
+                        </div>
+                    </div>
+                </div>
             </div>
             @endforeach
         </div>
@@ -133,6 +157,7 @@
         </div>
         @if(count($get_comments) > 0)
         @foreach($get_comments as $user_comment)
+        @if($user_comment->parent_comment_id == 0)
         <div class="comment-container comment mb-2">
             <div class="comment-content">
                 @if(strlen($user_comment->comments) > 150)
@@ -143,15 +168,62 @@
                 @endif
             </div>
             <div class="comment-actions">
-                <small>{{$user_comment->upvotes}} Upvotes</small>
+                <small class="mt-2">
+                    @if($user_comment->name != '')
+                    <b>{{$user_comment->name}}</b>
+                    @else
+                    <b>Anonymous</b>
+                    @endif
+                    ({{$user_comment->upvotes}} Upvotes)</small>
                 <div>
                     <i class="fa fa-arrow-up upvote-icon" onclick="upvote_count({{$user_comment->id}},{{$user_comment->upvotes}})"></i>
                     <i class="fa fa-arrow-down downvote-icon" onclick="downvote_count({{$user_comment->id}},{{$user_comment->downvotes}})"></i>
 
                 </div>
             </div>
+            <a href="#" class="reply-btn" data-comment-id="{{ $user_comment->id }}">Reply</a>
+            <form method="POST" action="{{ route('comments.storeReply') }}" class="reply-form reply-form-{{ $user_comment->id }} mt-3" style="display: none;">
+                @csrf
+                @foreach($header_info as $header)
+                <input type="hidden" name="question_id" value="{{$header['id']}}">
+                @endforeach
+                <input type="hidden" name="parent_comment_id" value="{{ $user_comment->id }}">
+                <textarea name="reply_text" class="form-control" rows="3" placeholder="Reply to this comment"></textarea>
+                <button type="submit" class="btn btn-primary mt-2">Submit Reply</button>
+            </form>
+            <hr>
+            @foreach($replies as $reply)
+            @if($reply->parent_comment_id == $user_comment->id)
+            <div class="comment-container comment reply mb-2">
+                <!-- Reply Content -->
+                <!-- ... -->
+                <div class="comment-content">
+                    @if(strlen($reply->comments) > 150)
+                    <p class="half-comment">{{ substr($reply->comments, 0, 150) }} <span class="read-more">... Read More</span></p>
+                    <span class="full-comment" style="display: none;">{{ $reply->comments }}</span>
+                    <p>
+                        @if($reply->name != '')
+                        <b>{{$reply->name}}</b>
+                        @else
+                        <b>Anonymous</b>
+                        @endif
+                    </p>
+                    @else
+                    <p>{{ $reply->comments }}</p>
+                    <p>
+                        @if($reply->name != '')
+                        <b>{{$reply->name}}</b>
+                        @else
+                        <b>Anonymous</b>
+                        @endif
+                    </p>
+                    @endif
+                </div>
+            </div>
+            @endif
+            @endforeach
         </div>
-
+        @endif
         @endforeach
         @endif
         <!-- <div class="comment m-2 p-2">
@@ -187,6 +259,27 @@
                 <button type="submit" class="btn btn-primary float-end">Add</button>
             </div>
         </form>
+
+    </div>
+    <div class="container mt-3">
+        <div class="row">
+            @foreach($all_posts as $all_post)
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-3">
+                        <img src="/images/posts/{{$all_post->featured_image}}" class="zoom-block img-fluid" alt="">
+                    </div>
+                    <div class="col-md-9">
+                        <h4 class="mt-2"><a href="/blog/{{$all_post->slug}}">{{substr(strip_tags($all_post->title), 0, 100) }}</a></h4>
+                        {!! substr(strip_tags($all_post->blog_content), 0, 150) !!}... <br><br>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+        <div class="pagination justify-content-center">
+            {{ $all_posts->links('pagination::bootstrap-5') }}
+        </div>
     </div>
 </div>
 <!-- Modal -->

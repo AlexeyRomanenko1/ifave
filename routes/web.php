@@ -34,6 +34,10 @@ Route::get('/searchcategories', [indexController::class, 'searchcategories']);
 Route::post('/delete_vote', [indexController::class, 'delete_vote']);
 Route::post('/add_user_answer', [App\Http\Controllers\indexController::class, 'add_user_answer'])->name('add_user_answer');
 Route::post('/add_user_comments', [App\Http\Controllers\indexController::class, 'add_user_comments'])->name('add_user_comments');
+// routes/web.php
+
+Route::post('comments/reply', [App\Http\Controllers\indexController::class, 'storeReply'])->name('comments.storeReply');
+
 Route::post('/upvote_comment', [indexController::class, 'upvote_comment']);
 Route::post('/downvote_comment', [indexController::class, 'downvote_comment']);
 Route::get('/uncover_answers', [indexController::class, 'uncover_answers']);

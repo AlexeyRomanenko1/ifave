@@ -232,8 +232,9 @@ class BlogController extends Controller
             ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
             ->join('topics', 'questions.topic_id', '=', 'topics.id')
             ->select('questions.question', 'topics.topic_name')
-            ->where('questions.topic_id', '=', $this_post_location)
+            ->where('questions.topic_id', '=', 1)
             ->orderBy('questions_answer.vote_count', 'DESC')
+            ->distinct()
             ->offset(1)
             ->limit(5)
             ->get();
@@ -245,7 +246,7 @@ class BlogController extends Controller
         // Extract the plain text content
         $meta_description = strip_tags($meta_description);
         $meta_description =  Str::limit($meta_description, 160, '...');
-        $latest_posts = DB::table('posts')->select('*')->orderByDesc('created_at')->limit(5)->get();
+        $latest_posts = DB::table('posts')->select('*')->where('status',1)->orderByDesc('created_at')->limit(5)->get();
         $blog_title = DB::table('posts')->where('slug', $slug)->pluck('title');
         $page_title = 'iFave Blog - ' . $blog_title[0];
         return view('posts.post_details', compact('posts', 'latest_posts', 'keywords', 'meta_description', 'page_title', 'popular_questions'));
@@ -727,7 +728,7 @@ class BlogController extends Controller
                     'question_id' => $request->question_id,
                     'blog_content' => $blog_content,
                     'featured_image' => $uniqueName,
-                     //'slug' => $slug
+                    //'slug' => $slug
                 ]);
         } else {
             // $uniqueName = '';
