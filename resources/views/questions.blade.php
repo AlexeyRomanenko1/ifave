@@ -106,8 +106,12 @@
     </div>
     @if($thoughts !=='' || $thoughts !='' || $thoughts != NULL)
     <div class="container mb-4 mt-2">
-        <div class="thoughts-content">
-            <div class="half-comment half-thoughts">{!! substr($thoughts, 0, 1000) !!} <span class="read-more-thoughts">... Read More</span></div>
+        <div class="thoughts-content for-full-screen d-none">
+            <div class="half-comment half-thoughts">{!! substr(strip_tags($thoughts), 0, 1000) !!} <span class="read-more-thoughts">... Read More</span></div>
+            <span class="full-comment" style="display: none;">{!! $thoughts !!}</span>
+        </div>
+        <div class="thoughts-content for-mobile-screen d-none">
+            <div class="half-comment half-thoughts">{!! substr(strip_tags($thoughts), 0, 450) !!} <span class="read-more-thoughts">... Read More</span></div>
             <span class="full-comment" style="display: none;">{!! $thoughts !!}</span>
         </div>
     </div>

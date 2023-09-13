@@ -26,6 +26,15 @@
             _token: $('meta[name="csrf-token"]').attr('content') // Pass the CSRF token if required
         }
     })
+    let screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+    if (screenWidth <= 768) {
+       // deviceSize = 'mobile';
+       $('.for-mobile-screen').removeClass('d-none')
+    } else {
+       // deviceSize = 'desktop';
+       $('.for-full-screen').removeClass('d-none')
+    }
 })()
 
 
