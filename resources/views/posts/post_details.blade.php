@@ -25,22 +25,24 @@
             <div class="mt-3">
                 @php
                 $content = $post->blog_content;
-                $dom = new DOMDocument();
-                $dom->loadHTML($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+                $pattern = '/<img(.*?)>/';
 
-                $images = $dom->getElementsByTagName('img');
-                foreach ($images as $image) {
-                $style = $image->getAttribute('style');
-                // Remove the width property from the style attribute
-                $style = preg_replace('/\bwidth\s*:\s*[^;]+;/', '', $style);
-                $image->setAttribute('style', $style);
-                $currentClasses = $image->getAttribute('class');
-                $image->setAttribute('class', trim("$currentClasses img-fluid"));
-                }
+                    // Use preg_replace_callback to modify the <img> tags
+                    $updatedContent = preg_replace_callback($pattern, function($matches) {
+                    // Extract the existing attributes from the <img> tag
+                    $imgTag = $matches[0];
 
-                $modifiedContent = $dom->saveHTML();
-                @endphp
-                {!! $modifiedContent !!}
+                    // Remove 'style', 'width', and 'height' attributes
+                    $cleanedImgTag = preg_replace('/\bstyle=["\'](.*?)["\']/', '', $imgTag);
+                    $cleanedImgTag = preg_replace('/\bwidth=["\'](.*?)["\']/', '', $cleanedImgTag);
+                    $cleanedImgTag = preg_replace('/\bheight=["\'](.*?)["\']/', '', $cleanedImgTag);
+
+                    // Add the 'img-fluid' class to the modified <img> tag
+                    $modifiedImgTag = str_replace('<img', '<img class="img-fluid"' , $cleanedImgTag); // Return the modified <img> tag
+                        return $modifiedImgTag;
+                        }, $content);
+                        @endphp
+                        {!! $updatedContent !!}
             </div>
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex">
