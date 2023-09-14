@@ -25,22 +25,23 @@
             <div class="mt-3">
                 @php
                 $content = $post->blog_content;
-                $pattern = '/<img(.*?)>/';
+                $pattern = '/<span[^>]*>(<img[^>]*>)<\/span>/is';
 
-                    // Use preg_replace_callback to modify the <img> tags
-                    $updatedContent = preg_replace_callback($pattern, function($matches) {
-                    // Extract the existing attributes from the <img> tag
-                    $imgTag = $matches[0];
+// Use preg_replace_callback to modify the <span> elements
+$updatedContent = preg_replace_callback($pattern, function($matches) {
+    $imgTag = $matches[1];
+    
+    // Remove 'style', 'width', and 'height' attributes from the <img> tag
+    $cleanedImgTag = preg_replace('/\s+(style|width|height)=[\'"][^\'"]*[\'"]/', '', $imgTag);
+    
+    // Add the 'img-fluid' class to the modified <img> tag
+    $modifiedImgTag = str_replace('<img', '<img class="img-fluid"', $cleanedImgTag);
+    
+    // Return the modified <span> element
+    return $modifiedImgTag;
+}, $content);
 
-                    // Remove 'style', 'width', and 'height' attributes
-                    $cleanedImgTag = preg_replace('/\bstyle=["\'](.*?)["\']/', '', $imgTag);
-                    $cleanedImgTag = preg_replace('/\bwidth=["\'](.*?)["\']/', '', $cleanedImgTag);
-                    $cleanedImgTag = preg_replace('/\bheight=["\'](.*?)["\']/', '', $cleanedImgTag);
 
-                    // Add the 'img-fluid' class to the modified <img> tag
-                    $modifiedImgTag = str_replace('<img', '<img class="img-fluid"' , $cleanedImgTag); // Return the modified <img> tag
-                        return $modifiedImgTag;
-                        }, $content);
                         @endphp
                         {!! $updatedContent !!}
             </div>
