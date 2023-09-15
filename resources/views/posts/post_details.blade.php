@@ -23,11 +23,8 @@
                 <img src="/images/posts/{{$post->featured_image}}" class="img-fluid mt-3" alt="...">
             </div>
             <div class="mt-3">
-                @php
-                $content = $post->blog_content;
-                $updatedContent=$content;
-                        @endphp
-                        {!! $updatedContent !!}
+          
+                    {!! $modifiedContent !!}
             </div>
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex">
