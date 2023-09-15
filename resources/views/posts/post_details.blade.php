@@ -114,7 +114,7 @@
 <script>
      $(document).ready(function() {
         // Add the img-fluid class to all <img> tags within the #content div
-        $('#content img').addClass('img-fluid');
+        $('#blog_content img').addClass('img-fluid');
     });
     function handleScreenWidthChange(mq) {
         if (mq.matches) {
