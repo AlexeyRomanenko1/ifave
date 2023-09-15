@@ -22,9 +22,8 @@
             <div class="text-center">
                 <img src="/images/posts/{{$post->featured_image}}" class="img-fluid mt-3" alt="...">
             </div>
-            <div class="mt-3">
-          
-                    {!! $modifiedContent !!}
+            <div class="mt-3" id="blog_content">
+                {!! $post->blog_content !!}
             </div>
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex">
@@ -113,6 +112,10 @@
 </div>
 @include('footer.footer')
 <script>
+     $(document).ready(function() {
+        // Add the img-fluid class to all <img> tags within the #content div
+        $('#content img').addClass('img-fluid');
+    });
     function handleScreenWidthChange(mq) {
         if (mq.matches) {
             // Remove the class from the small element for mobile devices
