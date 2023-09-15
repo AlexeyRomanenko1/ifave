@@ -228,8 +228,11 @@ class BlogController extends Controller
             $updated_content = $html_content->blog_content;
         }
 
+        $cleanedContent = strip_tags($updated_content, '<p><a><img><ul><ol><li><br><hr>');
+
+        // Load the cleaned content into a DOMDocument
         $doc = new DOMDocument();
-        $doc->loadHTML(mb_convert_encoding($updated_content, 'HTML-ENTITIES', 'UTF-8'));
+        $doc->loadHTML(mb_convert_encoding($cleanedContent, 'HTML-ENTITIES', 'UTF-8'));
 
         // Enable libxml errors and warnings again
         libxml_use_internal_errors(false);
