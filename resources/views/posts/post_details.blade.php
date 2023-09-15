@@ -25,10 +25,15 @@
             <div class="mt-3">
                 @php
                 $content = $post->blog_content;
-                $pattern = '/<span[^>]*>(<img[^>]*>)<\/span>/is';
+                $pattern = '/<span[^>]*style=[\'"](.*?)[\'"][^>]*><img[^>]*><\/span>/is';
 
 // Use preg_replace_callback to modify the <span> elements
 $updatedContent = preg_replace_callback($pattern, function($matches) {
+    $spanTag = $matches[0];
+    
+    // Remove 'style' attribute from the <span> tag
+    $cleanedSpanTag = preg_replace('/\s+style=[\'"][^\'"]*[\'"]/', '', $spanTag);
+    
     $imgTag = $matches[1];
     
     // Remove 'style', 'width', and 'height' attributes from the <img> tag
@@ -38,7 +43,7 @@ $updatedContent = preg_replace_callback($pattern, function($matches) {
     $modifiedImgTag = str_replace('<img', '<img class="img-fluid"', $cleanedImgTag);
     
     // Return the modified <span> element
-    return $modifiedImgTag;
+    return $cleanedSpanTag . $modifiedImgTag;
 }, $content);
 
 
