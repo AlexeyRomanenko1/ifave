@@ -4,15 +4,22 @@
 <input type="hidden" value="{{$header_info}}" name="topic_name" id="topic_name">
 <input type="hidden" value="{{str_replace(' ','-',$topicName)}}" name="topicName" id="topicName">
 <!-- {{ Route::currentRouteName() }} -->
-<div class="container mt-5">
-    <div class="text-center">
-        <!-- <a href="" data-bs-toggle="modal" data-bs-target="#topics_modal">
-            <h3 class="mb-3">Select your location</h3>
-        </a> -->
+<div class="container topic-mt-5">
+<div class="text-center">
+        <a href="" data-bs-toggle="modal" data-bs-target="#topics_modal">
+            <h3 class="mb-3 organic-margin"> Select location</h3>
+        </a>
+        @if(count($get_last_three_locations) > 0)
+        <div class="mb-3">
+        @foreach($get_last_three_locations as $recent_links)
+        <a class="mt-2 mb-2" href="/location/{{$recent_links->location_link}}">{{$recent_links->location}}</a>&nbsp;
+        @endforeach
+        </div>
+        @endif
         <div class="container position-relative fav_tracks_parent">
             <div class="position-absolute fav_tracks">
                 <div class="container">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered border-blue user_faves_track">
                         <thead>
                             <td>
                                 <p class="fs-6"><b>My faves</b></p>
@@ -31,14 +38,7 @@
                 </div>
             </div>
         </div>
-        <h3 class="" id="display_topic_name"></h3>
-        @if(count($get_last_three_locations) > 0)
-        <div class="mb-3">
-        @foreach($get_last_three_locations as $recent_links)
-        <a class="mt-2 mb-3" href="/location/{{$recent_links->location_link}}">{{$recent_links->location}}</a>&nbsp;
-        @endforeach
-        </div>
-        @endif
+        <h3 class="mb-3" id="display_topic_name"></h3>
     </div>
     <!-- <div class="container position-relative mb-4 mt-5">
         <i onclick="scrollRight()" class="fa fa-4x fa-angle-double-right position-absolute right-scroll-btn" aria-hidden="true"></i>
@@ -93,13 +93,11 @@
                         <p><b>Best comments in this location</b></p>
                         <ol>
                             @foreach($comments as $comment)
-                            @if($comment->upvotes < 0)
-                            @php
-                            $comment->upvotes=0;
-                            @endphp
-                            @endif
-                            <li><a href="/comments/{{ str_replace(' ', '-', $comment->name)}}">{{$comment->name}} ({{$comment->upvotes}} upvotes)</a></li>
-                            @endforeach
+                            @if($comment->upvotes < 0) @php $comment->upvotes=0;
+                                @endphp
+                                @endif
+                                <li><a href="/comments/{{ str_replace(' ', '-', $comment->name)}}">{{$comment->name}} ({{$comment->upvotes}} upvotes)</a></li>
+                                @endforeach
                         </ol>
                         @if(count($comments) >=5)
                         <div class="text-center"><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#top_comments_modal" onclick="top_comments_modal({{$topic_id}})">Show me more</button></div>
@@ -196,74 +194,73 @@
                         </div>
                         <div class="suggestions p-1"></div>
                         <div class="text-center">
-                            @if (file_exists(public_path('images/question_images/ifave_images/'.$question_image)))
-                            <img onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' src="/images/question_images/ifave_images/{{$question_image}}" class="img-fluid zoom-block" height="325px" width="325px" alt="...">
-                            @else
-                            <img onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' src="/images/question_images/ifave.jpg" class="img-fluid zoom-block" height="325px" width="325px" alt="...">
-                            @endif
-                        </div>
-                        @if(!$exists)
-                        @php
-                        $lm=1;
-                        @endphp
-                        @foreach ($answers as &$answer)
-                        @php
-                        $answer_votes = substr($answer, strpos($answer, "( Faves") + 1);
-                        @endphp
-                        @if($lm==1)
-                        <div class="p-1 mt-4">
-                            <small onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' class="fw-normal fs-6  unselect underline"> Place ( {{$answer_votes}} </small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone float-end" onclick="copy_url('https://ifave.com/category/{{$TopicName}}/{{$questionName}}')" aria-hidden="true"></i>
-                        </div>
-                        @elseif($lm==2)
-                        <div class="p-1">
-                            <small onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' class="fw-normal fs-6  unselect underline"> Place ( {{$answer_votes}} </small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share float-end" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url('https://ifave.com/category/{{$TopicName}}/{{$questionName}}')" aria-hidden="true"></i>
-                        </div>
-                        @elseif($lm==3)
-                        <div class="p-1">
-                            <small onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' class="fw-normal fs-6  unselect underline"> Place ( {{$answer_votes}} </small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code float-end" onclick="generate_embeded_code('https://ifave.com/category/{{$TopicName}}/{{$questionName}}')" aria-hidden="true"></i>
-                        </div>
-                        @endif
-                        @php
-                        $lm=$lm+1;
-                        @endphp
-                        @endforeach
-                        @else
-                        @if(count($answers) > 1)
-                        @for($m=0; $m < count($answers);$m++) @php  preg_match('/^(.*)(\(Faves: \d+\))$/', $answers[$m], $matches); $text=$matches[1]; $faves=$matches[2]; if (strlen($text)> 18) {
-                            $text = substr($text, 0, 18) . '...';
-                            }
-                            $to_answer = $text . $faves;
+                            @if (file_exists(public_path(' images/question_images/ifave_images/'.$question_image))) <img onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' src="/images/question_images/ifave_images/{{$question_image}}" class="img-fluid zoom-block" height="325px" width="325px" alt="...">
+                                @else
+                                <img onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' src="/images/question_images/ifave.jpg" class="img-fluid zoom-block" height="325px" width="325px" alt="...">
+                                @endif
+                            </div>
+                            @if(!$exists)
+                            @php
+                            $lm=1;
                             @endphp
-                            @if($m==0)
-                            <div class="p-1 mt-4"> <small onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' class="fw-normal fs-6  unselect underline"> {{$to_answer}}</small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone float-end" onclick="copy_url('https://ifave.com/category/{{$TopicName}}/{{$questionName}}')" aria-hidden="true"></i>
+                            @foreach ($answers as &$answer)
+                            @php
+                            $answer_votes = substr($answer, strpos($answer, "( Faves") + 1);
+                            @endphp
+                            @if($lm==1)
+                            <div class="p-1 mt-4">
+                                <small onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' class="fw-normal fs-6  unselect underline"> Place ( {{$answer_votes}} </small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone float-end" onclick="copy_url('https://ifave.com/category/{{$TopicName}}/{{$questionName}}')" aria-hidden="true"></i>
                             </div>
-                            @elseif($m==1)
-                            <div class="p-1"> <small onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' class="fw-normal fs-6  unselect underline"> {{$to_answer}}</small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share float-end" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url('https://ifave.com/category/{{$TopicName}}/{{$questionName}}')" aria-hidden="true"></i>
+                            @elseif($lm==2)
+                            <div class="p-1">
+                                <small onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' class="fw-normal fs-6  unselect underline"> Place ( {{$answer_votes}} </small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share float-end" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url('https://ifave.com/category/{{$TopicName}}/{{$questionName}}')" aria-hidden="true"></i>
                             </div>
-                            @elseif($m==2)
-                            <div class="p-1"> <small onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' class="fw-normal fs-6  unselect underline"> {{$to_answer}}</small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code float-end" onclick="generate_embeded_code('https://ifave.com/category/{{$TopicName}}/{{$questionName}}','{{$question->question}}')" aria-hidden="true"></i>
+                            @elseif($lm==3)
+                            <div class="p-1">
+                                <small onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' class="fw-normal fs-6  unselect underline"> Place ( {{$answer_votes}} </small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code float-end" onclick="generate_embeded_code('https://ifave.com/category/{{$TopicName}}/{{$questionName}}')" aria-hidden="true"></i>
                             </div>
                             @endif
-                            @endfor 
-                            @endif
-                            @endif
-                            <!-- <div class="text-center"><a href="/questions_details/{{$question->question_id}}" class="btn btn-primary m-2">Show me more</a></div> -->
+                            @php
+                            $lm=$lm+1;
+                            @endphp
+                            @endforeach
+                            @else
+                            @if(count($answers) > 1)
+                            @for($m=0; $m < count($answers);$m++) @php preg_match('/^(.*)(\(Faves: \d+\))$/', $answers[$m], $matches); $text=$matches[1]; $faves=$matches[2]; if (strlen($text)> 18) {
+                                $text = substr($text, 0, 18) . '...';
+                                }
+                                $to_answer = $text . $faves;
+                                @endphp
+                                @if($m==0)
+                                <div class="p-1 mt-4"> <small onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' class="fw-normal fs-6  unselect underline"> {{$to_answer}}</small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-clone float-end" onclick="copy_url('https://ifave.com/category/{{$TopicName}}/{{$questionName}}')" aria-hidden="true"></i>
+                                </div>
+                                @elseif($m==1)
+                                <div class="p-1"> <small onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' class="fw-normal fs-6  unselect underline"> {{$to_answer}}</small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-share float-end" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url('https://ifave.com/category/{{$TopicName}}/{{$questionName}}')" aria-hidden="true"></i>
+                                </div>
+                                @elseif($m==2)
+                                <div class="p-1"> <small onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' class="fw-normal fs-6  unselect underline"> {{$to_answer}}</small> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-code float-end" onclick="generate_embeded_code('https://ifave.com/category/{{$TopicName}}/{{$questionName}}','{{$question->question}}')" aria-hidden="true"></i>
+                                </div>
+                                @endif
+                                @endfor
+                                @endif
+                                @endif
+                                <!-- <div class="text-center"><a href="/questions_details/{{$question->question_id}}" class="btn btn-primary m-2">Show me more</a></div> -->
+                        </div>
                     </div>
                 </div>
-            </div>
-            @php
+                @php
 
-            @endphp
-            @endforeach
-            <div class="pagination justify-content-center">
-                {{ $questions->links('pagination::bootstrap-5') }}
+                @endphp
+                @endforeach
+                <div class="pagination justify-content-center">
+                    {{ $questions->links('pagination::bootstrap-5') }}
+                </div>
             </div>
-        </div>
-        <div class="text-center" id="pagination">
-            <!-- Pagination controls will be added dynamically -->
+            <div class="text-center" id="pagination">
+                <!-- Pagination controls will be added dynamically -->
+            </div>
         </div>
     </div>
-</div>
 </div>
 </div>
 <!-- Modal -->

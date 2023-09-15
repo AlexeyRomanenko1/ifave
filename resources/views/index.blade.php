@@ -4,7 +4,7 @@
 <div class="container mt-5">
     <div class="text-center">
         <a href="" data-bs-toggle="modal" data-bs-target="#topics_modal">
-            <h3 class="mb-3"> Select location</h3>
+            <h3 class="mb-3 organic-margin"> Select location</h3>
         </a>
         @if(count($get_last_three_locations) > 0)
         <div class="mb-3">

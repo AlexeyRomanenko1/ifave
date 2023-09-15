@@ -408,7 +408,7 @@ button#imageManager-1 {
     .fav_tracks_parent {
         /* margin-top: 5rem;
         margin-bottom: 1rem; */
-        left: 40px;
+        left: 38px;
         right: o;
         top: 0;
         margin-right: 50px;
@@ -417,9 +417,14 @@ button#imageManager-1 {
         flex-direction: column;
         align-items: center;
     }
-
+    .table>:not(caption)>*>* {
+        padding: .2rem .2rem;
+        background-color: var(--bs-table-bg);
+        border-bottom-width: 1px;
+        box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+    }
     .user_faves_track {
-        margin-top: 2rem;
+        margin-top: 1rem;
         margin-bottom: 2rem;
     }
 
@@ -434,11 +439,11 @@ button#imageManager-1 {
 
 @media screen and (max-width: 415px) {
     .fav_tracks_parent {
-        margin-top: 5rem;
+        margin-top: 6rem;
         margin-bottom: 5rem;
-        left: -8px;
+        left: -76px;
         right: 0;
-        top: 0;
+        top: 5px;
         margin-right: 50px;
         display: flex;
         justify-content: center;
@@ -447,10 +452,12 @@ button#imageManager-1 {
     }
 
     .user_faves_track {
-        margin-top: 2rem;
+        margin-top: 0rem;
         margin-bottom: 2rem;
     }
-
+    .topic-mt-5 {
+        margin-top: 5rem!important;
+    }
     .fav_tracks {
         width: auto;
         bottom: 230px !important;
@@ -458,6 +465,12 @@ button#imageManager-1 {
 
     .h-fixed-30 {
         height: 90px;
+    }
+    .table>:not(caption)>*>* {
+        padding: .2rem .2rem;
+        background-color: var(--bs-table-bg);
+        border-bottom-width: 1px;
+        box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
     }
 }
 
@@ -477,14 +490,14 @@ button#imageManager-1 {
     }
     .fav_tracks {
         width: auto;
-        bottom: 186px !important;
+        bottom: 182px !important;
     }
 }
 
 @media screen and (max-width: 768px) and (min-width: 415px) {
     .fav_tracks_parent {
         /* left: -90px; */
-        left: -130px;
+        left: -165px;
         right: 0;
         top: 22px;
         margin-right: 50px;
@@ -516,6 +529,9 @@ button#imageManager-1 {
 @media (max-width: 1200px) {
     .slick-slide {
         padding: 5px;
+    }
+    .organic-margin{
+        margin-top: 3rem !important;
     }
 }
 
