@@ -984,9 +984,10 @@ class indexController extends Controller
                 ->offset(0)
                 ->limit(3)
                 ->get();
+               
             $link_exsistance = 0;
             foreach ($get_last_three_locations as $recent_location) {
-                if ($recent_location->location == $header_info) {
+                if ($recent_location->location_link == $header_info) {
                     $link_exsistance = 1;
                 }
             }
