@@ -25,26 +25,30 @@
             <div class="mt-3">
                 @php
                 $content = $post->blog_content;
-                $pattern = '/<span[^>]*style=[\'"](.*?)[\'"][^>]*><img[^>]*><\/span>/is';
+                $doc = new DOMDocument();
+@$doc->loadHTML($content); // Suppress warnings
 
-// Use preg_replace_callback to modify the <span> elements
-$updatedContent = preg_replace_callback($pattern, function($matches) {
-    $spanTag = $matches[0];
-    
-    // Remove 'style' attribute from the <span> tag
-    $cleanedSpanTag = preg_replace('/\s+style=[\'"][^\'"]*[\'"]/', '', $spanTag);
-    
-    $imgTag = $matches[1];
-    
+// Create a DOMXPath instance to query the document
+$xpath = new DOMXPath($doc);
+
+// Find all <span> elements containing <img> tags
+$spanImgElements = $xpath->query('//span/img');
+
+foreach ($spanImgElements as $imgElement) {
     // Remove 'style', 'width', and 'height' attributes from the <img> tag
-    $cleanedImgTag = preg_replace('/\s+(style|width|height)=[\'"][^\'"]*[\'"]/', '', $imgTag);
-    
-    // Add the 'img-fluid' class to the modified <img> tag
-    $modifiedImgTag = str_replace('<img', '<img class="img-fluid"', $cleanedImgTag);
-    
-    // Return the modified <span> element
-    return $cleanedSpanTag . $modifiedImgTag;
-}, $content);
+    $imgElement->removeAttribute('style');
+    $imgElement->removeAttribute('width');
+    $imgElement->removeAttribute('height');
+
+    // Add the 'img-fluid' class to the <img> tag
+    $class = $imgElement->getAttribute('class');
+    $class .= ' img-fluid';
+    $imgElement->setAttribute('class', trim($class));
+}
+
+// Get the updated HTML content
+$updatedContent = $doc->saveHTML();
+
 
 
                         @endphp
