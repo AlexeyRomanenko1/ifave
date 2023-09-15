@@ -17,6 +17,7 @@ use ZipArchive;
 use Mews\Purifier\Facades\Purifier;
 use Illuminate\Support\Str;
 use DOMDocument;
+
 class BlogController extends Controller
 {
     //
@@ -228,14 +229,17 @@ class BlogController extends Controller
         }
 
         $doc = new DOMDocument();
-        $doc->loadHTML($updated_content);
+        $doc->loadHTML(mb_convert_encoding($updated_content, 'HTML-ENTITIES', 'UTF-8'));
+
+        // Enable libxml errors and warnings again
+        libxml_use_internal_errors(false);
         $imgTags = $doc->getElementsByTagName('img');
 
         // Add the 'img-fluid' class to each <img> tag
         foreach ($imgTags as $imgTag) {
             $imgTag->setAttribute('class', 'img-fluid');
         }
-        
+
         // Save the modified content
         $modifiedContent = $doc->saveHTML();
 
@@ -265,7 +269,7 @@ class BlogController extends Controller
         $latest_posts = DB::table('posts')->select('*')->where('status', 1)->orderByDesc('created_at')->limit(5)->get();
         $blog_title = DB::table('posts')->where('slug', $slug)->pluck('title');
         $page_title = 'iFave Blog - ' . $blog_title[0];
-        return view('posts.post_details', compact('posts', 'latest_posts', 'keywords', 'meta_description', 'page_title', 'popular_questions','modifiedContent'));
+        return view('posts.post_details', compact('posts', 'latest_posts', 'keywords', 'meta_description', 'page_title', 'popular_questions', 'modifiedContent'));
     }
     public function upvote_post(Request $request)
     {
