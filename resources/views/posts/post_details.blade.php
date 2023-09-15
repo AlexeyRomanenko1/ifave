@@ -115,6 +115,10 @@
      $(document).ready(function() {
         // Add the img-fluid class to all <img> tags within the #content div
         $('#blog_content img').addClass('img-fluid');
+        $('#content span:has(img)').each(function() {
+           // Remove the 'style' attribute from the <span> element
+           $(this).removeAttr('style');
+       });
     });
     function handleScreenWidthChange(mq) {
         if (mq.matches) {
