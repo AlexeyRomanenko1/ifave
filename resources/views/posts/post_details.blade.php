@@ -25,32 +25,7 @@
             <div class="mt-3">
                 @php
                 $content = $post->blog_content;
-                // Find all <span> elements containing <img> tags with styles
-$dom = new DOMDocument();
-$dom->loadHTML($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-$xpath = new DOMXPath($dom);
-
-$spanImgElements = $xpath->query('//span[@style][img[@class="fr-fic fr-dii img-fluid"]]');
-
-foreach ($spanImgElements as $spanElement) {
-    // Remove the 'style' attribute from the <span> element
-    $spanElement->removeAttribute('style');
-
-    // Remove 'style', 'width', and 'height' attributes from the <img> tag
-    $imgElement = $spanElement->getElementsByTagName('img')->item(0);
-    $imgElement->removeAttribute('style');
-    $imgElement->removeAttribute('width');
-    $imgElement->removeAttribute('height');
-
-    // Add the 'img-fluid' class to the <img> tag
-    $imgElement->setAttribute('class', 'img-fluid');
-}
-
-// Get the updated HTML content
-$updatedContent = $dom->saveHTML();
-
-
-
+                $updatedContent=$content;
                         @endphp
                         {!! $updatedContent !!}
             </div>
