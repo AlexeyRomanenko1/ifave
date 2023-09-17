@@ -241,7 +241,19 @@ $('#search_categories').on('keyup', function () {
             let obj = JSON.parse(data);
             if (obj.data.length > 0) {
                 for (let j = 0; j < obj.data.length; j++) {
-                    html += '<div class="col-md-6"><ul><li> <h6><a href="/category/' + $('#topicName').val().replace(/ /g, "-") + '/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
+                    html += '<p><b>' + obj.data[j]['question_category'] + '</b></p>'
+                    let questions = obj.data[j]['questions'].split(',');
+                    html+='<div class="container"><ul>';
+                    for (var i = 0; i < questions.length; i++) {
+                        // Trim any leading/trailing spaces from each value
+                        let trimmedValue = questions[i].trim();
+
+                        // Perform any desired operations on each value here
+                        // For demonstration purposes, we'll just log each value to the console
+                      html+='<li> <h6><a href="category/' + $('#topicName').val().replace(/ /g, "-") + '/' + trimmedValue.replace(/ /g, "-") + '">' + trimmedValue + '</a></h6></li>';
+                    }
+                    html+='</ul></div>';
+                    // html += '<div class="col-md-6"><ul><li> <h6><a href="category/' + $('#topicName').val().replace(/ /g, "-") + '/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
                 }
             }
             $('#on_search_category').empty();
@@ -289,7 +301,19 @@ $('#open_search_category_modal').on('click', function () {
             let obj = JSON.parse(data);
             if (obj.data.length > 0) {
                 for (let j = 0; j < obj.data.length; j++) {
-                    html += '<div class="col-md-6"><ul><li> <h6><a href="category/' + $('#topicName').val().replace(/ /g, "-") + '/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
+                    html += '<p><b>' + obj.data[j]['question_category'] + '</b></p>'
+                    let questions = obj.data[j]['questions'].split(',');
+                    html+='<div class="container"><ul>';
+                    for (var i = 0; i < questions.length; i++) {
+                        // Trim any leading/trailing spaces from each value
+                        let trimmedValue = questions[i].trim();
+
+                        // Perform any desired operations on each value here
+                        // For demonstration purposes, we'll just log each value to the console
+                      html+='<li> <h6><a href="category/' + $('#topicName').val().replace(/ /g, "-") + '/' + trimmedValue.replace(/ /g, "-") + '">' + trimmedValue + '</a></h6></li>';
+                    }
+                    html+='</ul></div>';
+                    // html += '<div class="col-md-6"><ul><li> <h6><a href="category/' + $('#topicName').val().replace(/ /g, "-") + '/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
                 }
             }
             $('#on_search_category').empty();

@@ -446,9 +446,46 @@ class indexController extends Controller
         $tosearch = $request->search;
         $topicName = $request->id;
         if (strlen($tosearch) > 0) {
-            $query = DB::table('questions')->where('topic_id', $topicName)->where('question', 'like', '%' . $tosearch . '%')->get();
+            //$query = DB::table('questions')->where('topic_id', $topicName)->where('question', 'like', '%' . $tosearch . '%')->get();
+            $query = DB::table(function ($query) use ($topicName, $tosearch) {
+                $query->select([
+                    'cat_group AS question_category',
+                    'question',
+                    DB::raw('@row_number := IF(@prev_cat_group = cat_group, @row_number + 1, 1) AS question_order'),
+                    DB::raw('@prev_cat_group := cat_group'),
+                ])
+                ->from('questions')
+                ->where('topic_id', '=', $topicName)
+                ->where('question', 'like', '%'.$tosearch.'%')
+                ->orderBy('cat_group');
+            }, 'subquery')
+            ->groupBy('question_category')
+            ->select([
+                'question_category',
+                DB::raw('GROUP_CONCAT(CONCAT(question) ORDER BY question_order) AS questions')
+            ])
+            ->orderByDesc('questions')
+            ->get();
         } else {
-            $query = DB::table('questions')->where('topic_id', $topicName)->get();
+            // $query = DB::table('questions')->where('topic_id', $topicName)->get();
+            $query=DB::table(DB::raw('(SELECT
+            cat_group AS question_category,
+            question,
+            @row_number := IF(@prev_cat_group = cat_group, @row_number + 1, 1) AS question_order,
+            @prev_cat_group := cat_group
+        FROM
+            questions
+         WHERE
+            topic_id = '.$topicName.'
+        ORDER BY
+            cat_group) AS subquery'))
+            ->select([
+                'question_category',
+                DB::raw('GROUP_CONCAT(CONCAT(question) ORDER BY question_order) AS questions')
+            ])
+            ->groupBy('question_category')
+            ->orderBy('questions', 'DESC')
+            ->get();
         }
         return json_encode([
             'success' => 1,
