@@ -194,8 +194,8 @@
                         </div>
                         <div class="suggestions p-1"></div>
                         <div class="text-center">
-                            @if (file_exists(public_path(' images/question_images/ifave_images/'.$question_image))) <img onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' src="/images/question_images/ifave_images/{{$question_image}}" class="img-fluid zoom-block" height="325px" width="325px" alt="...">
-                                @else
+                            @if (file_exists(public_path('images/question_images/ifave_images/'.$question_image))) <img onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' src="/images/question_images/ifave_images/{{$question_image}}" class="img-fluid zoom-block" height="325px" width="325px" alt="...">
+                            @else
                                 <img onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' src="/images/question_images/ifave.jpg" class="img-fluid zoom-block" height="325px" width="325px" alt="...">
                                 @endif
                             </div>
