@@ -418,7 +418,7 @@ $('#search_categories').on('keyup', function () {
 
                         // Perform any desired operations on each value here
                         // For demonstration purposes, we'll just log each value to the console
-                      html+='<li> <h6><a href="category/' + $('#topicName').val().replace(/ /g, "-") + '/' + trimmedValue.replace(/ /g, "-") + '">' + trimmedValue + '</a></h6></li>';
+                      html+='<li> <h6><a href="/category/' + $('#topicName').val().replace(/ /g, "-") + '/' + trimmedValue.replace(/ /g, "-") + '">' + trimmedValue + '</a></h6></li>';
                     }
                     html+='</ul></div>';
                     // html += '<div class="col-md-6"><ul><li> <h6><a href="category/' + $('#topicName').val().replace(/ /g, "-") + '/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
@@ -454,7 +454,7 @@ $('#open_search_category_modal').on('click', function () {
 
                         // Perform any desired operations on each value here
                         // For demonstration purposes, we'll just log each value to the console
-                      html+='<li> <h6><a href="category/' + $('#topicName').val().replace(/ /g, "-") + '/' + trimmedValue.replace(/ /g, "-") + '">' + trimmedValue + '</a></h6></li>';
+                      html+='<li> <h6><a href="/category/' + $('#topicName').val().replace(/ /g, "-") + '/' + trimmedValue.replace(/ /g, "-") + '">' + trimmedValue + '</a></h6></li>';
                     }
                     html+='</ul></div>';
                     // html += '<div class="col-md-6"><ul><li> <h6><a href="category/' + $('#topicName').val().replace(/ /g, "-") + '/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
