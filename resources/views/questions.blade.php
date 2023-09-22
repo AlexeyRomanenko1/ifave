@@ -106,12 +106,16 @@
     </div>
     @if($thoughts !=='' || $thoughts !='' || $thoughts != NULL)
     <div class="container mb-4 mt-2">
+        <div class="d-none hidden-cotnent">
+            {!! $thoughts !!}
+        </div>
         <div class="thoughts-content for-full-screen d-none">
-            <div class="half-comment half-thoughts">{!! substr(strip_tags($thoughts), 0, 1000) !!} <span class="read-more-thoughts">... Read More</span></div>
+            <div class="half-comment half-thoughts half-thoughts-full-screen"> </div><span class="read-more-thoughts">... Read More</span>
             <span class="full-comment" style="display: none;">{!! $thoughts !!}</span>
         </div>
+
         <div class="thoughts-content for-mobile-screen d-none">
-            <div class="half-comment half-thoughts">{!! substr(strip_tags($thoughts), 0, 450) !!} <span class="read-more-thoughts">... Read More</span></div>
+            <div class="half-comment half-thoughts"></div> <span class="read-more-thoughts">... Read More</span>
             <span class="full-comment" style="display: none;">{!! $thoughts !!}</span>
         </div>
     </div>
@@ -355,7 +359,7 @@
                 @csrf
                 <div class="modal-body">
                     <input type="hidden" name="question_id" value="{{$question_id}}">
-                    <textarea class="form-control" name="thoughts" id="thoughts" rows="3" data-upload-url="{{ route('upload_content_image') }}" value="{!! $thoughts !!}"></textarea>
+                    <textarea class="form-control" name="thoughts" id="thoughts" rows="3" data-upload-url="{{ route('upload_content_image') }}">{!! $thoughts !!}</textarea>
                     <small id="content_error" class="text-danger d-none">This fied is required</small>
                 </div>
                 <div class="modal-footer">

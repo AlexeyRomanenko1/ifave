@@ -29,11 +29,30 @@
     let screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 
     if (screenWidth <= 768) {
-       // deviceSize = 'mobile';
-       $('.for-mobile-screen').removeClass('d-none')
+        // deviceSize = 'mobile';
+        $('.for-mobile-screen').removeClass('d-none')
+        let str = $('.hidden-cotnent').html();
+        if (str.length > 450) {
+            str = str.slice(0, 450);
+        }
+        //console.log(str)
+        var el = document.implementation.createHTMLDocument().createElement('div');
+        el.innerHTML = str;
+        str = el.innerHTML;
+        $('.half-thoughts-full-screen').html(str);
     } else {
-       // deviceSize = 'desktop';
-       $('.for-full-screen').removeClass('d-none')
+        // deviceSize = 'desktop';
+        $('.for-full-screen').removeClass('d-none')
+        //    var str = "This <small>is <i>ONE</small> Messed up string</i><strong>.";
+        let str = $('.hidden-cotnent').html();
+        if (str.length > 1000) {
+            str = str.slice(0, 1000);
+        }
+        //console.log(str)
+        var el = document.implementation.createHTMLDocument().createElement('div');
+        el.innerHTML = str;
+        str = el.innerHTML;
+        $('.half-thoughts-full-screen').html(str);
     }
 })()
 
@@ -109,7 +128,7 @@ $('.content_images').on('change', function (e) {
 })
 
 
-$('.reply-btn').click(function(e) {
+$('.reply-btn').click(function (e) {
     e.preventDefault();
     const commentId = $(this).data('comment-id');
     $(`.reply-form-${commentId}`).toggle();

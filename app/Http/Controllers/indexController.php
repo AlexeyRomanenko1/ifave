@@ -948,7 +948,7 @@ class indexController extends Controller
             $topics = DB::table('topics')->select('*')
                 ->where('topic_name', 'like', '%' . $tosearch . '%')
                 ->orderBy('topic_name', 'desc')
-                ->limit(150) 
+                ->limit(100) 
                 ->get();
         } else {
             $topics = DB::table('topics')->select('*')
