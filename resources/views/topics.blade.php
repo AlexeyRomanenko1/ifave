@@ -4,7 +4,7 @@
 <input type="hidden" value="{{$header_info}}" name="topic_name" id="topic_name">
 <input type="hidden" value="{{str_replace(' ','-',$topicName)}}" name="topicName" id="topicName">
 <!-- {{ Route::currentRouteName() }} -->
-<div class="container topic-mt-5">
+<div class="container mt-5">
 <div class="text-center">
         <a href="" data-bs-toggle="modal" data-bs-target="#topics_modal">
             <h3 class="mb-3 organic-margin"> Select location</h3>
