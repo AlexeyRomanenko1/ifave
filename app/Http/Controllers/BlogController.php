@@ -60,7 +60,7 @@ class BlogController extends Controller
         $blog_content = $request->blog_content;
         $user_id = Auth::id();
         $slug = str_replace(" ", "-", $request->blog_title) . "-" . $user_id . "-" . date('m-d-Y-his');
-
+        $slug = str_replace('?', '-', $slug);
         if ($request->hasFile('featured_image') && $request->file('featured_image')->isValid()) {
             $file = $request->file('featured_image');
             $allowedExtensions = ['jpg', 'jpeg', 'png', 'JPG', 'JPEG', 'PNG'];
@@ -223,9 +223,9 @@ class BlogController extends Controller
             ->where('posts.slug', $slug)
             ->get();
 
-        
 
-            
+
+
         foreach ($posts as $post_location) {
             $this_post_location = $post_location->topic_id;
             // return $this_post_location;
@@ -249,7 +249,7 @@ class BlogController extends Controller
         // Extract the plain text content
         $meta_description = strip_tags($meta_description);
         $meta_description =  Str::limit($meta_description, 160, '...');
-        $latest_posts = DB::table('posts')->select('*')->where('status',1)->orderByDesc('created_at')->limit(5)->get();
+        $latest_posts = DB::table('posts')->select('*')->where('status', 1)->orderByDesc('created_at')->limit(5)->get();
         $blog_title = DB::table('posts')->where('slug', $slug)->pluck('title');
         $page_title = 'iFave Blog - ' . $blog_title[0];
         return view('posts.post_details', compact('posts', 'latest_posts', 'keywords', 'meta_description', 'page_title', 'popular_questions'));

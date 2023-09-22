@@ -904,7 +904,7 @@ class indexController extends Controller
 
     public function get_topics(Request $request)
     {
-        $query = DB::table('topics')->select('*')->orderBy('topic_name', 'desc')->get();
+        $query = DB::table('topics')->select('*')->orderBy('topic_name', 'desc') ->limit(150)->get();
         return json_encode([
             'success' => 1,
             'data' => $query
@@ -948,6 +948,7 @@ class indexController extends Controller
             $topics = DB::table('topics')->select('*')
                 ->where('topic_name', 'like', '%' . $tosearch . '%')
                 ->orderBy('topic_name', 'desc')
+                ->limit(150) 
                 ->get();
         } else {
             $topics = DB::table('topics')->select('*')

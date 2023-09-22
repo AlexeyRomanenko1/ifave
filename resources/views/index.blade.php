@@ -16,7 +16,7 @@
         <div class="container position-relative fav_tracks_parent">
             <div class="position-absolute fav_tracks">
                 <div class="container">
-                    <table class="table table-bordered border-blue user_faves_track">
+                    <table class="table table-bordered rounded shadow border-blue user_faves_track">
                         <thead>
                             <td>
                                 <p class="fs-6"><b>My faves</b></p>
