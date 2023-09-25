@@ -76,9 +76,7 @@
                     <label for="select_location" class="form-label">Location<b class="text-danger">*</b></label>
                     <select class="select-2 form-control" id="select_location" name="topic_id" aria-label="Select Location">
                         <option selected disabled>Select Location</option>
-                        @foreach($topics as $all_topic)
-                        <option value="{{$all_topic->id}}">{{$all_topic->topic_name}}</option>
-                        @endforeach
+                       
                     </select>
                     <small id="location_error" class="text-danger d-none">This fied is required</small>
                 </div>
