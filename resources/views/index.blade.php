@@ -128,8 +128,7 @@
                                 @elseif($col_md==12)
                                 {!! substr(strip_tags($post->blog_content), 0, 700) !!}... <br><br>
                                 @endif
-                                <small> {{ date('d-m-Y', strtotime($post->created_at)) }}</small><br>
-                                <small> {{$post->name}}</small>
+                                
                             </div>
                         </div>
                     </div>
@@ -165,8 +164,7 @@
                             @elseif($col_md==12)
                             {!! substr(strip_tags($post->blog_content), 0, 700) !!}... <br><br>
                             @endif
-                            <small> {{ date('d-m-Y', strtotime($post->created_at)) }}</small><br>
-                            <small> {{$post->name}}</small>
+                           
                         </div>
                     </div>
                 </div>

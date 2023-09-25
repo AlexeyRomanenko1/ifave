@@ -40,7 +40,7 @@
             <div class="mt-2">
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-4"><small><b>Author:</b> {{$post->name}}</small></div>
+                        <div class="col-md-4"><small><b>Author:</b> <a href="/blogger/{{str_replace(' ','-',$post->name)}}">{{$post->name}}</a></small></div>
                         <div class="col-md-4"><small class="float-end"><b>Date:</b> {{ date('d-m-Y', strtotime($post->created_at)) }}</small></div>
                         <div class="col-md-4"><small class="float-end"><b>Views:</b> {{ number_format($post->views_count, 0, '.', ',')}}</small></div>
                     </div>
