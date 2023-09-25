@@ -27,7 +27,7 @@
         }
     })
     let screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-
+    if ($('.hidden-cotnent').length) {
     if (screenWidth <= 768) {
         // deviceSize = 'mobile';
         $('.for-mobile-screen').removeClass('d-none')
@@ -54,6 +54,7 @@
         str = el.innerHTML;
         $('.half-thoughts-full-screen').html(str);
     }
+}
 })()
 
 
