@@ -104,11 +104,12 @@
             </div>
         </div>
     </div>
-    @if($thoughts !=='' || $thoughts !='' || $thoughts != NULL)
-    <div class="container mb-4 mt-2">
-        <div class="d-none hidden-cotnent">
+    <div class="d-none hidden-cotnent">
             {!! $thoughts !!}
         </div>
+    @if($thoughts !=='' || $thoughts !='' || $thoughts != NULL)
+    <div class="container mb-4 mt-2">
+       
         <div class="thoughts-content for-full-screen d-none">
             <div class="half-comment half-thoughts half-thoughts-full-screen"> </div><span class="read-more-thoughts">... Read More</span>
             <span class="full-comment" style="display: none;">{!! $thoughts !!}</span>
