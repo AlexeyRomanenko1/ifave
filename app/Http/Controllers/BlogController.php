@@ -115,7 +115,7 @@ class BlogController extends Controller
     public function show_blogs(Request $request)
     {
         //query to get posts data 
-        $perPage = 50; // Number of items per page
+        $perPage = 52; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
         $posts = DB::table('posts')
             ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
@@ -398,7 +398,7 @@ class BlogController extends Controller
 
         $topic_id = $topic_id[0];
         $categories = DB::table('questions')->select('*')->where('topic_id', $topic_id)->get();
-        $perPage = 50; // Number of items per page
+        $perPage = 52; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
         if ($question != 'All Categories') {
             $question_id = DB::table('questions')
@@ -569,7 +569,7 @@ class BlogController extends Controller
             ->pluck('id');
         $user_id = $user_id[0];
         //query to get posts data 
-        $perPage = 50; // Number of items per page
+        $perPage = 52; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
         $posts = DB::table('posts')
             ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
@@ -627,7 +627,7 @@ class BlogController extends Controller
     }
     public function searchBlogs(Request $request)
     {
-        $perPage = 50; // Number of items per page
+        $perPage = 52; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
         if (isset($request->topic_slug) && isset($request->question_slug)) {
             $topic = str_replace('-', " ", $request->topic_slug);
