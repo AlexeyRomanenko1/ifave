@@ -231,17 +231,28 @@ class BlogController extends Controller
             // return $this_post_location;
         }
         // return $slug;
+        // $popular_questions = DB::table('questions')
+        //     ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+        //     ->join('topics', 'questions.topic_id', '=', 'topics.id')
+        //     ->select('questions.question', 'topics.topic_name')
+        //     ->where('questions.topic_id', '=', $this_post_location)
+        //     ->orderBy('questions_answer.vote_count', 'Asc')
+        //     ->distinct()
+        //     ->offset(1)
+        //     ->limit(5)
+        //     ->get();
         $popular_questions = DB::table('questions')
-            ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
-            ->join('topics', 'questions.topic_id', '=', 'topics.id')
-            ->select('questions.question', 'topics.topic_name')
-            ->where('questions.topic_id', '=', $this_post_location)
-            ->orderBy('questions_answer.vote_count', 'DESC')
-            ->distinct()
-            ->offset(1)
-            ->limit(5)
-            ->get();
-
+        ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+        ->join('topics', 'questions.topic_id', '=', 'topics.id')
+        ->select('questions.question', 'topics.topic_name')
+        ->selectRaw('SUM(questions_answer.vote_count) as total_vote_count')
+        ->where('questions.topic_id', '=', $this_post_location)
+        ->groupBy('questions.id', 'questions.question', 'topics.topic_name')
+        ->orderBy('total_vote_count', 'DESC')
+        ->offset(0) // Remove offset or adjust it as needed
+        ->limit(5)
+        ->get();
+    
         $keywords = DB::table('posts')->where('slug', $slug)->pluck('tags');
         $keywords = $keywords[0];
         $meta_description = DB::table('posts')->where('slug', $slug)->pluck('blog_content');
