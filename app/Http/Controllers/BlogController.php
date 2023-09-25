@@ -187,7 +187,7 @@ class BlogController extends Controller
         $keywords = 'ifave, ifave blogs, bloggers';
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title = 'iFave - Blogs';
-        $topics = DB::table('topics')->select('*')->get();
+        $topics = DB::table('topics')->select('*')->limit(200)->get();
         return view('posts.blog', compact('posts', 'bloggers', 'topics', 'keywords', 'meta_description', 'page_title'));
     }
     public function blog_details(Request $request, $slug)
@@ -467,7 +467,7 @@ class BlogController extends Controller
         $keywords = 'ifave, ifave blogging, blogging';
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title = 'iFave - Blogs - ' . $topic . ' - ' . $question;
-        $topics = DB::table('topics')->select('*')->get();
+        $topics = DB::table('topics')->select('*')->limit(200)->get();
         return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'categories', 'page_title', 'keywords', 'meta_description'));
     }
 
@@ -558,7 +558,7 @@ class BlogController extends Controller
         $keywords = 'ifave, ifave blogging, blogging';
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title = 'iFave - Blogger ' . $name . ' - ' . $topic . ' - ' . $question;
-        $topics = DB::table('topics')->select('*')->get();
+        $topics = DB::table('topics')->select('*')->limit(200)->get();
         return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'name', 'categories', 'keywords', 'meta_description', 'page_title'));
     }
     public function blogger_filter(Request $request, $user_name)
@@ -622,7 +622,7 @@ class BlogController extends Controller
         $keywords = 'ifave, ifave blogging, blogging';
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title = 'iFave - Blogger - ' . $name;
-        $topics = DB::table('topics')->select('*')->get();
+        $topics = DB::table('topics')->select('*')->limit(200)->get();
         return view('posts.blog', compact('posts', 'bloggers', 'topics', 'name', 'keywords', 'meta_description', 'page_title'));
     }
     public function searchBlogs(Request $request)
@@ -691,7 +691,7 @@ class BlogController extends Controller
             return redirect()->route('/');
         }
         $post_details = DB::table('posts')->select('*')->where('id', $blog_id)->where('user_id', $clientIP)->get();
-        $topics = DB::table('topics')->select('*')->get();
+        $topics = DB::table('topics')->select('*')->limit(200)->get();
         $keywords = 'ifave, ifave blogging, blogging';
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title = 'iFave - Edit Blogs';
@@ -771,6 +771,28 @@ class BlogController extends Controller
             ]);
         }
     }
+
+    public function search_blog_cat(Request $request)
+    {
+        $term = $request->input('q');
+        if (empty($term)) {
+            $topics = DB::table('topics')->select('*')->limit(100)->get();
+            //return response()->json(['items' => $topics]);
+            return $topics;
+        } else {
+            // return $request->q;
+            $topics = DB::table('topics')->select('*')->where('topic_name', 'like', '%' . $request->q . '%')->limit(100)->get();
+            //return response()->json(['items' => $topics]);
+            return $topics;
+        }
+
+    }
+    // public function search_blog_cat_q(Request $request, $q)
+    // {
+    //     $topics = DB::table('topics')->select('*')->where('topic_name', 'like', '%' . $q . '%')->limit(100)->get();
+    //     //return response()->json(['items' => $topics]);
+    //     return $topics;
+    // }
     public function getClientIP(Request $request)
     {
         $ip = $request->getClientIp();

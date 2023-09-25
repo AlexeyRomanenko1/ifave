@@ -8,18 +8,18 @@
             // Customize the buttons you want to show in the toolbar.
             // Remove 'insertVideo' to exclude it. Keep 'insertImage'.
             moreText: {
-              buttons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor']
+                buttons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor']
             },
             moreParagraph: {
-              buttons: ['alignLeft', 'alignCenter', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent', 'quote']
+                buttons: ['alignLeft', 'alignCenter', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent', 'quote']
             },
             moreRich: {
-              buttons: ['insertImage', 'insertLink', 'insertTable', 'emoticons', 'fontAwesome', 'specialCharacters']
+                buttons: ['insertImage', 'insertLink', 'insertTable', 'emoticons', 'fontAwesome', 'specialCharacters']
             },
             moreMisc: {
-              buttons: ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'spellChecker', 'selectAll', 'html', 'help']
+                buttons: ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'spellChecker', 'selectAll', 'html', 'help']
             }
-          },
+        },
         imageUploadURL: uploadUrl,
         imageUploadMethod: 'POST', // Set the method to POST
         imageUploadParams: {
@@ -28,7 +28,44 @@
     })
     // $('#imageManager-1').addClass('d-none');
     // $("#select_location").customselect();
-    $("#select_location").select2();
+    // $("#select_location").select2();
+    $("#select_location").select2({
+        ajax: {
+            url: '/search_blog_cat', // Replace with your Laravel route URL
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term, // Search term from user input
+                    page: params.page
+                };
+            },
+            processResults: function (data, params) {
+                // console.log(data)
+                var options = [];
+
+                // Assuming data.items is an array of objects with "id" and "text" properties
+                if (data) {
+                    options = data.map(function (item) {
+                        return {
+                            id: item.id + '-' + item.topic_name,
+                            text: item.topic_name
+                        };
+                    });
+                }
+
+                return {
+                    results: options
+                };
+            },
+
+            cache: true,
+            error: function (error) {
+                // console.error(error);
+            }
+        },
+        placeholder: 'Search...',
+    });
     $("#select_category").select2();
     $('input')
         .on('change', function (event) {
@@ -83,8 +120,8 @@ $('#select_location').on('change', function () {
             $("#select_category").attr("disabled", false);
             $('#custom-select-category').empty();
             $('#custom-select-category').html(html);
-           // $("#select_category").customselect();
-           $("#select_category").select2();
+            // $("#select_category").customselect();
+            $("#select_category").select2();
         },
         error: function (e) {
             console.log(e)

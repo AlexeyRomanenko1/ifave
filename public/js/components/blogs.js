@@ -1,6 +1,42 @@
 $(document).on('ready', function () {
     // $("#location").customselect();
-    $("#location").select2();
+    $("#location").select2({
+        ajax: {
+            url: '/search_blog_cat', // Replace with your Laravel route URL
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term, // Search term from user input
+                    page: params.page
+                };
+            },
+            processResults: function(data, params) {
+                // console.log(data)
+                var options = [];
+                
+                // Assuming data.items is an array of objects with "id" and "text" properties
+                if (data) {
+                    options = data.map(function(item) {
+                        return {
+                            id: item.id+'-'+item.topic_name,
+                            text: item.topic_name
+                        };
+                    });
+                }
+            
+                return {
+                    results: options
+                };
+            },
+            
+            cache: true,
+            error: function (error) {
+               // console.error(error);
+            }
+        },
+        placeholder: 'Search...',
+    });
     $("#select_category").select2();
     // let slider_slick = $(".regular").slick({
     //     dots: true,

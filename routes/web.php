@@ -44,6 +44,7 @@ Route::get('/uncover_answers', [indexController::class, 'uncover_answers']);
 Route::get('/get_topics', [indexController::class, 'get_topics']);
 Route::get('/search_topics', [indexController::class, 'search_topics']);
 Route::get('/get_blogger', [indexController::class, 'get_blogger']);
+
 Route::get('/search_bloggers', [indexController::class, 'search_bloggers']);
 Route::get('/get_comments_list', [indexController::class, 'get_comments_list'])->name('get_comments_list');
 Route::get('/get_comments_list_by_name', [indexController::class, 'get_comments_list_by_name'])->name('get_comments_list_by_name');
@@ -61,6 +62,9 @@ Route::get('blogs/{topic_slug}/{question_slug}', [App\Http\Controllers\BlogContr
 Route::get('blogger/{user_name}/{topic_slug}/{question_slug}', [App\Http\Controllers\BlogController::class, 'blogger_location_filter'])->name('filter_blog');
 Route::get('blogger/{user_name}', [App\Http\Controllers\BlogController::class, 'blogger_filter'])->name('filter_blog');
 Route::get('/searchBlogs', [App\Http\Controllers\BlogController::class, 'searchBlogs'])->name('searchBlogs');
+
+Route::get('/search_blog_cat', [App\Http\Controllers\BlogController::class, 'search_blog_cat'])->name('search_blog_cat');
+//Route::get('/search_blog_cat/{q}', [App\Http\Controllers\BlogController::class, 'search_blog_cat_q'])->name('search_blog_cat_q');
 Route::post('/get_categories_onchange', [App\Http\Controllers\BlogController::class, 'get_categories_onchange'])->name('get_categories_onchange');
 Route::get('/location/{topic_name}', [indexController::class, 'topic_name'])->name('topic_name');
 Route::get('category/{location}/{category}', [indexController::class, 'questions_details'])->name('questions_details');
