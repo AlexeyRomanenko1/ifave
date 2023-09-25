@@ -33,7 +33,7 @@
             $('.for-mobile-screen').removeClass('d-none')
             let str = $('.hidden-cotnent').html();
             if (str.length > 450) {
-                str = str.slice(0, 2500);
+                str = str.slice(0, 1000);
             }
              console.log(str)
             var el = document.implementation.createHTMLDocument().createElement('div');
