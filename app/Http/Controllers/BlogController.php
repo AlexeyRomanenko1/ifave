@@ -479,7 +479,7 @@ class BlogController extends Controller
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title = 'iFave - Blogs - ' . $topic . ' - ' . $question;
         $topics = DB::table('topics')->select('*')->limit(200)->get();
-        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'categories', 'page_title', 'keywords', 'meta_description'));
+        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'categories', 'page_title', 'keywords', 'meta_description','topic_id'));
     }
 
     public function blogger_location_filter(Request $request, $user_name, $topic_slug, $question_slug)
@@ -570,7 +570,7 @@ class BlogController extends Controller
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title = 'iFave - Blogger ' . $name . ' - ' . $topic . ' - ' . $question;
         $topics = DB::table('topics')->select('*')->limit(200)->get();
-        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'name', 'categories', 'keywords', 'meta_description', 'page_title'));
+        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'name', 'categories', 'keywords', 'meta_description', 'page_title','topic_id'));
     }
     public function blogger_filter(Request $request, $user_name)
     {

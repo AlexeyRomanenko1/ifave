@@ -48,7 +48,7 @@
                 if (data) {
                     options = data.map(function (item) {
                         return {
-                            id: item.id + '-' + item.topic_name,
+                            id: item.id,
                             text: item.topic_name
                         };
                     });

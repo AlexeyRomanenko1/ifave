@@ -24,7 +24,7 @@
             <div class="col-md-5 mb-3">
                 <select class="select-2 form-control" id="location" name="topic_id" aria-label="Select Location">
                     @if(isset($topic_slug))
-                    <option value="{{str_replace('-', " ", $topic_slug)}}" selected>{{str_replace('-', " ", $topic_slug)}}</option>
+                    <option value="{{$topic_id}}-{{str_replace('-', ' ', $topic_slug)}}" selected>{{str_replace('-', " ", $topic_slug)}}</option>
                     @else
                     <option selected disabled>Select Location</option>
                     @endif
@@ -35,7 +35,7 @@
                 <div id="custom-select-category">
                     <select class="select-2 form-control" id="select_category" name="question_id" aria-label="Select Category">
                         @if(isset($categories))
-                        <option value="{{str_replace('-', " ", $question_slug)}}" selected>{{str_replace('-', " ", $question_slug)}}</option>
+                        <option value="{{str_replace('-', ' ', $question_slug)}}" selected>{{str_replace('-', " ", $question_slug)}}</option>
                         <option value="All Categories">All Categories</option>
                         @foreach($categories as $category)
                         <option value="{{$category->question}}">{{$category->question}}</option>
