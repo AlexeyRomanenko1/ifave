@@ -28,33 +28,33 @@
     })
     let screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     if ($('.hidden-cotnent').length) {
-    if (screenWidth <= 768) {
-        // deviceSize = 'mobile';
-        $('.for-mobile-screen').removeClass('d-none')
-        let str = $('.hidden-cotnent').html();
-        if (str.length > 450) {
-            str = str.slice(0, 450);
+        if (screenWidth <= 768) {
+            // deviceSize = 'mobile';
+            $('.for-mobile-screen').removeClass('d-none')
+            let str = $('.hidden-cotnent').html();
+            if (str.length > 450) {
+                str = str.slice(0, 2500);
+            }
+             console.log(str)
+            var el = document.implementation.createHTMLDocument().createElement('div');
+            el.innerHTML = str;
+            str = el.innerHTML;
+            $('.half-thoughts-mobile-screen').html(str);
+        } else {
+            // deviceSize = 'desktop';
+            $('.for-full-screen').removeClass('d-none')
+            //    var str = "This <small>is <i>ONE</small> Messed up string</i><strong>.";
+            let str = $('.hidden-cotnent').html();
+            if (str.length > 1000) {
+                str = str.slice(0, 2000);
+            }
+            //console.log(str)
+            var el = document.implementation.createHTMLDocument().createElement('div');
+            el.innerHTML = str;
+            str = el.innerHTML;
+            $('.half-thoughts-full-screen').html(str);
         }
-        //console.log(str)
-        var el = document.implementation.createHTMLDocument().createElement('div');
-        el.innerHTML = str;
-        str = el.innerHTML;
-        $('.half-thoughts-full-screen').html(str);
-    } else {
-        // deviceSize = 'desktop';
-        $('.for-full-screen').removeClass('d-none')
-        //    var str = "This <small>is <i>ONE</small> Messed up string</i><strong>.";
-        let str = $('.hidden-cotnent').html();
-        if (str.length > 1000) {
-            str = str.slice(0, 1000);
-        }
-        //console.log(str)
-        var el = document.implementation.createHTMLDocument().createElement('div');
-        el.innerHTML = str;
-        str = el.innerHTML;
-        $('.half-thoughts-full-screen').html(str);
     }
-}
 })()
 
 
