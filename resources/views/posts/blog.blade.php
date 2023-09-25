@@ -28,9 +28,7 @@
                     @else
                     <option selected disabled>Select Location</option>
                     @endif
-                    @foreach($topics as $topic)
-                    <option value="{{$topic->id}}-{{$topic->topic_name}}">{{$topic->topic_name}}</option>
-                    @endforeach
+                  
                 </select>
             </div>
             <div class="col-md-5 mb-3">
