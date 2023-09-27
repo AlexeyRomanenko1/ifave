@@ -171,7 +171,7 @@ class SitemapGenerator
         $questions = DB::table('questions')
         ->select('topics.topic_name', 'questions.question')
         ->join('topics', 'questions.topic_id', '=', 'topics.id')
-        ->where('questions.question', '=','Top dentists') // Adjust the condition for starting ID
+        ->where('questions.question', '=','Top eye doctors') // Adjust the condition for starting ID
         ->get();
     
     return $questions;
