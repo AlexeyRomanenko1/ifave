@@ -109,7 +109,7 @@ class SitemapGenerator
             }
 
             // Write the sitemap to a file for each iteration
-            $sitemap->writeToFile(public_path("sitemap-questions-1.xml"));
+            $sitemap->writeToFile(public_path("sitemap-questions-2.xml"));
 
             // Move the offset for the next iteration
          //   $offset += $chunkSize;
