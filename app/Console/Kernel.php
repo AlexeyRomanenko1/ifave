@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->call(function () {
             app(SitemapGenerator::class)->generate();
-        })->hourly();
+        })->everyFiveMinutes();
     }
 
     /**
