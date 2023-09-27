@@ -109,7 +109,7 @@ class SitemapGenerator
             }
 
             // Write the sitemap to a file for each iteration
-            $sitemap->writeToFile(public_path("sitemap-questions-24.xml"));
+            $sitemap->writeToFile(public_path("sitemap-questions-25.xml"));
 
             // Move the offset for the next iteration
          //   $offset += $chunkSize;
@@ -171,7 +171,7 @@ class SitemapGenerator
         $questions = DB::table('questions')
         ->select('topics.topic_name', 'questions.question')
         ->join('topics', 'questions.topic_id', '=', 'topics.id')
-        ->where('questions.question', '=','Top barbershops') // Adjust the condition for starting ID
+        ->where('questions.question', '=','Top bicycle shops') // Adjust the condition for starting ID
         ->get();
     
     return $questions;
