@@ -83,21 +83,21 @@ class SitemapGenerator
 
     protected function generateQuestionsSitemap($this_time)
     {
-        $chunkSize = 10000; // Set an appropriate chunk size
+        // $chunkSize = 10000; // Set an appropriate chunk size
 
-        // Count the total number of questions
-        $totalQuestions = DB::table('questions')->count();
+        // // Count the total number of questions
+        // $totalQuestions = DB::table('questions')->count();
 
-        // Calculate the number of iterations needed
-        $iterations = ceil($totalQuestions / $chunkSize);
+        // // Calculate the number of iterations needed
+        // $iterations = ceil($totalQuestions / $chunkSize);
 
-        // Initialize a variable to track the current offset
-        $offset = 0;
+        // // Initialize a variable to track the current offset
+        // $offset = 0;
 
         $sitemap = Sitemap::create();
 
-        for ($i = 1; $i <= $iterations; $i++) {
-            $questions = $this->questionUrls($chunkSize, $offset);
+        //for ($i = 1; $i <= $iterations; $i++) {
+            $questions = $this->questionUrls();
 
             foreach ($questions as $url) {
                 $topicSlug = str_replace(' ', '-', $url->topic_name);
@@ -109,11 +109,11 @@ class SitemapGenerator
             }
 
             // Write the sitemap to a file for each iteration
-            $sitemap->writeToFile(public_path("sitemap-questions-{$i}.xml"));
+            $sitemap->writeToFile(public_path("sitemap-questions-{1}.xml"));
 
             // Move the offset for the next iteration
-            $offset += $chunkSize;
-        }
+         //   $offset += $chunkSize;
+       // }
     }
 
 
@@ -166,13 +166,12 @@ class SitemapGenerator
         return $blogs;
     }
 
-    protected function questionUrls($chunkSize, $offset)
+    protected function questionUrls()
     {
         $questions = DB::table('questions')
         ->select('topics.topic_name', 'questions.question')
         ->join('topics', 'questions.topic_id', '=', 'topics.id')
-        ->where('questions.id', '>=', $offset + 1) // Adjust the condition for starting ID
-        ->where('questions.id', '<=', $offset + $chunkSize) // Adjust the condition for ending ID
+        ->where('questions.question', '=','Top movies ever') // Adjust the condition for starting ID
         ->get();
     
     return $questions;
