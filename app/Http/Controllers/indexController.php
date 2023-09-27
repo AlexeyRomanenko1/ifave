@@ -513,6 +513,7 @@ class indexController extends Controller
         // return $id;
         $category = str_replace('-', ' ', $category);
         $location = str_replace('-', ' ', $location);
+        $category = str_replace('&#039;', "'", $category);
         $topic_id = DB::table('topics')->where('topic_name', $location)->pluck('id');
         $topic_id = $topic_id[0];
         $question_id = DB::table('questions')->where('question', $category)->where('topic_id', $topic_id)->pluck('id');
