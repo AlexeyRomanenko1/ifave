@@ -102,14 +102,14 @@ class SitemapGenerator
             foreach ($questions as $url) {
                 $topicSlug = str_replace(' ', '-', $url->topic_name);
                 $questionSlug = str_replace(' ', '-', $url->question);
-
+                $topicSlug=urlencode($topicSlug);
                 $sitemap->add(Url::create("/category/{$topicSlug}/{$questionSlug}")
                     ->setPriority(0.8)
                     ->setChangeFrequency('monthly'));
             }
 
             // Write the sitemap to a file for each iteration
-            $sitemap->writeToFile(public_path("sitemap-questions-7.xml"));
+            $sitemap->writeToFile(public_path("sitemap-questions-8.xml"));
 
             // Move the offset for the next iteration
          //   $offset += $chunkSize;
@@ -171,7 +171,7 @@ class SitemapGenerator
         $questions = DB::table('questions')
         ->select('topics.topic_name', 'questions.question')
         ->join('topics', 'questions.topic_id', '=', 'topics.id')
-        ->where('questions.question', '=','Top hotels') // Adjust the condition for starting ID
+        ->where('questions.question', '=','Top nail salons') // Adjust the condition for starting ID
         ->get();
     
     return $questions;
