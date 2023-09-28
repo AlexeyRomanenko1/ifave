@@ -119,6 +119,9 @@
            // Remove the 'style' attribute from the <span> element
            $(this).removeAttr('style');
        });
+       $('#blog_content iframe').addClass('embed-responsive embed-responsive-4by3');
+       $('#blog_content iframe').removeAttr('height');
+       $('#blog_content iframe').removeAttr('width');
     });
     function handleScreenWidthChange(mq) {
         if (mq.matches) {
