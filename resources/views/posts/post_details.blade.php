@@ -112,17 +112,22 @@
 </div>
 @include('footer.footer')
 <script>
-     $(document).ready(function() {
+    $(document).ready(function() {
         // Add the img-fluid class to all <img> tags within the #content div
         $('#blog_content img').addClass('img-fluid');
         $('#blog_content span:has(img)').each(function() {
-           // Remove the 'style' attribute from the <span> element
-           $(this).removeAttr('style');
-       });
-       $('#blog_content iframe').addClass('embed-responsive embed-responsive-4by3');
-       $('#blog_content iframe').removeAttr('height');
-       $('#blog_content iframe').removeAttr('width');
+            // Remove the 'style' attribute from the <span> element
+            $(this).removeAttr('style');
+        });
+        // $('#blog_content iframe').addClass('embed-responsive embed-responsive-4by3');
+        let screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        if (screenWidth <= 768) {
+            // deviceSize = 'mobile';
+            $('#blog_content iframe').removeAttr('height');
+            $('#blog_content iframe').removeAttr('width');
+        }
     });
+
     function handleScreenWidthChange(mq) {
         if (mq.matches) {
             // Remove the class from the small element for mobile devices
