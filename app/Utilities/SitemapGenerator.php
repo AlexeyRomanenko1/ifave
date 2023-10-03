@@ -124,44 +124,32 @@ class SitemapGenerator
 
     protected function generateSitemapIndex($this_time)
     {
-        $sitemapIndexPath = public_path('sitemap-index.xml');
-        $existingSitemapIndex = simplexml_load_file($sitemapIndexPath);
+        $sitemapIndex = SitemapIndex::create();
 
-        // Add references to other individual sitemaps to the existing sitemap index
-        $existingSitemapIndex->addChild('sitemap')->addChild('loc', '/sitemap-blogs.xml');
-        $existingSitemapIndex->addChild('sitemap')->addChild('loc', '/sitemap-bloggers.xml');
-        $existingSitemapIndex->addChild('sitemap')->addChild('loc', '/sitemap-topics.xml');
-        // for ($i = 1; $i <= 179; $i++) {
-        //     $existingSitemapIndex->addChild('sitemap')->addChild('loc', '/sitemap-questions-' . $i . '.xml');
-        // }
-        // Write the updated sitemap index back to the file
-        $existingSitemapIndex->asXML($sitemapIndexPath);
-        // $sitemapIndex = SitemapIndex::create();
+        // Create and add instances of individual sitemaps
+        $sitemapBlogs = Sitemap::create();
+        $sitemapBloggers = Sitemap::create();
+        $sitemapTopics = Sitemap::create();
 
-        // // Create and add instances of individual sitemaps
-        // $sitemapBlogs = Sitemap::create();
-        // $sitemapBloggers = Sitemap::create();
-        // $sitemapTopics = Sitemap::create();
+        // Total number of question sitemaps
 
-        // // Total number of question sitemaps
+        // Add URLs to other individual sitemaps
+        $sitemapBlogs->add('/blogs');
+        $sitemapBloggers->add('/bloggers');
+        $sitemapTopics->add('/topics');
 
-        // // Add URLs to other individual sitemaps
-        // $sitemapBlogs->add('/blogs');
-        // $sitemapBloggers->add('/bloggers');
-        // $sitemapTopics->add('/topics');
+        // Write other individual sitemaps to files
+        $sitemapBlogs->writeToFile(public_path('sitemap-blogs.xml'));
+        $sitemapBloggers->writeToFile(public_path('sitemap-bloggers.xml'));
+        $sitemapTopics->writeToFile(public_path('sitemap-topics.xml'));
 
-        // // Write other individual sitemaps to files
-        // $sitemapBlogs->writeToFile(public_path('sitemap-blogs'.$this_time.'.xml'));
-        // $sitemapBloggers->writeToFile(public_path('sitemap-bloggers'.$this_time.'.xml'));
-        // $sitemapTopics->writeToFile(public_path('sitemap-topics'.$this_time.'.xml'));
+        // Add references to other individual sitemaps to the sitemap index
+        $sitemapIndex->add('/sitemap-blogs.xml');
+        $sitemapIndex->add('/sitemap-bloggers.xml');
+        $sitemapIndex->add('/sitemap-topics.xml');
 
-        // // Add references to other individual sitemaps to the sitemap index
-        // $sitemapIndex->add('/sitemap-blogs'.$this_time.'.xml');
-        // $sitemapIndex->add('/sitemap-bloggers'.$this_time.'.xml');
-        // $sitemapIndex->add('/sitemap-topics'.$this_time.'.xml');
-
-        // // Write the sitemap index to a file
-        // $sitemapIndex->writeToFile(public_path('sitemap-index.xml'));
+        // Write the sitemap index to a file
+        $sitemapIndex->writeToFile(public_path('sitemap-index.xml'));
     }
 
     protected function getNewBlogUrls()
