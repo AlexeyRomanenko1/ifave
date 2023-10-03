@@ -20,7 +20,7 @@ class SitemapGenerator
         // $this->generateQuestionsSitemap($this_time);
 
         // Generate sitemap index file
-         $this->generateSitemapIndex($this_time);
+        $this->generateSitemapIndex($this_time);
     }
 
 
@@ -126,27 +126,29 @@ class SitemapGenerator
     {
         $sitemapIndex = SitemapIndex::create();
 
-        // Create and add instances of individual sitemaps
-        $sitemapBlogs = Sitemap::create();
-        $sitemapBloggers = Sitemap::create();
-        $sitemapTopics = Sitemap::create();
+        // Create an array to hold references to question sitemaps
+        $questionSitemaps = [];
 
         // Total number of question sitemaps
+        $totalQuestionSitemaps = 179;
 
-        // Add URLs to other individual sitemaps
-        $sitemapBlogs->add('/blogs');
-        $sitemapBloggers->add('/bloggers');
-        $sitemapTopics->add('/topics');
+        // Loop to create and add URLs to individual question sitemaps
+        for ($i = 1; $i <= $totalQuestionSitemaps; $i++) {
+            $sitemapQuestions = Sitemap::create();
 
-        // Write other individual sitemaps to files
-        $sitemapBlogs->writeToFile(public_path('sitemap-blogs.xml'));
-        $sitemapBloggers->writeToFile(public_path('sitemap-bloggers.xml'));
-        $sitemapTopics->writeToFile(public_path('sitemap-topics.xml'));
+            // Add URLs to the current question sitemap
+            $sitemapQuestions->add('/questions-' . $i);
 
-        // Add references to other individual sitemaps to the sitemap index
-        $sitemapIndex->add('/sitemap-blogs.xml');
-        $sitemapIndex->add('/sitemap-bloggers.xml');
-        $sitemapIndex->add('/sitemap-topics.xml');
+            // Write the current question sitemap to a file
+            $sitemapFilename = 'sitemap-questions-' . $i . '.xml';
+            $sitemapQuestions->writeToFile(public_path($sitemapFilename));
+
+            // Add reference to the current question sitemap to the index
+            $sitemapIndex->add('/' . $sitemapFilename);
+
+            // Store the reference for later use
+            $questionSitemaps[] = $sitemapQuestions;
+        }
 
         // Write the sitemap index to a file
         $sitemapIndex->writeToFile(public_path('sitemap-index.xml'));
