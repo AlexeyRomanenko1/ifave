@@ -14,8 +14,8 @@ class SitemapGenerator
     public function generate()
     {
         $this_time = time();
-         $this->generateBlogsSitemap($this_time);
-         $this->generateBloggersSitemap($this_time);
+        // $this->generateBlogsSitemap($this_time);
+        // $this->generateBloggersSitemap($this_time);
          $this->generateTopicsSitemap($this_time);
         // $this->generateQuestionsSitemap($this_time);
 
@@ -185,7 +185,7 @@ class SitemapGenerator
     protected function topicsUrls()
     {
         $currentDate = Carbon::now()->toDateString();
-        $topics = DB::table('topics')->select('topic_name')->whereDate('date', $currentDate)->get();
+        $topics = DB::table('topics')->select('topic_name')->get();
         return $topics;
     }
     protected function bloggerUrls()
