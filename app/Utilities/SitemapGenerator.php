@@ -126,11 +126,16 @@ class SitemapGenerator
     {
         $sitemapIndex = SitemapIndex::create();
 
-        // Create an array to hold references to question sitemaps
-        $questionSitemaps = [];
+        // Create and add instances of individual sitemaps
+        $sitemapBlogs = Sitemap::create();
+        $sitemapBloggers = Sitemap::create();
+        $sitemapTopics = Sitemap::create();
 
         // Total number of question sitemaps
         $totalQuestionSitemaps = 179;
+
+        // Create an array to hold references to question sitemaps
+        $questionSitemaps = [];
 
         // Loop to create and add URLs to individual question sitemaps
         for ($i = 1; $i <= $totalQuestionSitemaps; $i++) {
@@ -149,6 +154,21 @@ class SitemapGenerator
             // Store the reference for later use
             $questionSitemaps[] = $sitemapQuestions;
         }
+
+        // Add URLs to other individual sitemaps
+        $sitemapBlogs->add('/blogs');
+        $sitemapBloggers->add('/bloggers');
+        $sitemapTopics->add('/topics');
+
+        // Write other individual sitemaps to files
+        $sitemapBlogs->writeToFile(public_path('sitemap-blogs.xml'));
+        $sitemapBloggers->writeToFile(public_path('sitemap-bloggers.xml'));
+        $sitemapTopics->writeToFile(public_path('sitemap-topics.xml'));
+
+        // Add references to other individual sitemaps to the sitemap index
+        $sitemapIndex->add('/sitemap-blogs.xml');
+        $sitemapIndex->add('/sitemap-bloggers.xml');
+        $sitemapIndex->add('/sitemap-topics.xml');
 
         // Write the sitemap index to a file
         $sitemapIndex->writeToFile(public_path('sitemap-index.xml'));
