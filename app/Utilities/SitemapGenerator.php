@@ -14,10 +14,10 @@ class SitemapGenerator
     public function generate()
     {
         $this_time = time();
-        // $this->generateBlogsSitemap($this_time);
-        // $this->generateBloggersSitemap($this_time);
-        // $this->generateTopicsSitemap($this_time);
-        $this->generateQuestionsSitemap($this_time);
+         $this->generateBlogsSitemap($this_time);
+         $this->generateBloggersSitemap($this_time);
+         $this->generateTopicsSitemap($this_time);
+        // $this->generateQuestionsSitemap($this_time);
 
         // Generate sitemap index file
        // $this->generateSitemapIndex($this_time);
@@ -35,12 +35,13 @@ class SitemapGenerator
         $newBlogUrls = $this->getNewBlogUrls(); // Implement this method
         if (count($newBlogUrls) > 0) {
             foreach ($newBlogUrls as $url) {
+                $url->slug=urlencode($url->slug);
                 $sitemap->add(Url::create("/blog/{$url->slug}")
                     ->setPriority(0.8) // Adjust priority as needed
                     ->setChangeFrequency('monthly')); // Adjust change frequency as needed
             }
             // Write the sitemap to a file
-            $sitemap->writeToFile(public_path('sitemap-blogs' . $this_time . '.xml'));
+            $sitemap->writeToFile(public_path('sitemap-blogs.xml'));
         }
     }
     protected function generateBloggersSitemap($this_time)
@@ -52,13 +53,15 @@ class SitemapGenerator
         // // blogger
         $newBloggersUrls = $this->bloggerUrls(); // Implement this method
         foreach ($newBloggersUrls as $url) {
+           
             $url->name = str_replace(' ', '-', $url->name);
+            $url->name=urlencode($url->name);
             $sitemap->add(Url::create("/blogger/{$url->name}")
                 ->setPriority(0.8) // Adjust priority as needed
                 ->setChangeFrequency('monthly')); // Adjust change frequency as needed
         }
         // Write the sitemap to a file
-        $sitemap->writeToFile(public_path('sitemap-bloggers' . $this_time . '.xml'));
+        $sitemap->writeToFile(public_path('sitemap-bloggers.xml'));
     }
 
     protected function generateTopicsSitemap($this_time)
@@ -71,13 +74,15 @@ class SitemapGenerator
         $topicssUrls = $this->topicsUrls(); // Implement this method
         if (count($topicssUrls) > 0) {
             foreach ($topicssUrls as $url) {
+                
                 $url->topic_name = str_replace(' ', '-', $url->topic_name);
+                $url->topic_name=urlencode($url->topic_name);
                 $sitemap->add(Url::create("/location/{$url->topic_name}")
                     ->setPriority(0.8) // Adjust priority as needed
                     ->setChangeFrequency('monthly')); // Adjust change frequency as needed
             }
             // Write the sitemap to a file
-            $sitemap->writeToFile(public_path('sitemap-topics' . $this_time . '.xml'));
+            $sitemap->writeToFile(public_path('sitemap-topics.xml'));
         }
     }
 
@@ -162,7 +167,7 @@ class SitemapGenerator
         $currentDate = Carbon::now()->toDateString();
         // Fetch and return new blog URLs from your database
         // Implement the logic to query your database for new blog posts
-        $blogs = DB::table('posts')->select('slug')->where('status', 1)->whereDate('created_at', $currentDate)->get();
+        $blogs = DB::table('posts')->select('slug')->where('status', 1)->get();
         return $blogs;
     }
 
