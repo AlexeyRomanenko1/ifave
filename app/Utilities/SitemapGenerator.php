@@ -131,9 +131,9 @@ class SitemapGenerator
         $existingSitemapIndex->addChild('sitemap')->addChild('loc', '/sitemap-blogs.xml');
         $existingSitemapIndex->addChild('sitemap')->addChild('loc', '/sitemap-bloggers.xml');
         $existingSitemapIndex->addChild('sitemap')->addChild('loc', '/sitemap-topics.xml');
-        for ($i = 1; $i <= 179; $i++) {
-            $existingSitemapIndex->addChild('sitemap')->addChild('loc', '/sitemap-questions-' . $i . '.xml');
-        }
+        // for ($i = 1; $i <= 179; $i++) {
+        //     $existingSitemapIndex->addChild('sitemap')->addChild('loc', '/sitemap-questions-' . $i . '.xml');
+        // }
         // Write the updated sitemap index back to the file
         $existingSitemapIndex->asXML($sitemapIndexPath);
         // $sitemapIndex = SitemapIndex::create();
