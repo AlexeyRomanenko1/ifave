@@ -15,7 +15,7 @@ class SitemapGenerator
     {
         $this_time = time();
        // $this->generateBlogsSitemap($this_time);
-        $this->generateBloggersSitemap($this_time);
+      //  $this->generateBloggersSitemap($this_time);
       //  $this->generateTopicsSitemap($this_time);
          $this->generateQuestionsSitemap($this_time);
 
@@ -174,7 +174,7 @@ class SitemapGenerator
         $questions = DB::table('questions')
         ->select('topics.topic_name', 'questions.question')
         ->join('topics', 'questions.topic_id', '=', 'topics.id')
-        ->where('questions.topic_id', '=',19) // Adjust the condition for starting ID
+        ->where('questions.topic_id', '=',1) // Adjust the condition for starting ID
         ->get();
     
     return $questions;
