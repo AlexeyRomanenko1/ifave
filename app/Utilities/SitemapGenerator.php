@@ -14,10 +14,10 @@ class SitemapGenerator
     public function generate()
     {
         $this_time = time();
-        $this->generateBlogsSitemap($this_time);
+       // $this->generateBlogsSitemap($this_time);
         $this->generateBloggersSitemap($this_time);
-        $this->generateTopicsSitemap($this_time);
-        // $this->generateQuestionsSitemap($this_time);
+      //  $this->generateTopicsSitemap($this_time);
+         $this->generateQuestionsSitemap($this_time);
 
         // Generate sitemap index file
        // $this->generateSitemapIndex($this_time);
@@ -60,7 +60,7 @@ class SitemapGenerator
                 ->setChangeFrequency('monthly')); // Adjust change frequency as needed
         }
         // Write the sitemap to a file
-        $sitemap->writeToFile(public_path('sitemap-bloggers' . $this_time . '.xml'));
+        $sitemap->writeToFile(public_path('sitemap-bloggers.xml'));
     }
 
     protected function generateTopicsSitemap($this_time)
@@ -112,7 +112,7 @@ class SitemapGenerator
             }
 
             // Write the sitemap to a file for each iteration
-            $sitemap->writeToFile(public_path("sitemap-questions-7.xml"));
+            $sitemap->writeToFile(public_path("sitemap-questions-19.xml"));
 
             // Move the offset for the next iteration
          //   $offset += $chunkSize;
@@ -174,7 +174,7 @@ class SitemapGenerator
         $questions = DB::table('questions')
         ->select('topics.topic_name', 'questions.question')
         ->join('topics', 'questions.topic_id', '=', 'topics.id')
-        ->where('questions.question', '=','Top hotels') // Adjust the condition for starting ID
+        ->where('questions.topic_id', '=',19) // Adjust the condition for starting ID
         ->get();
     
     return $questions;
