@@ -14,13 +14,13 @@ class SitemapGenerator
     public function generate()
     {
         $this_time = time();
-       // $this->generateBlogsSitemap($this_time);
-      //  $this->generateBloggersSitemap($this_time);
-      //  $this->generateTopicsSitemap($this_time);
-         $this->generateQuestionsSitemap($this_time);
+        // $this->generateBlogsSitemap($this_time);
+        //  $this->generateBloggersSitemap($this_time);
+        //  $this->generateTopicsSitemap($this_time);
+        // $this->generateQuestionsSitemap($this_time);
 
         // Generate sitemap index file
-       // $this->generateSitemapIndex($this_time);
+        $this->generateSitemapIndex($this_time);
     }
 
 
@@ -35,7 +35,7 @@ class SitemapGenerator
         $newBlogUrls = $this->getNewBlogUrls(); // Implement this method
         if (count($newBlogUrls) > 0) {
             foreach ($newBlogUrls as $url) {
-                $url->slug=urlencode($url->slug);
+                $url->slug = urlencode($url->slug);
                 $sitemap->add(Url::create("/blog/{$url->slug}")
                     ->setPriority(0.8) // Adjust priority as needed
                     ->setChangeFrequency('monthly')); // Adjust change frequency as needed
@@ -54,7 +54,7 @@ class SitemapGenerator
         $newBloggersUrls = $this->bloggerUrls(); // Implement this method
         foreach ($newBloggersUrls as $url) {
             $url->name = str_replace(' ', '-', $url->name);
-            $url->name=urlencode($url->name);
+            $url->name = urlencode($url->name);
             $sitemap->add(Url::create("/blogger/{$url->name}")
                 ->setPriority(0.8) // Adjust priority as needed
                 ->setChangeFrequency('monthly')); // Adjust change frequency as needed
@@ -74,7 +74,7 @@ class SitemapGenerator
         if (count($topicssUrls) > 0) {
             foreach ($topicssUrls as $url) {
                 $url->topic_name = str_replace(' ', '-', $url->topic_name);
-                $url->topic_name=urlencode($url->topic_name);
+                $url->topic_name = urlencode($url->topic_name);
                 $sitemap->add(Url::create("/location/{$url->topic_name}")
                     ->setPriority(0.8) // Adjust priority as needed
                     ->setChangeFrequency('monthly')); // Adjust change frequency as needed
@@ -100,64 +100,39 @@ class SitemapGenerator
         $sitemap = Sitemap::create();
 
         //for ($i = 1; $i <= $iterations; $i++) {
-            $questions = $this->questionUrls();
+        $questions = $this->questionUrls();
 
-            foreach ($questions as $url) {
-                $topicSlug = str_replace(' ', '-', $url->topic_name);
-                $questionSlug = str_replace(' ', '-', $url->question);
-                $topicSlug=urlencode($topicSlug);
-                $sitemap->add(Url::create("/category/{$topicSlug}/{$questionSlug}")
-                    ->setPriority(0.8)
-                    ->setChangeFrequency('monthly'));
-            }
+        foreach ($questions as $url) {
+            $topicSlug = str_replace(' ', '-', $url->topic_name);
+            $questionSlug = str_replace(' ', '-', $url->question);
+            $topicSlug = urlencode($topicSlug);
+            $sitemap->add(Url::create("/category/{$topicSlug}/{$questionSlug}")
+                ->setPriority(0.8)
+                ->setChangeFrequency('monthly'));
+        }
 
-            // Write the sitemap to a file for each iteration
-            $sitemap->writeToFile(public_path("sitemap-questions-19.xml"));
+        // Write the sitemap to a file for each iteration
+        $sitemap->writeToFile(public_path("sitemap-questions-19.xml"));
 
-            // Move the offset for the next iteration
-         //   $offset += $chunkSize;
-       // }
+        // Move the offset for the next iteration
+        //   $offset += $chunkSize;
+        // }
     }
 
 
     protected function generateSitemapIndex($this_time)
     {
-        $sitemapIndexPath = public_path('sitemap-index.xml');
-        $existingSitemapIndex = simplexml_load_file($sitemapIndexPath);
+        $sitemapIndex = SitemapIndex::create();
 
-        // Add references to other individual sitemaps to the existing sitemap index
-        $existingSitemapIndex->addChild('sitemap')->addChild('loc', '/sitemap-blogs' . $this_time . '.xml');
-        $existingSitemapIndex->addChild('sitemap')->addChild('loc', '/sitemap-bloggers' . $this_time . '.xml');
-        $existingSitemapIndex->addChild('sitemap')->addChild('loc', '/sitemap-topics' . $this_time . '.xml');
-        $existingSitemapIndex->addChild('sitemap')->addChild('loc', '/sitemap-questions-' . $this_time . '.xml');
-        // Write the updated sitemap index back to the file
-        $existingSitemapIndex->asXML($sitemapIndexPath);
-        // $sitemapIndex = SitemapIndex::create();
-
-        // // Create and add instances of individual sitemaps
-        // $sitemapBlogs = Sitemap::create();
-        // $sitemapBloggers = Sitemap::create();
-        // $sitemapTopics = Sitemap::create();
-
-        // // Total number of question sitemaps
-
-        // // Add URLs to other individual sitemaps
-        // $sitemapBlogs->add('/blogs');
-        // $sitemapBloggers->add('/bloggers');
-        // $sitemapTopics->add('/topics');
-
-        // // Write other individual sitemaps to files
-        // $sitemapBlogs->writeToFile(public_path('sitemap-blogs'.$this_time.'.xml'));
-        // $sitemapBloggers->writeToFile(public_path('sitemap-bloggers'.$this_time.'.xml'));
-        // $sitemapTopics->writeToFile(public_path('sitemap-topics'.$this_time.'.xml'));
-
-        // // Add references to other individual sitemaps to the sitemap index
-        // $sitemapIndex->add('/sitemap-blogs'.$this_time.'.xml');
-        // $sitemapIndex->add('/sitemap-bloggers'.$this_time.'.xml');
-        // $sitemapIndex->add('/sitemap-topics'.$this_time.'.xml');
-
-        // // Write the sitemap index to a file
-        // $sitemapIndex->writeToFile(public_path('sitemap-index.xml'));
+        // Add references to existing question sitemap files in the sitemap index
+        for ($i = 1; $i <= 179; $i++) {
+            $sitemapIndex->add('/sitemap-questions-' . $i . '.xml');
+        }
+        $sitemapIndex->add('/sitemap-bloggers.xml');
+        $sitemapIndex->add('/sitemap-blogs.xml');
+        $sitemapIndex->add('/sitemap-topics.xml');
+        // Write the sitemap index to a file
+        $sitemapIndex->writeToFile(public_path('sitemap-index.xml'));
     }
 
     protected function getNewBlogUrls()
@@ -172,12 +147,12 @@ class SitemapGenerator
     protected function questionUrls()
     {
         $questions = DB::table('questions')
-        ->select('topics.topic_name', 'questions.question')
-        ->join('topics', 'questions.topic_id', '=', 'topics.id')
-        ->where('questions.topic_id', '=',1) // Adjust the condition for starting ID
-        ->get();
-    
-    return $questions;
+            ->select('topics.topic_name', 'questions.question')
+            ->join('topics', 'questions.topic_id', '=', 'topics.id')
+            ->where('questions.topic_id', '=', 1) // Adjust the condition for starting ID
+            ->get();
+
+        return $questions;
     }
 
     protected function topicsUrls()
