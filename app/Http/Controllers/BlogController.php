@@ -37,7 +37,9 @@ class BlogController extends Controller
         $keywords = 'ifave, ifave blogging, blogging';
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title = 'iFave - Blogs';
-        return view('blogs.create-blog', compact('topics', 'keywords', 'meta_description', 'page_title'));
+        $user_type = DB::table('users')->where('id', $clientIP)->pluck('user_type');
+        $user_type = $user_type[0];
+        return view('blogs.create-blog', compact('topics', 'keywords', 'meta_description', 'page_title', 'user_type'));
     }
     public function create_blog(Request $request)
     {
@@ -59,8 +61,21 @@ class BlogController extends Controller
         $blog_title = $request->blog_title;
         $blog_content = $request->blog_content;
         $user_id = Auth::id();
-        $slug = str_replace(" ", "-", $request->blog_title) . "-" . $user_id . "-" . date('m-d-Y-his');
-        $slug = str_replace('?', '-', $slug);
+        $alt_text=$request->alt_text;
+        if (isset($request->slug)) {
+            $slug = str_replace(" ", "-", $request->slug);
+            $slug = str_replace('?', '-', $slug);
+            $slug_count=DB::table('posts')->where('slug',$slug)->count();
+            if($slug_count > 0){
+                return json_encode([
+                    'success' => 0,
+                    'data' => 'This slug is already taken'
+                ]);
+            }
+        } else {
+            $slug = str_replace(" ", "-", $request->blog_title) . "-" . $user_id . "-" . date('m-d-Y-his');
+            $slug = str_replace('?', '-', $slug);
+        }
         if ($request->hasFile('featured_image') && $request->file('featured_image')->isValid()) {
             $file = $request->file('featured_image');
             $allowedExtensions = ['jpg', 'jpeg', 'png', 'JPG', 'JPEG', 'PNG'];
@@ -68,7 +83,7 @@ class BlogController extends Controller
             if (!in_array($extension, $allowedExtensions)) {
                 return json_encode(['success' => 0, 'data' => "Only JPG,JPEG,PNG entensions are allowed"]);
             }
-            $uniqueName = date('m_d_Y_his') . $file->getClientOriginalName();
+            $uniqueName = date('his') . $file->getClientOriginalName();
             // $file->storeAs(public_path('images/posts/'), $uniqueName);
             $path =  $file->move(public_path('images/posts/'), $uniqueName);
         } else {
@@ -83,7 +98,8 @@ class BlogController extends Controller
             'question_id' => $request->question_id,
             'blog_content' => $blog_content,
             'featured_image' => $uniqueName,
-            'slug' => $slug
+            'slug' => $slug,
+            'alt_text'=>$alt_text
         ]);
 
         if ($insert_blog) {
@@ -118,7 +134,7 @@ class BlogController extends Controller
         $perPage = 52; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
         $posts = DB::table('posts')
-            ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
+            ->select('posts.title', 'posts.blog_content', 'posts.featured_image','posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
             ->join('users', 'posts.user_id', 'users.id')
             ->where('posts.status', 1)
             ->orderByDesc('posts.vote_count')
@@ -218,7 +234,7 @@ class BlogController extends Controller
                     ]);
             }
         }
-        $posts = DB::table('posts')->select('posts.title', 'posts.tags', 'posts.blog_content', 'posts.featured_image', 'posts.vote_count', 'users.name', 'posts.created_at', 'posts.id', 'posts.down_votes', 'posts.views_count', 'posts.topic_id')
+        $posts = DB::table('posts')->select('posts.title', 'posts.tags', 'posts.blog_content', 'posts.featured_image','posts.alt_text', 'posts.vote_count', 'users.name', 'posts.created_at', 'posts.id', 'posts.down_votes', 'posts.views_count', 'posts.topic_id')
             ->join('users', 'users.id', 'posts.user_id')
             ->where('posts.slug', $slug)
             ->get();
@@ -242,17 +258,17 @@ class BlogController extends Controller
         //     ->limit(5)
         //     ->get();
         $popular_questions = DB::table('questions')
-        ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
-        ->join('topics', 'questions.topic_id', '=', 'topics.id')
-        ->select('questions.question', 'topics.topic_name')
-        ->selectRaw('SUM(questions_answer.vote_count) as total_vote_count')
-        ->where('questions.topic_id', '=', $this_post_location)
-        ->groupBy('questions.id', 'questions.question', 'topics.topic_name')
-        ->orderBy('total_vote_count', 'DESC')
-        ->offset(0) // Remove offset or adjust it as needed
-        ->limit(5)
-        ->get();
-    
+            ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+            ->join('topics', 'questions.topic_id', '=', 'topics.id')
+            ->select('questions.question', 'topics.topic_name')
+            ->selectRaw('SUM(questions_answer.vote_count) as total_vote_count')
+            ->where('questions.topic_id', '=', $this_post_location)
+            ->groupBy('questions.id', 'questions.question', 'topics.topic_name')
+            ->orderBy('total_vote_count', 'DESC')
+            ->offset(0) // Remove offset or adjust it as needed
+            ->limit(5)
+            ->get();
+
         $keywords = DB::table('posts')->where('slug', $slug)->pluck('tags');
         $keywords = $keywords[0];
         $meta_description = DB::table('posts')->where('slug', $slug)->pluck('blog_content');
@@ -388,7 +404,7 @@ class BlogController extends Controller
         //     'path' => '/images/posts/' . $uniqueName
         // ]);
         $file = $request->file('file');
-        $uniqueName = date('m_d_Y_his') . $file->getClientOriginalName();
+        $uniqueName = date('his') . $file->getClientOriginalName();
         $path =  $file->move(public_path('images/posts/'), $uniqueName);
         // Validate the uploaded file, for example, you can check the file extension and size.
 
@@ -479,7 +495,7 @@ class BlogController extends Controller
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title = 'iFave - Blogs - ' . $topic . ' - ' . $question;
         $topics = DB::table('topics')->select('*')->limit(200)->get();
-        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'categories', 'page_title', 'keywords', 'meta_description','topic_id'));
+        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'categories', 'page_title', 'keywords', 'meta_description', 'topic_id'));
     }
 
     public function blogger_location_filter(Request $request, $user_name, $topic_slug, $question_slug)
@@ -506,7 +522,7 @@ class BlogController extends Controller
                 ->pluck('id');
             $question_id = $question_id[0];
             $posts = DB::table('posts')
-                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image','posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
                 ->where('posts.question_id', $question_id)
@@ -516,7 +532,7 @@ class BlogController extends Controller
                 ->paginate($perPage, ['*'], 'page', $page);
         } else {
             $posts = DB::table('posts')
-                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image','posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
                 ->where('posts.status', 1)
@@ -570,7 +586,7 @@ class BlogController extends Controller
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title = 'iFave - Blogger ' . $name . ' - ' . $topic . ' - ' . $question;
         $topics = DB::table('topics')->select('*')->limit(200)->get();
-        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'name', 'categories', 'keywords', 'meta_description', 'page_title','topic_id'));
+        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'name', 'categories', 'keywords', 'meta_description', 'page_title', 'topic_id'));
     }
     public function blogger_filter(Request $request, $user_name)
     {
@@ -583,7 +599,7 @@ class BlogController extends Controller
         $perPage = 52; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
         $posts = DB::table('posts')
-            ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
+            ->select('posts.title', 'posts.blog_content', 'posts.featured_image','posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
             ->join('users', 'posts.user_id', 'users.id')
             ->where('users.id', $user_id)
             ->where('posts.status', 1)
@@ -655,7 +671,7 @@ class BlogController extends Controller
                     ->pluck('id');
                 $question_id = $question_id[0];
                 $posts = DB::table('posts')
-                    ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
+                    ->select('posts.title', 'posts.blog_content', 'posts.featured_image','posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
                     ->join('users', 'posts.user_id', 'users.id')
                     ->where('posts.topic_id', $topic_id)
                     ->where('posts.question_id', $question_id)
@@ -665,7 +681,7 @@ class BlogController extends Controller
                     ->paginate($perPage, ['*'], 'page', $page);
             } else {
                 $posts = DB::table('posts')
-                    ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
+                    ->select('posts.title', 'posts.blog_content', 'posts.featured_image','posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
                     ->join('users', 'posts.user_id', 'users.id')
                     ->where('posts.topic_id', $topic_id)
                     ->where('posts.status', 1)
@@ -675,7 +691,7 @@ class BlogController extends Controller
             }
         } else {
             $posts = DB::table('posts')
-                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image','posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.status', 1)
                 ->where('posts.title', 'like', '%' . $request->search . '%')
@@ -731,7 +747,7 @@ class BlogController extends Controller
             if (!in_array($extension, $allowedExtensions)) {
                 return json_encode(['success' => 0, 'data' => "Only JPG,JPEG,PNG entensions are allowed"]);
             }
-            $uniqueName = date('m_d_Y_his') . $file->getClientOriginalName();
+            $uniqueName = date('his') . $file->getClientOriginalName();
             // $file->storeAs(public_path('images/posts/'), $uniqueName);
             $path =  $file->move(public_path('images/posts/'), $uniqueName);
             $insert_blog = DB::table('posts')
@@ -796,7 +812,6 @@ class BlogController extends Controller
             //return response()->json(['items' => $topics]);
             return $topics;
         }
-
     }
     // public function search_blog_cat_q(Request $request, $q)
     // {

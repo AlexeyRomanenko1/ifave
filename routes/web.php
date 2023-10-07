@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 //     return view('index');
 // });
 Route::get('/', [indexController::class, 'index'])->name('/');
+
 // Route::post('indexonloadRequest', [indexController::class, 'indexonloadRequest'])->name('indexonload.post');
 Route::get('/indexonloadRequest', [indexController::class, 'indexonloadRequest']);
 Route::get('/comments/{name}', [indexController::class, 'comments_route'])->name('comments_route');
@@ -69,6 +70,8 @@ Route::post('/get_categories_onchange', [App\Http\Controllers\BlogController::cl
 Route::get('/location/{topic_name}', [indexController::class, 'topic_name'])->name('topic_name');
 Route::get('category/{location}/{category}', [indexController::class, 'questions_details'])->name('questions_details');
 Route::get('/test', [App\Http\Controllers\BlogController::class, 'test_controller'])->name('test_controller');
+//Route::get('/non-existent-page', [indexController::class, 'not_found'])->name('not_found');
+
 Auth::routes([
     'verify' => true
 ]);
@@ -111,3 +114,4 @@ Route::post('/add_thoughts', [indexController::class, 'add_thoughts']);
 // Route::post('/login', function () {
 //     return view('auth.login');
 // });
+Route::fallback([indexController::class, 'not_found']);

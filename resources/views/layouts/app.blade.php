@@ -35,7 +35,7 @@
     <link href="{{ asset('css/header.css') }}" rel="stylesheet">
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
     <link href="{{ asset('css/berlin_sans.css') }}" rel="stylesheet">
-    @if (request()->route()->getName() == 'create-blog-index' || request()->route()->getName() == 'create_blog_topic_question')
+    @if (request()->route() && (request()->route()->getName() == 'create-blog-index' || request()->route()->getName() == 'create_blog_topic_question'))
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" rel="stylesheet" />
     <!-- <link href="{{ asset('src/richtext.min.css') }}" rel="stylesheet"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css">
@@ -57,7 +57,7 @@
     <!-- <link href="{{ asset('select_src/jquery-customselect.css') }}" rel="stylesheet"> -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
     @endif
-    @if(request()->route()->getName() == 'editBlog' )
+    @if(request()->route() && request()->route()->getName() == 'editBlog' )
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" rel="stylesheet" />
     <!-- <link href="{{ asset('src/richtext.min.css') }}" rel="stylesheet"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css">
@@ -79,7 +79,7 @@
     <!-- <link href="{{ asset('select_src/jquery-customselect.css') }}" rel="stylesheet"> -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
     @endif
-    @if(request()->route()->getName()=='questions_details')
+    @if(request()->route() && request()->route()->getName()=='questions_details')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css">
     <link rel="stylesheet" href="{{ asset('css/froala_editor.css') }}">
     <link rel="stylesheet" href="{{ asset('css/froala_style.css') }}">
@@ -97,13 +97,13 @@
     <link rel="stylesheet" href="{{ asset('css/plugins/file.css') }}">
     <link rel="stylesheet" href="{{ asset('css/themes/dark.css') }}">
     @endif
-    @if (request()->route()->getName() == 'blog' || request()->route()->getName() == 'filter_blog')
+    @if (request()->route() && (request()->route()->getName() == 'blog' || request()->route()->getName() == 'filter_blog'))
     <!-- <link href="{{ asset('select_src/jquery-customselect.css') }}" rel="stylesheet"> -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset('slick/slick.css?v2022') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('slick/slick-theme.css?v2022') }}">
     @endif
-    @if(request()->route()->getName()=='comments_route')
+    @if(request()->route() && request()->route()->getName()=='comments_route')
 
     <link href="{{ asset('css/comments.css') }}" rel="stylesheet">
     @endif

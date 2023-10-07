@@ -20,7 +20,11 @@
                 </div>
             </div>
             <div class="text-center">
-                <img src="/images/posts/{{$post->featured_image}}" class="img-fluid mt-3" alt="...">
+                @if($post->alt_text != '' || $post->alt_text != NULL)
+                <img src="/images/posts/{{$post->featured_image}}" class="img-fluid mt-3" alt="{{$post->alt_text}}">
+                @else
+                <img src="/images/posts/{{$post->featured_image}}" class="img-fluid mt-3" alt="{{$post->title}}">
+                @endif
             </div>
             <div class="mt-3" id="blog_content">
                 {!! $post->blog_content !!}

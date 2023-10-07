@@ -10,17 +10,19 @@
                     Our platform is made for those who like trying new things and are proud to share their discoveries. Our bloggers are a key part of all this.<br><br>
 
                     Blogging on iFave is fun because we are all about favorite things. We offer a great choice of topics. So just tell us about your faves.
-                    You are welcome to give your opinions and arguments for who is the best, create your own top tens, inform the world about the news and trends within a certain category and much more.<br><br>
+                    You are welcome to give your opinions and arguments for who is the best, create your own top tens, inform the world about the news and trends within a certain category and much more. <a href="#" class="unfold_instructions">read more</a><br><br>
                 </p>
+                <div class="instruction-fold d-none">
                 With us, you will participate in the economic growth of your region by improving the experiences of locals and tourists. You can also support your favorite entrepreneurs by spreading the word about them. You can promote their products and discounts without forgetting to give a thorough review of the premises and of their strengths and weaknesses.
                 Our bloggers may accept payments, gifts, free services or other benefits from businesses they review. The important thing is to make proper disclosures and be honest with the readers.
                 You are free to promote your website and social media accounts. You can also use affiliate links to reputable websites as long as you provide quality and useful content.<br><br>
+                </div>
             </div>
         </div>
         <div class="col-md-4">
             <img src="/images/Create-blog-page.jpg" class="img-fluid mt-5 mb-3" alt="...">
         </div>
-        <div class="d-flex justify-content-start">
+        <div class="d-flex justify-content-start instruction-fold d-none">
             <p>
                 All posts are displayed on the Category pages and the best posts on the Location pages.
                 Your rating is based on views and likes of your posts. Upvotes of your comments anywhere on our website are also included into your rating. Higher ratings result in a higher visibility.<br><br>
@@ -48,6 +50,12 @@
             @enderror
 
         </div>
+        @if($user_type==1 || $user_type==2)
+        <div class="mb-3">
+            <label for="slug" class="form-label">Slug <b class="text-danger">*</b></label>
+            <input type="text" class="form-control" id="slug" name="slug" maxlength="100" value="{{ old('slug') }}" required>
+        </div>
+        @endif
         @if(isset($topic) && isset($question))
         <div class="mb-3">
             <label for="topic_name" class="form-label">Location</label>
@@ -76,7 +84,7 @@
                     <label for="select_location" class="form-label">Location<b class="text-danger">*</b></label>
                     <select class="select-2 form-control" id="select_location" name="topic_id" aria-label="Select Location">
                         <option selected disabled>Select Location</option>
-                       
+
                     </select>
                     <small id="location_error" class="text-danger d-none">This fied is required</small>
                 </div>
@@ -101,6 +109,11 @@
             @error('featured_image')
             <div class="error"><b class="text-danger">{{ $message }}</b></div>
             @enderror
+        </div>
+        <div class="mb-3">
+            <label for="alt_text" class="form-label">Image Alt Text <b class="text-danger">*</b></label>
+            <input type="text" class="form-control" id="alt_text" name="alt_text" maxlength="50" value="{{ old('alt_text') }}" required>
+            <small id="alt_error" class="text-danger d-none">This fied is required</small>
         </div>
         <div class="mb-3">
             <label for="edit" class="form-label">Blog Content<b class="text-danger">*</b></label>
