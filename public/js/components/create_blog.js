@@ -212,6 +212,9 @@ $('#blog_form').on('submit', function (e) {
             let obj = JSON.parse(data);
             if (obj.success == 1) {
                 toastr.success(obj.data)
+                setTimeout(function () {
+                    location.reload();
+                }, 2000);
             }
             if (obj.success == 0) {
                 toastr.error(obj.data);
@@ -219,9 +222,7 @@ $('#blog_form').on('submit', function (e) {
             if (obj.success == 3) {
                 toastr.error('Please verify your account in order to add blogs')
             }
-            setTimeout(function () {
-                location.reload();
-            }, 2000);
+
         },
         error: function (e) {
             console.log(e)
