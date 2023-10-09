@@ -219,7 +219,9 @@ $('#blog_form').on('submit', function (e) {
             if (obj.success == 3) {
                 toastr.error('Please verify your account in order to add blogs')
             }
-            $('#blog_form').reset();
+            setTimeout(function () {
+                location.reload();
+            }, 2000);
         },
         error: function (e) {
             console.log(e)
@@ -265,7 +267,7 @@ $('#blog_title').on('keyup', function () {
     $('.title_count').empty();
     $('.title_count').html($(this).val().length + '/100');
 })
-$('.unfold_instructions').on('click',function(){
+$('.unfold_instructions').on('click', function () {
     $('.instruction-fold').removeClass('d-none')
     $(this).addClass('d-none')
 })
