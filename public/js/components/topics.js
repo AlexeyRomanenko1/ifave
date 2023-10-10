@@ -410,7 +410,7 @@ $('#search_categories').on('keyup', function () {
             if (obj.data.length > 0) {
                 for (let j = 0; j < obj.data.length; j++) {
                     html += '<p><b>' + obj.data[j]['question_category'] + '</b></p>'
-                    let questions = obj.data[j]['questions'].split(',');
+                    let questions = obj.data[j]['questions'].split('break_statement');
                     html+='<div class="container"><ul>';
                     for (var i = 0; i < questions.length; i++) {
                         // Trim any leading/trailing spaces from each value
