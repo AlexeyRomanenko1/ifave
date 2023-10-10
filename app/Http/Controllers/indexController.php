@@ -462,7 +462,7 @@ class indexController extends Controller
                 ->groupBy('question_category')
                 ->select([
                     'question_category',
-                    DB::raw("GROUP_CONCAT(CONCAT(question) ORDER BY question_order SEPARATOR 'break_statement') AS questions")
+                    DB::raw("GROUP_CONCAT(CONCAT(question) ORDER BY question_order SEPARATOR ' break_statement') AS questions")
                 ])
                 ->orderByDesc('questions')
                 ->get();
@@ -481,7 +481,7 @@ class indexController extends Controller
             cat_group) AS subquery'))
                 ->select([
                     'question_category',
-                    DB::raw("GROUP_CONCAT(CONCAT(question) ORDER BY question_order SEPARATOR 'break_statement') AS questions")
+                    DB::raw("GROUP_CONCAT(CONCAT(question) ORDER BY question_order SEPARATOR ' break_statement') AS questions")
                 ])
                 ->groupBy('question_category')
                 ->orderBy('questions', 'DESC')
