@@ -142,7 +142,7 @@
                 <ul>
                     <li>We recommend posting articles of at least 1000 words (6000 characters) which rank higher in search engines.</li>
                     <li>All posts must be originally written for iFave.</li>
-                    <li>Respect copywrite of text and images.</li>
+                    <li>Respect copyright of text and images.</li>
                     <li>Blog tags (or keywords) are words or phrases that describe a blog post. They help search engines to find your post. Keep them short (usually 1-2 words). Do not use more than 7-8 tags.</li>
                     <li>Use rel=”sponsored” or rel=”nofollow” attributes on affiliate links.</li>
                 </ul>

@@ -434,7 +434,7 @@ class BlogController extends Controller
                 ->pluck('id');
             $question_id = $question_id[0];
             $posts = DB::table('posts')
-                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image','posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
                 ->where('posts.question_id', $question_id)
@@ -443,7 +443,7 @@ class BlogController extends Controller
                 ->paginate($perPage, ['*'], 'page', $page);
         } else {
             $posts = DB::table('posts')
-                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image','posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
                 ->where('posts.status', 1)
