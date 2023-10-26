@@ -1,5 +1,5 @@
 <div class="row">
-    @foreach($posts as $post)
+    @foreach($posts as $index=>$post)
     <div class="col-md-3">
         <div class="p-3">
             <div class="h-75">
@@ -20,6 +20,22 @@
             @endif
         </div>
     </div>
+    @if($index == 2)
+    <div class="col-md-3">
+        <div class="card mt-2">
+            <div class="card-header text-center">
+                <h6>POPULAR CATEGORIES</h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    @foreach($popular_questions as $popular_question)
+                    <li class="list-group-item"><a href="/category/{{str_replace(' ','-',$popular_question->topic_name)}}/{{str_replace(' ','-',$popular_question->question)}}">{{$popular_question->question}}</a></li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    </div>
+    @endif
     @endforeach
 </div>
 <div class="pagination justify-content-center">

@@ -61,12 +61,12 @@ class BlogController extends Controller
         $blog_title = $request->blog_title;
         $blog_content = $request->blog_content;
         $user_id = Auth::id();
-        $alt_text=$request->alt_text;
+        $alt_text = $request->alt_text;
         if (isset($request->slug)) {
             $slug = str_replace(" ", "-", $request->slug);
             $slug = str_replace('?', '-', $slug);
-            $slug_count=DB::table('posts')->where('slug',$slug)->count();
-            if($slug_count > 0){
+            $slug_count = DB::table('posts')->where('slug', $slug)->count();
+            if ($slug_count > 0) {
                 return json_encode([
                     'success' => 0,
                     'data' => 'This slug is already taken'
@@ -99,7 +99,7 @@ class BlogController extends Controller
             'blog_content' => $blog_content,
             'featured_image' => $uniqueName,
             'slug' => $slug,
-            'alt_text'=>$alt_text
+            'alt_text' => $alt_text
         ]);
 
         if ($insert_blog) {
@@ -134,12 +134,20 @@ class BlogController extends Controller
         $perPage = 52; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
         $posts = DB::table('posts')
-            ->select('posts.title', 'posts.blog_content', 'posts.featured_image','posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
+            ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
             ->join('users', 'posts.user_id', 'users.id')
             ->where('posts.status', 1)
             ->orderByDesc('posts.vote_count')
             ->paginate($perPage, ['*'], 'page', $page);
 
+            // popular categories
+            $popular_questions = DB::table('questions')
+            ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+            ->join('topics', 'questions.topic_id', '=', 'topics.id')
+            ->select('questions.question', 'topics.topic_name')
+            ->inRandomOrder()  // This line randomizes the order of the records
+            ->limit(5)
+            ->get();
         // $bloggers = [];
         // $bloggers_rating = DB::table('users as u')
         //     ->join('posts as p', 'u.id', '=', 'p.user_id')
@@ -204,7 +212,7 @@ class BlogController extends Controller
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title = 'iFave - Blogs';
         $topics = DB::table('topics')->select('*')->limit(200)->get();
-        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'keywords', 'meta_description', 'page_title'));
+        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'keywords', 'meta_description', 'page_title','popular_questions'));
     }
     public function blog_details(Request $request, $slug)
     {
@@ -234,18 +242,32 @@ class BlogController extends Controller
                     ]);
             }
         }
-        $posts = DB::table('posts')->select('posts.title', 'posts.tags', 'posts.blog_content', 'posts.featured_image','posts.alt_text', 'posts.vote_count', 'users.name', 'posts.created_at', 'posts.id', 'posts.down_votes', 'posts.views_count', 'posts.topic_id')
+        $posts = DB::table('posts')->select('posts.title', 'posts.tags', 'posts.blog_content', 'posts.featured_image', 'posts.alt_text', 'posts.vote_count', 'users.name', 'posts.created_at', 'posts.id', 'posts.down_votes', 'posts.views_count', 'posts.topic_id')
             ->join('users', 'users.id', 'posts.user_id')
             ->where('posts.slug', $slug)
             ->get();
 
 
+        $post_location_link = DB::table('posts')->join('topics', 'topics.id', 'posts.topic_id')->where('posts.slug', $slug)->pluck('topics.topic_name');
+        $post_location_link = str_replace(' ', '-', $post_location_link[0]);
 
+        $post_category = DB::table('posts')->join('questions', 'questions.id', 'posts.question_id')->where('posts.slug', $slug)->pluck('questions.question');
+        $post_category = str_replace(' ', '-', $post_category[0]);
 
         foreach ($posts as $post_location) {
             $this_post_location = $post_location->topic_id;
+            $this_post_id = $post_location->id;
             // return $this_post_location;
         }
+        $get_comments = DB::table('comments_posts')
+            ->select('comments_posts.*', 'users.id as user_id', 'users.name')
+            ->selectRaw('(upvotes - downvotes) as difference')
+            ->leftJoin('users', 'comments_posts.comment_by', '=', 'users.id')
+            ->where('comments_posts.blog_id', $this_post_id)
+            ->orderBy('difference', 'DESC')
+            ->limit(5)
+            ->get();
+        $replies = DB::table('comments_posts')->select('comments_posts.*', 'users.id as user_id', 'users.name')->leftJoin('users', 'comments_posts.comment_by', '=', 'users.id')->where('blog_id', $this_post_id)->where('parent_comment_id', '<>', 0)->get();
         // return $slug;
         // $popular_questions = DB::table('questions')
         //     ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
@@ -257,17 +279,27 @@ class BlogController extends Controller
         //     ->offset(1)
         //     ->limit(5)
         //     ->get();
+        // $popular_questions = DB::table('questions')
+        //     ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+        //     ->join('topics', 'questions.topic_id', '=', 'topics.id')
+        //     ->select('questions.question', 'topics.topic_name')
+        //     ->selectRaw('SUM(questions_answer.vote_count) as total_vote_count')
+        //     ->where('questions.topic_id', '=', $this_post_location)
+        //     ->groupBy('questions.id', 'questions.question', 'topics.topic_name')
+        //     ->orderBy('total_vote_count', 'DESC')
+        //     ->offset(0) // Remove offset or adjust it as needed
+        //     ->limit(5)
+        //     ->get();
+
         $popular_questions = DB::table('questions')
             ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
             ->join('topics', 'questions.topic_id', '=', 'topics.id')
             ->select('questions.question', 'topics.topic_name')
-            ->selectRaw('SUM(questions_answer.vote_count) as total_vote_count')
+            ->inRandomOrder()  // This line randomizes the order of the records
             ->where('questions.topic_id', '=', $this_post_location)
-            ->groupBy('questions.id', 'questions.question', 'topics.topic_name')
-            ->orderBy('total_vote_count', 'DESC')
-            ->offset(0) // Remove offset or adjust it as needed
             ->limit(5)
             ->get();
+
 
         $keywords = DB::table('posts')->where('slug', $slug)->pluck('tags');
         $keywords = $keywords[0];
@@ -279,7 +311,7 @@ class BlogController extends Controller
         $latest_posts = DB::table('posts')->select('*')->where('status', 1)->orderByDesc('created_at')->limit(5)->get();
         $blog_title = DB::table('posts')->where('slug', $slug)->pluck('title');
         $page_title = 'iFave Blog - ' . $blog_title[0];
-        return view('posts.post_details', compact('posts', 'latest_posts', 'keywords', 'meta_description', 'page_title', 'popular_questions'));
+        return view('posts.post_details', compact('posts', 'post_category', 'post_location_link', 'latest_posts', 'get_comments', 'replies', 'keywords', 'meta_description', 'page_title', 'popular_questions'));
     }
     public function upvote_post(Request $request)
     {
@@ -434,7 +466,7 @@ class BlogController extends Controller
                 ->pluck('id');
             $question_id = $question_id[0];
             $posts = DB::table('posts')
-                ->select('posts.title', 'posts.blog_content', 'posts.featured_image','posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
                 ->where('posts.question_id', $question_id)
@@ -443,7 +475,7 @@ class BlogController extends Controller
                 ->paginate($perPage, ['*'], 'page', $page);
         } else {
             $posts = DB::table('posts')
-                ->select('posts.title', 'posts.blog_content', 'posts.featured_image','posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
                 ->where('posts.status', 1)
@@ -491,11 +523,19 @@ class BlogController extends Controller
             return $b['rating'] - $a['rating'];
         });
 
+        $popular_questions = DB::table('questions')
+        ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+        ->join('topics', 'questions.topic_id', '=', 'topics.id')
+        ->select('questions.question', 'topics.topic_name')
+        ->inRandomOrder()  // This line randomizes the order of the records
+        ->limit(5)
+        ->get();
+
         $keywords = 'ifave, ifave blogging, blogging';
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title = 'iFave - Blogs - ' . $topic . ' - ' . $question;
         $topics = DB::table('topics')->select('*')->limit(200)->get();
-        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'categories', 'page_title', 'keywords', 'meta_description', 'topic_id'));
+        return view('posts.blog', compact('posts', 'bloggers','popular_questions','topics', 'topic_slug', 'question_slug', 'categories', 'page_title', 'keywords', 'meta_description', 'topic_id'));
     }
 
     public function blogger_location_filter(Request $request, $user_name, $topic_slug, $question_slug)
@@ -522,7 +562,7 @@ class BlogController extends Controller
                 ->pluck('id');
             $question_id = $question_id[0];
             $posts = DB::table('posts')
-                ->select('posts.title', 'posts.blog_content', 'posts.featured_image','posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
                 ->where('posts.question_id', $question_id)
@@ -532,7 +572,7 @@ class BlogController extends Controller
                 ->paginate($perPage, ['*'], 'page', $page);
         } else {
             $posts = DB::table('posts')
-                ->select('posts.title', 'posts.blog_content', 'posts.featured_image','posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
                 ->where('posts.status', 1)
@@ -578,6 +618,14 @@ class BlogController extends Controller
             ];
         }
 
+        $popular_questions = DB::table('questions')
+        ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+        ->join('topics', 'questions.topic_id', '=', 'topics.id')
+        ->select('questions.question', 'topics.topic_name')
+        ->inRandomOrder()  // This line randomizes the order of the records
+        ->limit(5)
+        ->get();
+
         // Sort bloggers by rating in descending order
         usort($bloggers, function ($a, $b) {
             return $b['rating'] - $a['rating'];
@@ -586,7 +634,7 @@ class BlogController extends Controller
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title = 'iFave - Blogger ' . $name . ' - ' . $topic . ' - ' . $question;
         $topics = DB::table('topics')->select('*')->limit(200)->get();
-        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'topic_slug', 'question_slug', 'name', 'categories', 'keywords', 'meta_description', 'page_title', 'topic_id'));
+        return view('posts.blog', compact('posts', 'bloggers','popular_questions','topics', 'topic_slug', 'question_slug', 'name', 'categories', 'keywords', 'meta_description', 'page_title', 'topic_id'));
     }
     public function blogger_filter(Request $request, $user_name)
     {
@@ -599,7 +647,7 @@ class BlogController extends Controller
         $perPage = 52; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
         $posts = DB::table('posts')
-            ->select('posts.title', 'posts.blog_content', 'posts.featured_image','posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
+            ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
             ->join('users', 'posts.user_id', 'users.id')
             ->where('users.id', $user_id)
             ->where('posts.status', 1)
@@ -642,6 +690,14 @@ class BlogController extends Controller
             ];
         }
 
+        $popular_questions = DB::table('questions')
+        ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+        ->join('topics', 'questions.topic_id', '=', 'topics.id')
+        ->select('questions.question', 'topics.topic_name')
+        ->inRandomOrder()  // This line randomizes the order of the records
+        ->limit(5)
+        ->get();
+
         // Sort bloggers by rating in descending order
         usort($bloggers, function ($a, $b) {
             return $b['rating'] - $a['rating'];
@@ -650,7 +706,7 @@ class BlogController extends Controller
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title = 'iFave - Blogger - ' . $name;
         $topics = DB::table('topics')->select('*')->limit(200)->get();
-        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'name', 'keywords', 'meta_description', 'page_title'));
+        return view('posts.blog', compact('posts', 'bloggers', 'popular_questions', 'topics', 'name', 'keywords', 'meta_description', 'page_title'));
     }
     public function searchBlogs(Request $request)
     {
@@ -671,7 +727,7 @@ class BlogController extends Controller
                     ->pluck('id');
                 $question_id = $question_id[0];
                 $posts = DB::table('posts')
-                    ->select('posts.title', 'posts.blog_content', 'posts.featured_image','posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
+                    ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
                     ->join('users', 'posts.user_id', 'users.id')
                     ->where('posts.topic_id', $topic_id)
                     ->where('posts.question_id', $question_id)
@@ -681,7 +737,7 @@ class BlogController extends Controller
                     ->paginate($perPage, ['*'], 'page', $page);
             } else {
                 $posts = DB::table('posts')
-                    ->select('posts.title', 'posts.blog_content', 'posts.featured_image','posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
+                    ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
                     ->join('users', 'posts.user_id', 'users.id')
                     ->where('posts.topic_id', $topic_id)
                     ->where('posts.status', 1)
@@ -691,7 +747,7 @@ class BlogController extends Controller
             }
         } else {
             $posts = DB::table('posts')
-                ->select('posts.title', 'posts.blog_content', 'posts.featured_image','posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.status', 1)
                 ->where('posts.title', 'like', '%' . $request->search . '%')
@@ -699,7 +755,14 @@ class BlogController extends Controller
                 ->limit(1)
                 ->paginate($perPage, ['*'], 'page', $page);
         }
-        return view('posts.pagination', compact('posts'));
+        $popular_questions = DB::table('questions')
+        ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+        ->join('topics', 'questions.topic_id', '=', 'topics.id')
+        ->select('questions.question', 'topics.topic_name')
+        ->inRandomOrder()  // This line randomizes the order of the records
+        ->limit(5)
+        ->get();
+        return view('posts.pagination', compact('posts','popular_questions'));
     }
     public function editBlog(Request $request, $username, $slug, $blog_id)
     {
@@ -758,6 +821,7 @@ class BlogController extends Controller
                     'question_id' => $request->question_id,
                     'blog_content' => $blog_content,
                     'featured_image' => $uniqueName,
+                    'alt_text'=>$request->alt_text
                     //'slug' => $slug
                 ]);
         } else {
@@ -769,6 +833,7 @@ class BlogController extends Controller
                     'topic_id' => $request->topic_id,
                     'question_id' => $request->question_id,
                     'blog_content' => $blog_content,
+                    'alt_text'=>$request->alt_text
                     //'slug' => $slug
                 ]);
         }
@@ -811,6 +876,106 @@ class BlogController extends Controller
             $topics = DB::table('topics')->select('*')->where('topic_name', 'like', '%' . $request->q . '%')->limit(100)->get();
             //return response()->json(['items' => $topics]);
             return $topics;
+        }
+    }
+
+    // blog add comments by users
+    public function add_user_comments_posts(Request $request)
+    {
+        if (Auth::check()) {
+            // User is logged in
+            $clientIP = Auth::id();
+        } else {
+            // User is not logged in
+            $clientIP = $this->getClientIP($request);
+        }
+        $comments = $request->comments;
+        $blog_id = $request->blog_id;
+        if ($this->isURLComment($comments) == true) {
+            return redirect()->back()->with('error', 'external website links are not allowed to add!');
+        }
+        $pattern = '/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/';
+
+        if (preg_match($pattern, $comments)) {
+            // Email address found in textarea, handle the error
+            return redirect()->back()->with('error', 'You can not add email addresses in comments.');
+        }
+        if (strlen($comments) > 2000) {
+            return redirect()->back()->with('error', 'You comments length is exceeding the limit of 2000 characters!');
+        } else {
+            $insert_comments = DB::table('comments_posts')->insert([
+                'comments' => $comments,
+                'blog_id' => $blog_id,
+                'comment_by' => $clientIP
+            ]);
+
+            if ($insert_comments) {
+                return redirect()->back()->with('success', 'Comment added successfully!');
+            } else {
+                return redirect()->back()->with('error', 'Something went wrong!');
+            }
+        }
+    }
+    //store replty to commentfor posts
+    public function storeReply(Request $request)
+    {
+        // Validation for replies
+        $this->validate($request, [
+            'parent_comment_id' => 'required|exists:comments,id',
+            'reply_text' => 'required|max:2000',
+        ]);
+        if (Auth::check()) {
+            // User is logged in
+            $clientIP = Auth::id();
+        } else {
+            // User is not logged in
+            $clientIP = $this->getClientIP($request);
+        }
+        // $comments = $request->comments;
+        // $question_id = $request->question_id;
+        if ($this->isURLComment($request->input('reply_text')) == true) {
+            return redirect()->back()->with('error', 'external website links are not allowed to add!');
+        }
+        $pattern = '/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/';
+
+        if (preg_match($pattern, $request->input('reply_text'))) {
+            // Email address found in textarea, handle the error
+            return redirect()->back()->with('error', 'You can not add email addresses in comments.');
+        }
+        if (strlen($request->input('reply_text')) > 2000) {
+            return redirect()->back()->with('error', 'You reply length is exceeding the limit of 2000 characters!');
+        } else {
+            $insert_comments = DB::table('comments_posts')->insert([
+                'parent_comment_id' => $request->input('parent_comment_id'),
+                'comments' => $request->input('reply_text'),
+                'comment_by' => $clientIP,
+                'blog_id' => $request->blog_id
+            ]);
+        }
+        if ($insert_comments) {
+            return redirect()->back()->with('success', 'Reply added successfully!');
+        } else {
+            return redirect()->back()->with('error', 'Something went wrong!');
+        }
+        // Storing the reply in the database
+        // $comment = new Comment();
+        // $comment->parent_comment_id = $request->input('parent_comment_id');
+        // $comment->comments = $request->input('reply_text');
+        // Add other fields like user ID, etc.
+        // $comment->save();
+
+        // return redirect()->back()->with('success', 'Reply added successfully!');
+    }
+    public function isURLComment($comment)
+    {
+        // Regular expression pattern to match a URL
+        $pattern = '/\b(?:https?:\/\/|www\.)\S+\b/i';
+
+        // Check if the comment contains a URL
+        if (preg_match($pattern, $comment)) {
+            return true; // URL found in the comment
+        } else {
+            return false; // No URL found in the comment
         }
     }
     // public function search_blog_cat_q(Request $request, $q)

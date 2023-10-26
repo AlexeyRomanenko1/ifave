@@ -1,4 +1,8 @@
 (function () {
+    let url=$('#to_share_link').val();
+    let text = "Checkout my comment on ifave";
+    $("#facebook_share_comment").attr("href", "https://www.facebook.com/sharer/sharer.php?u=" + encodeURI(url));
+    $("#twitter_share_comment").attr("href", "https://twitter.com/intent/tweet?text=" + encodeURI(text) + "&url=" + encodeURI(url));
     // $('#edit').richText();
     var uploadUrl = $('#thoughts').data('upload-url');
     new FroalaEditor("#thoughts", {
@@ -35,7 +39,7 @@
             if (str.length > 450) {
                 str = str.slice(0, 1000);
             }
-             console.log(str)
+            console.log(str)
             var el = document.implementation.createHTMLDocument().createElement('div');
             el.innerHTML = str;
             str = el.innerHTML;
@@ -134,3 +138,40 @@ $('.reply-btn').click(function (e) {
     const commentId = $(this).data('comment-id');
     $(`.reply-form-${commentId}`).toggle();
 });
+
+$('#add_comments').on('submit', function (e) {
+
+    e.preventDefault();
+    $.ajax({
+        type: 'POST',
+        url: '/add_user_comments_ajax',
+        data: new FormData(this),
+        contentType: false,
+        cache: false,
+        processData: false,
+        success: function (data) {
+            let obj = JSON.parse(data);
+            if (obj.success == 1) {
+                toastr.success(obj.data)
+            }
+            if (obj.success == 2) {
+                toastr.success(obj.data)
+                // $('#sharecommentmodal').show();
+                $('#sharecommentmodal').addClass('show');
+                $('#sharecommentmodal').show();
+
+            }
+            if (obj.success == 0) {
+                toastr.error(obj.data)
+            }
+            $('#add_comments').trigger("reset");
+        },
+        error: function (error) {
+
+        }
+    })
+})
+$('.closesharecommentmodal').on('click', function (e) {
+    $('#sharecommentmodal').removeClass('show');
+    $('#sharecommentmodal').hide();
+})

@@ -44,7 +44,7 @@
     <input type="hidden" name="hidden_question_id" id="hidden_question_id" value="{{$postArray[0]['question_id']}}">
     <form id="blog_form" enctype="multipart/form-data">
         @csrf
-    <input type="hidden" name="blog_id" value="{{$blog_id}}">
+        <input type="hidden" name="blog_id" value="{{$blog_id}}">
         <div class="mb-3">
             <label for="blog_title" class="form-label">Blog Title <b class="text-danger">*</b></label>
             <input type="text" class="form-control" id="blog_title" name="blog_title" maxlength="100" value="{{$postArray[0]['title']}}" disabled>
@@ -115,8 +115,13 @@
             </div>
         </div>
         <div class="mb-3">
+            <label for="alt_text" class="form-label">Image Alt Text <b class="text-danger">*</b></label>
+            <input type="text" class="form-control" id="alt_text" name="alt_text" maxlength="100" value="{{$postArray[0]['alt_text']}}" required>
+            <small id="alt_error" class="text-danger d-none">This fied is required</small>
+        </div>
+        <div class="mb-3">
             <label for="edit" class="form-label">Blog Content<b class="text-danger">*</b></label>
-            <textarea class="form-control" name="blog_content" id="edit" rows="3" data-upload-url="{{ route('upload_content_image') }}" >{!! $postArray[0]['blog_content'] !!}</textarea>
+            <textarea class="form-control" name="blog_content" id="edit" rows="3" data-upload-url="{{ route('upload_content_image') }}">{!! $postArray[0]['blog_content'] !!}</textarea>
             <small id="content_error" class="text-danger d-none">This fied is required</small>
             @error('blog_content')
             <div class="error"><b class="text-danger">{{ $message }}</b></div>

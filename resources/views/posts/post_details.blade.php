@@ -4,6 +4,9 @@
     <div class="row">
         <div class="col-md-8">
             @foreach($posts as $post)
+            <div class="text-center">
+            <a href="/category/{{ $post_location_link }}/{{ $post_category }}">Go to ranking of {{ str_replace('-',' ',$post_category) }} in {{ str_replace('-',' ',$post_location_link) }}</a> <br><br>
+            </div>
             <input type="hidden" id="post_id" value="{{$post->id}}">
             <input type="hidden" id="post_vote_count" value="{{$post->vote_count}}">
             <input type="hidden" id="post_down_votes" value="{{$post->down_votes}}">
@@ -40,6 +43,9 @@
                     </div>
                 </div>
             </div>
+            <div class="mt-3">
+                <a href="/category/{{ $post_location_link }}/{{ $post_category }}">Go to ranking of {{ str_replace('-',' ',$post_category) }} in {{ str_replace('-',' ',$post_location_link) }}</a> <br><br>
+            </div>
             <hr>
             <div class="mt-2">
                 <div class="container">
@@ -50,6 +56,86 @@
                     </div>
                 </div>
             </div>
+            @if(count($get_comments) > 0)
+            @foreach($get_comments as $user_comment)
+            @if($user_comment->parent_comment_id == 0)
+            <div class="comment-container comment mb-2">
+                <div class="comment-content">
+                    @if(strlen($user_comment->comments) > 150)
+                    <p class="half-comment">{{ substr($user_comment->comments, 0, 150) }} <span class="read-more">... Read More</span></p>
+                    <span class="full-comment" style="display: none;">{{ $user_comment->comments }}</span>
+                    @else
+                    <p>{{ $user_comment->comments }}</p>
+                    @endif
+                </div>
+                <div class="comment-actions">
+                    <small class="mt-2">
+                        @if($user_comment->name != '')
+                        <b>{{$user_comment->name}}</b>
+                        @else
+                        <b>Anonymous</b>
+                        @endif
+                        ({{$user_comment->upvotes}} Upvotes)</small>
+                    <div>
+                    </div>
+                </div>
+                <a href="#" class="reply-btn" data-comment-id="{{ $user_comment->id }}">Reply</a>
+                <form method="POST" action="{{ route('postscomments.storeReplyPost') }}" class="reply-form reply-form-{{ $user_comment->id }} mt-3" style="display: none;">
+                    @csrf
+                    <input type="hidden" name="blog_id" value="{{$post->id}}">
+                    <input type="hidden" name="parent_comment_id" value="{{ $user_comment->id }}">
+                    <textarea name="reply_text" class="form-control" rows="3" placeholder="Reply to this comment"></textarea>
+                    <button type="submit" class="btn btn-primary mt-2">Submit Reply</button>
+                </form>
+                <hr>
+                @foreach($replies as $reply)
+                @if($reply->parent_comment_id == $user_comment->id)
+                <div class="comment-container comment reply mb-2">
+                    <!-- Reply Content -->
+                    <!-- ... -->
+                    <div class="comment-content">
+                        @if(strlen($reply->comments) > 150)
+                        <p class="half-comment">{{ substr($reply->comments, 0, 150) }} <span class="read-more">... Read More</span></p>
+                        <span class="full-comment" style="display: none;">{{ $reply->comments }}</span>
+                        <p>
+                            @if($reply->name != '')
+                            <b>{{$reply->name}}</b>
+                            @else
+                            <b>Anonymous</b>
+                            @endif
+                        </p>
+                        @else
+                        <p>{{ $reply->comments }}</p>
+                        <p>
+                            @if($reply->name != '')
+                            <b>{{$reply->name}}</b>
+                            @else
+                            <b>Anonymous</b>
+                            @endif
+                        </p>
+                        @endif
+                    </div>
+                </div>
+                @endif
+                @endforeach
+            </div>
+            @endif
+            @endforeach
+            @endif
+            <form method="POST" action="{{url('add_user_comments_posts')}}">
+                @csrf
+                <input type="hidden" name="blog_id" value="{{$post->id}}">
+                <div class="add_comments m-2 p-2">
+                    <textarea name="comments" onpaste="return false" class="form-control comment-text" id="" cols="30" rows="10" placeholder="Add your comment here" maxlength="2000" required></textarea>
+                    <small class="text-primary comment-warn">0/2000</small><br>
+                    @auth
+                    @else
+                    @endauth
+                </div>
+                <div class="add_comment_button p-2 m-2">
+                    <button type="submit" class="btn btn-primary float-end">Add</button>
+                </div>
+            </form>
             @endforeach
 
         </div>
@@ -130,6 +216,9 @@
             $('#blog_content iframe').removeAttr('height');
             $('#blog_content iframe').removeAttr('width');
         }
+        $('.comment-text').on('keyup', function() {
+            $('.comment-warn').html($(this).val().length + '/2000 characters')
+        })
     });
 
     function handleScreenWidthChange(mq) {

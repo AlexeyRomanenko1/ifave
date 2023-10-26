@@ -6,6 +6,8 @@
         $question_category=$details['question_category'];
         $question_id=$details['id'];
         $question=$details["question"];
+        $question_to_share=str_replace(' ','-',$question);
+        $topic_to_share=str_replace(" ", "-", $details["topic_name"]);
         $blog_question=str_replace(" ", "-", $details["question"]);
         $blog_topic_name=str_replace(" ", "-", $details["topic_name"]);
         $question_image=strtolower($details["question"]);
@@ -28,6 +30,7 @@
             {{ $details["question"] }}
         </h3>
         @endforeach
+        <input type="hidden" id="to_share_link" value="https://ifave.com/category/{{$topic_to_share}}/{{ $question_to_share }}">
     </div>
     <div class="row height d-flex justify-content-center align-items-center">
         <div class="col-md-8">
@@ -65,14 +68,14 @@
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Not in the list. Add my fave</button>
                     </div>
                     <p class="">
-                        <i class="fa fa-2x fa-clone float-center p-2 m-2" aria-hidden="true" onclick="copy_url('https://ifave.com/questions_details/'+{{ $question_id }})"></i> <i class="fa fa-2x fa-share float-center p-2 m-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url('https://ifave.com/questions_details/' + {{$question_id}})"></i> <i class="fa fa-2x fa-code float-center p-2 m-2" aria-hidden="true" onclick="generate_embeded_code('https://ifave.com/questions_details/' +{{ $question_id }}, '{{ $question }}')"></i>
+                        <i class="fa fa-2x fa-clone float-center p-2 m-2" aria-hidden="true" onclick="copy_url('https://ifave.com/category/{{$topic_to_share}}/{{ $question_to_share }}')"></i> <i class="fa fa-2x fa-share float-center p-2 m-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url('https://ifave.com/category/{{$topic_to_share}}/{{ $question_to_share }}')"></i> <i class="fa fa-2x fa-code float-center p-2 m-2" aria-hidden="true" onclick="generate_embeded_code('https://ifave.com/category/{{$topic_to_share}}/{{ $question_to_share }}', '{{ $question }}')"></i>
                     </p>
                     @if($user_status==1 || $user_status==2)
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#thoughts_modal">Thoughts</button>
                     @endif
                 </div>
                 <div class="col-md-4">
-                    <p class="p-1 mt-2"> <b>Click to fave</b></p>
+                    <!-- <p class="p-1 mt-2"> <b>Click to fave</b></p> -->
                     @if(count($get_user_answers) > 0)
                     <table class="table">
                         <thead>
@@ -250,7 +253,7 @@
                 </div>
             </div>
         </div> -->
-        <form method="POST" action="{{url('add_user_comments')}}">
+        <form id="add_comments">
             @csrf
             @foreach($header_info as $header)
             <input type="hidden" name="question_id" value="{{$header['id']}}">
@@ -275,7 +278,7 @@
             <div class="col-md-3">
                 <div class="p-3">
                     <div class="h-75">
-                    <img src="/images/posts/{{$all_post->featured_image}}" class="zoom-block img-fluid" alt="">
+                        <img src="/images/posts/{{$all_post->featured_image}}" class="zoom-block img-fluid" alt="">
                     </div>
                     <h4 class="mt-2"><a href="/blog/{{$all_post->slug}}">{{substr(strip_tags($all_post->title), 0, 100) }}</a></h4>
                     {!! substr(strip_tags($all_post->blog_content), 0, 150) !!}... <br><br>
@@ -368,6 +371,23 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="sharecommentmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Share My Comment</h5>
+                <button type="button" class="btn-close closesharecommentmodal" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <a id="facebook_share_comment" class="btn  m-2" href=""><i class="fa fa-facebook-square" aria-hidden="true"></i></a><a id="twitter_share_comment" class="btn m-2" href=""><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary closesharecommentmodal" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @include('footer.footer')
 <script>
     $('.modal-text').on('keyup', function() {

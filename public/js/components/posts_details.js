@@ -40,3 +40,8 @@ $('.post-thumbs-down').on('click',function(e){
         }
     });
 })
+$('.reply-btn').click(function (e) {
+    e.preventDefault();
+    const commentId = $(this).data('comment-id');
+    $(`.reply-form-${commentId}`).toggle();
+});

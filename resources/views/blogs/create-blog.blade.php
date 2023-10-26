@@ -112,7 +112,7 @@
         </div>
         <div class="mb-3">
             <label for="alt_text" class="form-label">Image Alt Text <b class="text-danger">*</b></label>
-            <input type="text" class="form-control" id="alt_text" name="alt_text" maxlength="50" value="{{ old('alt_text') }}" required>
+            <input type="text" class="form-control" id="alt_text" name="alt_text" maxlength="100" value="{{ old('alt_text') }}" required>
             <small id="alt_error" class="text-danger d-none">This fied is required</small>
         </div>
         <div class="mb-3">

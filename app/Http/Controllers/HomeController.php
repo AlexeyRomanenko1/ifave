@@ -78,6 +78,7 @@ class HomeController extends Controller
                     $question = $data[0];
                     $topic_name = $data[1];
                     $question_category = $data[2];
+                    $cat_group = $data[3];
                     // print_r($data);
                     // return;
                     //redirect()->back()->with('message', "$data");
@@ -103,7 +104,8 @@ class HomeController extends Controller
                             $insert_question =  DB::table('questions')->insert([
                                 'question' => $question,
                                 'topic_id' => $new_topic_id,
-                                'question_category' => $question_category
+                                'question_category' => $question_category,
+                                'cat_group' => $cat_group
                             ]);
                         }
                     }
@@ -121,7 +123,8 @@ class HomeController extends Controller
                             $insert_question =  DB::table('questions')->insert([
                                 'question' => $question,
                                 'topic_id' => $new_topic_id,
-                                'question_category' => $question_category
+                                'question_category' => $question_category,
+                                'cat_group' => $cat_group
                             ]);
                         }
                     }

@@ -563,17 +563,37 @@ class indexController extends Controller
             ->leftJoin('users', 'comments.comment_by', '=', 'users.id')
             ->where('comments.question_id', $question_id)
             ->orderBy('difference', 'DESC')
-            ->limit(5)
+            // ->limit(5)
             ->get();
         $replies = DB::table('comments')->select('comments.*', 'users.id as user_id', 'users.name')->leftJoin('users', 'comments.comment_by', '=', 'users.id')->where('question_id', $question_id)->where('parent_comment_id', '<>', 0)->get();
         // $data=[
         //     'question_details'=>$question_details,
         //     'question_answers'=>$question_answers
         // ];
-        $posts = DB::table('posts')->select('*')->where('question_id', $question_id)->where('status', 1)->orderBy('created_at', 'DESC')->limit(2)->get();
-        $perPage = 9; // Number of items per page
+        $currentDate = date('Y-m-d');
+        // $posts = DB::table('posts')->select('*')->where('question_id', $question_id)->where('status', 1)->orderBy('created_at', 'DESC')->limit(2)->get();
+        $posts = DB::table('posts')
+            ->select('*')
+            ->where('question_id', $question_id)
+            ->where('status', 1)
+            ->whereDate('last_displayed_at', '<', $currentDate)
+            ->orderBy('last_displayed_at', 'ASC')
+            ->limit(2)
+            ->get();
+        if (count($posts) == 0) {
+            $posts = DB::table('posts')->select('*')->where('question_id', $question_id)->where('status', 1)->orderBy('created_at', 'DESC')->limit(2)->get();
+        }
+        // Update the last_displayed_at column for the selected posts
+        foreach ($posts as $post) {
+            DB::table('posts')
+                ->where('id', $post->id)
+                ->update(['last_displayed_at' => now()]);
+            $excludedPostIds[] = $post->id;
+        }
+
+        $perPage = 12; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
-        $all_posts = DB::table('posts')->select('*')->where('question_id', $question_id)->where('status', 1)->orderBy('created_at', 'DESC')->paginate($perPage, ['*'], 'page', $page);
+        $all_posts = DB::table('posts')->select('*')->where('question_id', $question_id)->where('status', 1)->whereNotIn('id', $excludedPostIds)->orderBy('created_at', 'DESC')->paginate($perPage, ['*'], 'page', $page);
 
 
         $thoughts_details = DB::table('question_thoughts')->where('question_id', $question_id)->pluck('thoughts');
@@ -749,6 +769,55 @@ class indexController extends Controller
                 }
             } else {
                 return redirect()->back()->with('error', 'Something went wrong!');
+            }
+        }
+    }
+    public function add_user_comments_ajax(Request $request)
+    {
+        if (Auth::check()) {
+            // User is logged in
+            $clientIP = Auth::id();
+        } else {
+            // User is not logged in
+            $clientIP = $this->getClientIP($request);
+        }
+        $comments = $request->comments;
+        $question_id = $request->question_id;
+        if ($this->isURLComment($comments) == true) {
+            return redirect()->back()->with('error', 'external website links are not allowed to add!');
+        }
+        $pattern = '/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/';
+
+        if (preg_match($pattern, $comments)) {
+            // Email address found in textarea, handle the error
+            return redirect()->back()->with('error', 'You can not add email addresses in comments.');
+        }
+        if (strlen($comments) > 2000) {
+            return redirect()->back()->with('error', 'You comments length is exceeding the limit of 2000 characters!');
+        } else {
+            $insert_comments = DB::table('comments')->insert([
+                'comments' => $comments,
+                'question_id' => $question_id,
+                'comment_by' => $clientIP
+            ]);
+
+            if ($insert_comments) {
+                if (strlen($comments) > 300) {
+                    return json_encode([
+                        'success' => 2,
+                        'data' => 'Looks like you have left a thorough and detailed comment. Thanks you! Please share your comment across the social media'
+                    ]);
+                } else {
+                    return json_encode([
+                        'success' => 1,
+                        'data' => 'Comment added successfully!'
+                    ]);
+                }
+            } else {
+                return json_encode([
+                    'success' => 0,
+                    'data' => 'Something went wrong!'
+                ]);
             }
         }
     }
@@ -1216,7 +1285,8 @@ class indexController extends Controller
             ]);
         }
     }
-    public function not_found(Request $request){
+    public function not_found(Request $request)
+    {
         $topicName = "The World";
         $perPage = 20; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
@@ -1309,7 +1379,7 @@ class indexController extends Controller
         $meta_description = substr($meta_description, 0, -1);
         $page_title = 'iFave - ' . $topicName;
 
-        return view('errors.404', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts', 'keywords', 'topicName', 'meta_description', 'page_title', 'get_last_three_locations'));  
+        return view('errors.404', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts', 'keywords', 'topicName', 'meta_description', 'page_title', 'get_last_three_locations'));
     }
     public function comments_list_by_username_all(Request $request)
     {
