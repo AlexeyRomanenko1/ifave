@@ -16,6 +16,7 @@ use PDO;
 use ZipArchive;
 use Mews\Purifier\Facades\Purifier;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
 
 class BlogController extends Controller
 {
@@ -140,8 +141,8 @@ class BlogController extends Controller
             ->orderByDesc('posts.vote_count')
             ->paginate($perPage, ['*'], 'page', $page);
 
-            // popular categories
-            $popular_questions = DB::table('questions')
+        // popular categories
+        $popular_questions = DB::table('questions')
             ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
             ->join('topics', 'questions.topic_id', '=', 'topics.id')
             ->select('questions.question', 'topics.topic_name')
@@ -212,7 +213,7 @@ class BlogController extends Controller
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title = 'iFave - Blogs';
         $topics = DB::table('topics')->select('*')->limit(200)->get();
-        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'keywords', 'meta_description', 'page_title','popular_questions'));
+        return view('posts.blog', compact('posts', 'bloggers', 'topics', 'keywords', 'meta_description', 'page_title', 'popular_questions'));
     }
     public function blog_details(Request $request, $slug)
     {
@@ -524,18 +525,18 @@ class BlogController extends Controller
         });
 
         $popular_questions = DB::table('questions')
-        ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
-        ->join('topics', 'questions.topic_id', '=', 'topics.id')
-        ->select('questions.question', 'topics.topic_name')
-        ->inRandomOrder()  // This line randomizes the order of the records
-        ->limit(5)
-        ->get();
+            ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+            ->join('topics', 'questions.topic_id', '=', 'topics.id')
+            ->select('questions.question', 'topics.topic_name')
+            ->inRandomOrder()  // This line randomizes the order of the records
+            ->limit(5)
+            ->get();
 
         $keywords = 'ifave, ifave blogging, blogging';
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title = 'iFave - Blogs - ' . $topic . ' - ' . $question;
         $topics = DB::table('topics')->select('*')->limit(200)->get();
-        return view('posts.blog', compact('posts', 'bloggers','popular_questions','topics', 'topic_slug', 'question_slug', 'categories', 'page_title', 'keywords', 'meta_description', 'topic_id'));
+        return view('posts.blog', compact('posts', 'bloggers', 'popular_questions', 'topics', 'topic_slug', 'question_slug', 'categories', 'page_title', 'keywords', 'meta_description', 'topic_id'));
     }
 
     public function blogger_location_filter(Request $request, $user_name, $topic_slug, $question_slug)
@@ -619,12 +620,12 @@ class BlogController extends Controller
         }
 
         $popular_questions = DB::table('questions')
-        ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
-        ->join('topics', 'questions.topic_id', '=', 'topics.id')
-        ->select('questions.question', 'topics.topic_name')
-        ->inRandomOrder()  // This line randomizes the order of the records
-        ->limit(5)
-        ->get();
+            ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+            ->join('topics', 'questions.topic_id', '=', 'topics.id')
+            ->select('questions.question', 'topics.topic_name')
+            ->inRandomOrder()  // This line randomizes the order of the records
+            ->limit(5)
+            ->get();
 
         // Sort bloggers by rating in descending order
         usort($bloggers, function ($a, $b) {
@@ -634,7 +635,7 @@ class BlogController extends Controller
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
         $page_title = 'iFave - Blogger ' . $name . ' - ' . $topic . ' - ' . $question;
         $topics = DB::table('topics')->select('*')->limit(200)->get();
-        return view('posts.blog', compact('posts', 'bloggers','popular_questions','topics', 'topic_slug', 'question_slug', 'name', 'categories', 'keywords', 'meta_description', 'page_title', 'topic_id'));
+        return view('posts.blog', compact('posts', 'bloggers', 'popular_questions', 'topics', 'topic_slug', 'question_slug', 'name', 'categories', 'keywords', 'meta_description', 'page_title', 'topic_id'));
     }
     public function blogger_filter(Request $request, $user_name)
     {
@@ -691,12 +692,12 @@ class BlogController extends Controller
         }
 
         $popular_questions = DB::table('questions')
-        ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
-        ->join('topics', 'questions.topic_id', '=', 'topics.id')
-        ->select('questions.question', 'topics.topic_name')
-        ->inRandomOrder()  // This line randomizes the order of the records
-        ->limit(5)
-        ->get();
+            ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+            ->join('topics', 'questions.topic_id', '=', 'topics.id')
+            ->select('questions.question', 'topics.topic_name')
+            ->inRandomOrder()  // This line randomizes the order of the records
+            ->limit(5)
+            ->get();
 
         // Sort bloggers by rating in descending order
         usort($bloggers, function ($a, $b) {
@@ -756,13 +757,13 @@ class BlogController extends Controller
                 ->paginate($perPage, ['*'], 'page', $page);
         }
         $popular_questions = DB::table('questions')
-        ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
-        ->join('topics', 'questions.topic_id', '=', 'topics.id')
-        ->select('questions.question', 'topics.topic_name')
-        ->inRandomOrder()  // This line randomizes the order of the records
-        ->limit(5)
-        ->get();
-        return view('posts.pagination', compact('posts','popular_questions'));
+            ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
+            ->join('topics', 'questions.topic_id', '=', 'topics.id')
+            ->select('questions.question', 'topics.topic_name')
+            ->inRandomOrder()  // This line randomizes the order of the records
+            ->limit(5)
+            ->get();
+        return view('posts.pagination', compact('posts', 'popular_questions'));
     }
     public function editBlog(Request $request, $username, $slug, $blog_id)
     {
@@ -821,7 +822,7 @@ class BlogController extends Controller
                     'question_id' => $request->question_id,
                     'blog_content' => $blog_content,
                     'featured_image' => $uniqueName,
-                    'alt_text'=>$request->alt_text
+                    'alt_text' => $request->alt_text
                     //'slug' => $slug
                 ]);
         } else {
@@ -833,7 +834,7 @@ class BlogController extends Controller
                     'topic_id' => $request->topic_id,
                     'question_id' => $request->question_id,
                     'blog_content' => $blog_content,
-                    'alt_text'=>$request->alt_text
+                    'alt_text' => $request->alt_text
                     //'slug' => $slug
                 ]);
         }
@@ -966,6 +967,23 @@ class BlogController extends Controller
 
         // return redirect()->back()->with('success', 'Reply added successfully!');
     }
+    public function test_controller(Request $request)
+    {
+
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer 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',
+        ])->post('https://api.openai.com/v1/engines/davinci/completions', [
+            'prompt' => 'How to lose weight in 5 steps?',
+            'max_tokens' => 1,  // Adjust this as needed
+        ]);
+
+        $result = $response->json();
+
+        // The generated text can be extracted using $result['choices'][0]['text']
+        // $generatedText = $result['choices'][0]['text'];
+        return $result;
+    }
     public function isURLComment($comment)
     {
         // Regular expression pattern to match a URL
@@ -978,6 +996,12 @@ class BlogController extends Controller
             return false; // No URL found in the comment
         }
     }
+
+    public function generateInfographics()
+    {
+        return view('infographics');
+    }
+
     // public function search_blog_cat_q(Request $request, $q)
     // {
     //     $topics = DB::table('topics')->select('*')->where('topic_name', 'like', '%' . $q . '%')->limit(100)->get();

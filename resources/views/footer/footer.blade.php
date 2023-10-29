@@ -141,6 +141,8 @@
 <!-- <script src="{{ asset('select_src/jquery-customselect.js')}}"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="{{ asset('js/components/question_details.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 @endif
 
 <!-- Option 2: Separate Popper and Bootstrap JS -->

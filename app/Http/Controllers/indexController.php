@@ -584,13 +584,14 @@ class indexController extends Controller
             $posts = DB::table('posts')->select('*')->where('question_id', $question_id)->where('status', 1)->orderBy('created_at', 'DESC')->limit(2)->get();
         }
         // Update the last_displayed_at column for the selected posts
+        $excludedPostIds = [];
         foreach ($posts as $post) {
             DB::table('posts')
                 ->where('id', $post->id)
                 ->update(['last_displayed_at' => now()]);
             $excludedPostIds[] = $post->id;
         }
-
+        //  return $excludedPostIds;
         $perPage = 12; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
         $all_posts = DB::table('posts')->select('*')->where('question_id', $question_id)->where('status', 1)->whereNotIn('id', $excludedPostIds)->orderBy('created_at', 'DESC')->paginate($perPage, ['*'], 'page', $page);
@@ -603,7 +604,19 @@ class indexController extends Controller
         } else {
             $thoughts = '';
         }
-        return view('questions', compact('header_info', 'question_answers', 'get_user_answers', 'get_comments', 'posts', 'keywords', 'meta_description', 'page_title', 'user_status', 'question_id', 'thoughts', 'replies', 'all_posts'));
+
+        // top 5 answers 
+        $top_answers_query = DB::table('questions_answer')->select('questions_answer.vote_count', 'questions_answer.answers')->join('questions', 'questions.question_category', 'questions_answer.questions_category')->where('questions.id', $question_id)->orderby('questions_answer.vote_count', 'DESC')->limit(5)->get();
+
+        $top_answers = '';
+        $top_answers_votes = '';
+        foreach ($top_answers_query as $top_answers_fetch) {
+            $top_answers .= $top_answers_fetch->answers . 'line_break';
+            $top_answers_votes .= $top_answers_fetch->vote_count . ',';
+        }
+        $top_answers = substr($top_answers, 0, -10);
+        $top_answers_votes = substr($top_answers_votes, 0, -1);
+        return view('questions', compact('header_info', 'question_answers', 'get_user_answers', 'get_comments', 'posts', 'keywords', 'meta_description', 'page_title', 'user_status', 'question_id', 'thoughts', 'replies', 'all_posts', 'top_answers','top_answers_votes'));
     }
     public function delete_vote(Request $request)
     {

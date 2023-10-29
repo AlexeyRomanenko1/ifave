@@ -73,6 +73,7 @@ Route::post('/get_categories_onchange', [App\Http\Controllers\BlogController::cl
 Route::get('/location/{topic_name}', [indexController::class, 'topic_name'])->name('topic_name');
 Route::get('category/{location}/{category}', [indexController::class, 'questions_details'])->name('questions_details');
 Route::get('/test', [App\Http\Controllers\BlogController::class, 'test_controller'])->name('test_controller');
+Route::get('/generate-infographics',[App\Http\Controllers\BlogController::class, 'generateInfographics'])->name('generate.infographics');
 //Route::get('/non-existent-page', [indexController::class, 'not_found'])->name('not_found');
 
 Auth::routes([

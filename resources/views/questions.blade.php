@@ -66,6 +66,13 @@
                     </div>
                     <div class="text-nowrap bd-highlight m-2" style="width:14rem">
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Not in the list. Add my fave</button>
+                        <!-- Button trigger modal -->
+                    </div>
+                    <div class="text-nowrap bd-highlight m-2" style="width:9rem">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#infographics">
+                            Show Infographic
+                        </button>
                     </div>
                     <p class="">
                         <i class="fa fa-2x fa-clone float-center p-2 m-2" aria-hidden="true" onclick="copy_url('https://ifave.com/category/{{$topic_to_share}}/{{ $question_to_share }}')"></i> <i class="fa fa-2x fa-share float-center p-2 m-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url('https://ifave.com/category/{{$topic_to_share}}/{{ $question_to_share }}')"></i> <i class="fa fa-2x fa-code float-center p-2 m-2" aria-hidden="true" onclick="generate_embeded_code('https://ifave.com/category/{{$topic_to_share}}/{{ $question_to_share }}', '{{ $question }}')"></i>
@@ -387,9 +394,37 @@
         </div>
     </div>
 </div>
-
+<!-- Modal -->
+<div class="modal fade" id="infographics" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Infographics</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="chart-container">
+                    <canvas id="myChart"></canvas>
+                    <h2 id="chart-title">Professional Infographic</h2>
+                </div>
+              
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button class="btn btn-primary" id="downloadButton">Download</button>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="top_answers" value="{{$top_answers}}">
+<input type="hidden" id="top_answers_votes" value="{{$top_answers_votes}}">
 @include('footer.footer')
 <script>
+    let top_answer = $('#top_answers').val();
+    let top_answer_votes = $('#top_answers_votes').val();
+    let top_answers_data = top_answer.split('line_break');
+    let top_votes_data = top_answer_votes.split(',');
+    console.log(top_answers_data);
     $('.modal-text').on('keyup', function() {
         $('.modal-warn').html($(this).val().length + '/2000 characters')
     })
@@ -400,4 +435,64 @@
 
         $('.user-fave-warn').html($(this).val().length + '/50 characters')
     })
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: top_answers_data,
+            datasets: [{
+                label: 'Histogram Data',
+                data: top_votes_data,
+                backgroundColor: 'blue', // Set the background color to white
+                borderColor: 'blue', // Set the border color
+                borderWidth: 1, // Add a border
+            }],
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                },
+            },
+            plugins: {
+                legend: {
+                    display: false, // Hide the legend
+                },
+            },
+        },
+    });
+
+    // Customize the appearance of the chart
+    chart.options.plugins.title = {
+        display: true,
+        text: '',
+        font: {
+            size: 16,
+            weight: 'bold',
+        },
+    };
+
+    chart.options.plugins.tooltips = {
+        backgroundColor: 'white',
+        titleColor: 'black',
+        bodyColor: 'black',
+    };
+
+    // Add event listener to download the chart as an image in JPG format
+    const downloadButton = document.getElementById('downloadButton');
+    downloadButton.addEventListener('click', () => {
+        const chartTitle = document.getElementById('chart-title').innerText;
+        chart.options.plugins.title.text = chartTitle; // Set the chart title
+
+        const chartContainer = document.getElementById('chart-container');
+        const canvas = document.getElementById('myChart');
+        html2canvas(chartContainer).then(function(canvas) {
+            chart.options.plugins.title.text = ''; // Reset the chart title
+            const dataURL = canvas.toDataURL('image/jpeg', 1.0); // Set image format (JPEG) and quality
+            const link = document.createElement('a');
+            link.href = dataURL;
+            link.download = 'infographics.jpg'; // Use the JPG file extension
+            link.click();
+        });
+    });
 </script>
