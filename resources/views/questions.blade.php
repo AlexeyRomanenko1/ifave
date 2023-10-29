@@ -491,7 +491,7 @@
             const dataURL = canvas.toDataURL('image/jpeg', 1.0); // Set image format (JPEG) and quality
             const link = document.createElement('a');
             link.href = dataURL;
-            link.download = 'infographics.jpg'; // Use the JPG file extension
+            link.download = '{{$topic_to_share}}-{{$question_category}}-infographic.jpg'; // Use the JPG file extension
             link.click();
         });
     });
