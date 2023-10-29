@@ -424,7 +424,6 @@
     let top_answer_votes = $('#top_answers_votes').val();
     let top_answers_data = top_answer.split('line_break');
     let top_votes_data = top_answer_votes.split(',');
-    console.log(top_answers_data);
     $('.modal-text').on('keyup', function() {
         $('.modal-warn').html($(this).val().length + '/2000 characters')
     })
