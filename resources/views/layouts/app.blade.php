@@ -10,6 +10,11 @@
     <meta name="keywords" content="{{$keywords}}">
     <meta name="description" content="{{$meta_description}}" />
     @endif
+    
+    @if (request()->route() && (request()->route()->getName() == 'questions_details') && isset($location) && $location != 'The World')
+    <meta name="robots" content="noindex">
+
+    @endif
     <meta property="og:title" content="Ifave - Explore Surveys and Blogs on ifave.com" />
     <meta property="og:description" content="Engage in surveys, vote on answers, and explore insightful blogs on ifave.com. Join a dynamic online community of opinions and ideas." />
     <meta property="og:url" content="https://www.ifave.com" />

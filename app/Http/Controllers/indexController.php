@@ -606,7 +606,7 @@ class indexController extends Controller
         }
 
         // top 5 answers 
-        $top_answers_query = DB::table('questions_answer')->select('questions_answer.vote_count', 'questions_answer.answers')->join('questions', 'questions.question_category', 'questions_answer.questions_category')->where('questions.id', $question_id)->orderby('questions_answer.vote_count', 'DESC')->limit(5)->get();
+        $top_answers_query = DB::table('questions_answer')->select('questions_answer.vote_count', 'questions_answer.answers')->join('questions', 'questions.question_category', 'questions_answer.questions_category')->where('questions.id', $question_id)->orderby('questions_answer.vote_count', 'DESC')->limit(10)->get();
 
         $top_answers = '';
         $top_answers_votes = '';
@@ -616,7 +616,8 @@ class indexController extends Controller
         }
         $top_answers = substr($top_answers, 0, -10);
         $top_answers_votes = substr($top_answers_votes, 0, -1);
-        return view('questions', compact('header_info', 'question_answers', 'get_user_answers', 'get_comments', 'posts', 'keywords', 'meta_description', 'page_title', 'user_status', 'question_id', 'thoughts', 'replies', 'all_posts', 'top_answers','top_answers_votes'));
+        
+        return view('questions', compact('header_info', 'question_answers', 'get_user_answers', 'get_comments', 'posts', 'keywords', 'meta_description', 'page_title', 'user_status', 'question_id', 'thoughts', 'replies', 'all_posts', 'top_answers','top_answers_votes','location'));
     }
     public function delete_vote(Request $request)
     {

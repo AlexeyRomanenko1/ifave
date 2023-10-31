@@ -3,6 +3,7 @@
     <div class="text-center">
         @foreach($header_info as $details)
         @php
+        $topic_name=$details["topic_name"];
         $question_category=$details['question_category'];
         $question_id=$details['id'];
         $question=$details["question"];
@@ -14,7 +15,7 @@
         $question_image=str_replace(" ","_",$question_image).".jpg";
         @endphp
         <input type="hidden" id="hidden_question_id" value="{{ $details['question_category'] }}">
-        @if($details["topic_name"] == 'movies')
+        @if($details["topic_name"] == 'The World')
         <a href="/">Go back to best in {{ $details["topic_name"] }}</a>
         <h4 class="mt-2 p-2">{{ $details["topic_name"] }}</h4>
         @else
@@ -68,10 +69,10 @@
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Not in the list. Add my fave</button>
                         <!-- Button trigger modal -->
                     </div>
-                    <div class="text-nowrap bd-highlight m-2" style="width:9rem">
+                    <div class="text-nowrap bd-highlight m-2" style="width:7rem">
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#infographics">
-                            Show Infographic
+                        <button type="button" class="btn p-0" data-bs-toggle="modal" data-bs-target="#infographics">
+                            <img src="/images/info-908889_1280.png" class="img-fluid zoom-block" alt="Info Graphics">
                         </button>
                     </div>
                     <p class="">
@@ -404,10 +405,12 @@
             </div>
             <div class="modal-body">
                 <div id="chart-container">
+                    <h4 class="chart-title p-2" id="chart-heading">{{$question}} in {{$topic_name}}</h4>
+                    <p class="ps-3"><small>as voted by <a href="ifave.com">iFave.com</a> visitors</small></p>
                     <canvas id="myChart"></canvas>
-                    <h2 id="chart-title">Professional Infographic</h2>
+                    <p class="text-center p-2 mt-3"><small>Visit ifave.com for more awesome rankings and infographics that you will enjoy!</small></p>
                 </div>
-              
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -480,7 +483,7 @@
     // Add event listener to download the chart as an image in JPG format
     const downloadButton = document.getElementById('downloadButton');
     downloadButton.addEventListener('click', () => {
-        const chartTitle = document.getElementById('chart-title').innerText;
+        const chartTitle = document.getElementById('chart-heading').innerText;
         chart.options.plugins.title.text = chartTitle; // Set the chart title
 
         const chartContainer = document.getElementById('chart-container');
