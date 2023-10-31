@@ -386,8 +386,11 @@
                 <h5 class="modal-title" id="exampleModalLabel">Share My Comment</h5>
                 <button type="button" class="btn-close closesharecommentmodal" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body text-center">
-                <a id="facebook_share_comment" class="btn  m-2" href=""><i class="fa fa-facebook-square" aria-hidden="true"></i></a><a id="twitter_share_comment" class="btn m-2" href=""><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
+            <div class="modal-body ">
+                <p>Looks like you have left a thorough and detailed comment. Thanks you!</p>
+                <div class="text-center">
+                    <a id="facebook_share_comment" class="btn  m-2" href=""><i class="fa fa-facebook-square" aria-hidden="true"></i></a><a id="twitter_share_comment" class="btn m-2" href=""><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary closesharecommentmodal" data-bs-dismiss="modal">Close</button>
@@ -406,7 +409,7 @@
             <div class="modal-body">
                 <div id="chart-container">
                     <h4 class="chart-title p-2" id="chart-heading">{{$question}} in {{$topic_name}}</h4>
-                    <p class="ps-3"><small>as voted by <a href="ifave.com">iFave.com</a> visitors</small></p>
+                    <p class="ps-3"><small>as voted by iFave visitors</small></p>
                     <canvas id="myChart"></canvas>
                     <p class="text-center p-2 mt-3"><small>Visit ifave.com for more awesome rankings and infographics that you will enjoy!</small></p>
                 </div>

@@ -777,7 +777,7 @@ class indexController extends Controller
 
             if ($insert_comments) {
                 if (strlen($comments) > 300) {
-                    return redirect()->back()->with('success', 'Looks like you have left a thorough and detailed comment. Thanks you!');
+                    return redirect()->back()->with('success', 'Comment added successfully!');
                 } else {
                     return redirect()->back()->with('success', 'Comment added successfully!');
                 }
