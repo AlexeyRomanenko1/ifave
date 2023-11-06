@@ -84,7 +84,7 @@
                 @if($main_loop==2)
                 @if(count($comments) > 0)
                 <div class="col-md-4">
-                    <div class="container border rounded shadow border-blue mt-3 p-2 m-2">
+                    <div class="container rounded shadow border-blue mt-3 p-2 m-2">
                         <p><b>Best comments in this location</b></p>
                         <ol>
                             @foreach($comments as $comment)
@@ -173,7 +173,7 @@
             @endforeach
             @endif
             <div class="col-md-4 mb-4">
-                <div class="p-3 border rounded shadow border-blue mt-3">
+                <div class="p-3 rounded shadow border-blue mt-3">
                     <div class="question">
                         <div class="h-fixed-30 border-bottom">
                             @if (strlen($question->question)> 40)
@@ -220,8 +220,8 @@
                         @endphp
                         @endforeach
                         @else
-                        @for($m=0; $m < count($answers);$m++) @php preg_match('/^(.*)(\(Faves: \d+\))$/', $answers[$m], $matches); $text=$matches[1]; $faves=$matches[2]; if (strlen($text)> 18) {
-                            $text = substr($text, 0, 18) . '...';
+                        @for($m=0; $m < count($answers);$m++) @php preg_match('/^(.*)(\(Faves: \d+\))$/', $answers[$m], $matches); $text=$matches[1]; $faves=$matches[2]; if (strlen($text)> 13) {
+                            $text = substr($text, 0, 13) . '...';
                             }
                             $to_answer = $text . $faves;
                             //$TopicName=str_replace(' ','-',$topicName);

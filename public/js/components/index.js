@@ -34,6 +34,10 @@ $(document).ready(function () {
             // console.log(obj.top_comments)
             let html = '';
             // let questions_slider = '';
+            if (obj.personality != '' || obj.personality != null) {
+                $('.personality_headding').html('My personality portrait based on my faves');
+                $('.personality_content').html(obj.personality)
+            }
             if (obj.myfaves.length > 0) {
                 for (let k = 0; k < obj.myfaves.length; k++) {
                     html += '<tr><td class="fs-5"><b>' + obj.myfaves[k]['answers'] + '</b></td><td>' + obj.myfaves[k]['question'] + '</td><td>' + obj.myfaves[k]['topic_name'] + '</td></tr>';
@@ -243,16 +247,16 @@ $('#search_categories').on('keyup', function () {
                 for (let j = 0; j < obj.data.length; j++) {
                     html += '<p><b>' + obj.data[j]['question_category'] + '</b></p>'
                     let questions = obj.data[j]['questions'].split('break_statement');
-                    html+='<div class="container"><ul>';
+                    html += '<div class="container"><ul>';
                     for (var i = 0; i < questions.length; i++) {
                         // Trim any leading/trailing spaces from each value
                         let trimmedValue = questions[i].trim();
 
                         // Perform any desired operations on each value here
                         // For demonstration purposes, we'll just log each value to the console
-                      html+='<li> <h6><a href="category/' + $('#topicName').val().replace(/ /g, "-") + '/' + trimmedValue.replace(/ /g, "-") + '">' + trimmedValue + '</a></h6></li>';
+                        html += '<li> <h6><a href="category/' + $('#topicName').val().replace(/ /g, "-") + '/' + trimmedValue.replace(/ /g, "-") + '">' + trimmedValue + '</a></h6></li>';
                     }
-                    html+='</ul></div>';
+                    html += '</ul></div>';
                     // html += '<div class="col-md-6"><ul><li> <h6><a href="category/' + $('#topicName').val().replace(/ /g, "-") + '/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
                 }
             }
@@ -303,16 +307,16 @@ $('#open_search_category_modal').on('click', function () {
                 for (let j = 0; j < obj.data.length; j++) {
                     html += '<p><b>' + obj.data[j]['question_category'] + '</b></p>'
                     let questions = obj.data[j]['questions'].split('break_statement');
-                    html+='<div class="container"><ul>';
+                    html += '<div class="container"><ul>';
                     for (var i = 0; i < questions.length; i++) {
                         // Trim any leading/trailing spaces from each value
                         let trimmedValue = questions[i].trim();
 
                         // Perform any desired operations on each value here
                         // For demonstration purposes, we'll just log each value to the console
-                      html+='<li> <h6><a href="category/' + $('#topicName').val().replace(/ /g, "-") + '/' + trimmedValue.replace(/ /g, "-") + '">' + trimmedValue + '</a></h6></li>';
+                        html += '<li> <h6><a href="category/' + $('#topicName').val().replace(/ /g, "-") + '/' + trimmedValue.replace(/ /g, "-") + '">' + trimmedValue + '</a></h6></li>';
                     }
-                    html+='</ul></div>';
+                    html += '</ul></div>';
                     // html += '<div class="col-md-6"><ul><li> <h6><a href="category/' + $('#topicName').val().replace(/ /g, "-") + '/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
                 }
             }
@@ -565,3 +569,30 @@ $('.zoom-block').hover(
         $(this).removeClass('hover');
     }
 );
+
+
+$('.personality-potrait').on('click', function (e) {
+    $.ajax({
+        type: 'GET',
+        url: '/personality-potrait',
+        data: { task: 'personality_potrait' },
+        success: function (data) {
+            // console.log(data);
+            let obj = JSON.parse(data);
+            if (obj.success == 1) {
+                if (obj.data != '' || obj.data != null) {
+                    $('.personality_headding').empty();
+                    $('.personality_content').empty();
+                    $('.personality_headding').html('My personality portrait based on my faves');
+                    $('.personality_content').html(obj.data);
+                }
+            }
+            if (obj.success == 0) {
+                toastr.error(obj.data)
+            }
+        },
+        error: function (error) {
+
+        }
+    })
+})

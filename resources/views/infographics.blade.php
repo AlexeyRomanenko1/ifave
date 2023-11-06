@@ -9,11 +9,10 @@
 
         #chart-title {
             position: absolute;
-            top: 0px;
+            top: 10px;
             left: 10px;
             font-size: 16px;
             font-weight: bold;
-            margin-top: 10px;
         }
     </style>
 </head>
@@ -29,20 +28,21 @@
     <script>
         const ctx = document.getElementById('myChart').getContext('2d');
         const chart = new Chart(ctx, {
-            type: 'bar',
+            type: 'bar', // Use 'bar' type for horizontal bars
             data: {
                 labels: ['Data 1', 'Data 2', 'Data 3', 'Data 4', 'Data 5'],
                 datasets: [{
                     label: 'Histogram Data',
                     data: [10, 20, 30, 40, 50],
-                    backgroundColor: 'blue', // Set the background color to white
+                    backgroundColor: 'white', // Set the background color to white
                     borderColor: 'blue', // Set the border color
                     borderWidth: 1, // Add a border
                 }],
             },
             options: {
+                indexAxis: 'y', // Display bars along the y-axis for horizontal bars
                 scales: {
-                    y: {
+                    x: { // Use 'x' scale for horizontal bars
                         beginAtZero: true,
                     },
                 },

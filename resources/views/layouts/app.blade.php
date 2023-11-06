@@ -10,7 +10,7 @@
     <meta name="keywords" content="{{$keywords}}">
     <meta name="description" content="{{$meta_description}}" />
     @endif
-    
+
     @if (request()->route() && (request()->route()->getName() == 'questions_details') && isset($location) && $location != 'The World')
     <meta name="robots" content="noindex">
 
@@ -264,6 +264,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <div class="text-center mb-2">
+                        <button class="btn btn-primary personality-potrait" data-bs-toggle="tooltip" data-bs-placement="top" title="Personality potrail based on your faves">Generate Personality Potrait</button>
+                    </div>
+                    <h5 class="personality_headding"></h5>
+                    <p class="personality_content"></p>
                     <table class="table" id="faves_table">
                         <thead>
                             <tr>

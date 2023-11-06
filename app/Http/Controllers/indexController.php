@@ -33,12 +33,14 @@ class indexController extends Controller
             $subQuery = UsersAnswer::select('question_id')
                 ->where('user_ip_address', $userId)
                 ->get();
-
+          
             $get_this_user_votes = DB::table('user_answers')->select('questions.question', 'questions_answer.answers')
                 ->join('questions', 'user_answers.question_id', 'questions.id')
                 ->join('questions_answer', 'user_answers.answer_id', 'questions_answer.id')
                 ->where('user_answers.user_ip_address', $userId)
                 ->get();
+
+            
             $get_last_three_locations = DB::table('recent_locations')
                 ->where('user_id', $userId)
                 ->orderBy('id', 'desc')
@@ -141,7 +143,12 @@ class indexController extends Controller
                 $topic_id = $get_topic_detail['id'];
             }
             $questions_slider = Questions::select('*')->where('topic_id', $topic_id)->get();
-            return json_encode(['success' => 1, 'topic_name' => $topicName, 'questions_slider' => $questions_slider, 'myfaves' => $get_this_user_votes, 'topic_id' => $topic_id]);
+            $personality_potrait=DB::table('personality_potrait')->select('personality')->where('user_id',$userId)->orderBy('id','desc')->limit(1)->get();
+            $personality='';
+            foreach($personality_potrait as $user_personality){
+                $personality=$user_personality->personality;
+            }
+            return json_encode(['success' => 1, 'topic_name' => $topicName, 'questions_slider' => $questions_slider, 'myfaves' => $get_this_user_votes, 'topic_id' => $topic_id,'personality'=>$personality]);
         }
         // return response()->json(['sucess' => 'hello']);
     }
