@@ -51,14 +51,7 @@ class GptController extends Controller
                 // $prompt = 'Define my personality of maximum 100 words based on keywords  Atif Aslam, Babar Azam, Laravel , Cricket, Dota 2';
                 $prompt = 'Define my personality of maximum 100 words based on keywords ' . $user_selections . '.Instead of using I am/ I have etc use you. Also please dont mention keywords word in response' ;
                 //return $prompt;
-                // $response = Http::withHeaders([
-                //     'Authorization' => 'Bearer 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',
-                // ])->post('https://api.openai.com/v1/engines/davinci/completions', [
-                //     'prompt' => $prompt,
-                //     'max_tokens' => 100,  // Adjust this as needed
-                // ]);
-
-                // $result = $response->json();
+                
 
                 // // The generated text can be extracted using $result['choices'][0]['text']
                 // $generatedText = $result['choices'][0]['text'];
