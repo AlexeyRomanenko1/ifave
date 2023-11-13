@@ -76,6 +76,8 @@ Route::get('/test', [App\Http\Controllers\BlogController::class, 'test_controlle
 Route::get('/generate-infographics',[App\Http\Controllers\BlogController::class, 'generateInfographics'])->name('generate.infographics');
 Route::get('/personality-potrait',[App\Http\Controllers\GptController::class, 'create_personality_potrait'])->name('personality-potrait');
 //Route::get('/non-existent-page', [indexController::class, 'not_found'])->name('not_found');
+Route::get('/generate-info-graphics/{location}/{category}',[App\Http\Controllers\InfographicsController::class, 'generate_image'])->name('generateHistogram');
+Route::post('/save-chart-image',[App\Http\Controllers\InfographicsController::class, 'saveChartImage'])->name('save-chart-image');
 
 Auth::routes([
     'verify' => true

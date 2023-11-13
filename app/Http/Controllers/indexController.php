@@ -8,6 +8,7 @@ use App\Models\Questions;
 use App\Models\Topics;
 use App\Models\Questionsanswers;
 use App\Models\UsersAnswer;
+use App\Charts\InfographicsChart as charts;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;

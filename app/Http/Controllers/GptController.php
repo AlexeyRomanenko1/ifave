@@ -33,7 +33,7 @@ class GptController extends Controller
             $currentTime = Carbon::now();
             $check_time = DB::table('personality_potrait')->where('user_id', $userId)->where('created_at', $currentTime->toDateString())->count();
             //return $currentTime->toDateString();
-            if ($check_time != 0) {
+            if ($check_time == 0) {
                 $user_faves = DB::table('questions')
                     ->select('questions.question', 'questions_answer.answers')
                     ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
@@ -56,7 +56,7 @@ class GptController extends Controller
                 // // The generated text can be extracted using $result['choices'][0]['text']
                 // $generatedText = $result['choices'][0]['text'];
                 // return $result;
-                $apiKey = 'api - key'; // Replace with your OpenAI API key
+                $apiKey = 'API- Key'; // Replace with your OpenAI API key
                 $model = 'gpt-3.5-turbo-instruct';
                 $prompt = $prompt;
                 $maxTokens = 150;

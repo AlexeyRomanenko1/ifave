@@ -971,18 +971,7 @@ class BlogController extends Controller
     {
 
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer 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',
-        ])->post('https://api.openai.com/v1/engines/davinci/completions', [
-            'prompt' => 'How to lose weight in 5 steps?',
-            'max_tokens' => 1,  // Adjust this as needed
-        ]);
-
-        $result = $response->json();
-
-        // The generated text can be extracted using $result['choices'][0]['text']
-        // $generatedText = $result['choices'][0]['text'];
-        return $result;
+     
     }
     public function isURLComment($comment)
     {

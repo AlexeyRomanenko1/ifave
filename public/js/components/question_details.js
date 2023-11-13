@@ -1,5 +1,5 @@
 (function () {
-    let url=$('#to_share_link').val();
+    let url = $('#to_share_link').val();
     let text = "Checkout my comment on ifave";
     $("#facebook_share_comment").attr("href", "https://www.facebook.com/sharer/sharer.php?u=" + encodeURI(url));
     $("#twitter_share_comment").attr("href", "https://twitter.com/intent/tweet?text=" + encodeURI(text) + "&url=" + encodeURI(url));
@@ -58,6 +58,10 @@
             str = el.innerHTML;
             $('.half-thoughts-full-screen').html(str);
         }
+    }
+    if (screenWidth < 998) {
+        $('.info-large-screen').hide();
+        $('.info-small-screen').removeClass();
     }
 })()
 

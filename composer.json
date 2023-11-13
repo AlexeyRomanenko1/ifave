@@ -6,7 +6,10 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "consoletvs/charts": "^6.6",
+        "barryvdh/laravel-snappy": "*",
         "guzzlehttp/guzzle": "^7.6",
+        "h4cc/wkhtmltoimage-amd64": "0.12.x",
         "intervention/image": "^2.7",
         "laravel/framework": "^10.8",
         "laravel/sanctum": "^3.2",

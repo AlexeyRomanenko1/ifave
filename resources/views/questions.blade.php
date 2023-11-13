@@ -71,9 +71,12 @@
                     </div>
                     <div class="text-nowrap bd-highlight m-2" style="width:7rem">
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn p-0" data-bs-toggle="modal" data-bs-target="#infographics">
+                        <button type="button" class="btn p-0 info-large-screen" data-bs-toggle="modal" data-bs-target="#infographics">
                             <img src="/images/info-908889_1280.png" class="img-fluid zoom-block" alt="Info Graphics">
                         </button>
+                        <a href="/generate-info-graphics/{{$topic_to_share}}/{{$question_to_share}}" class="info-small-screen d-none">
+                            <img src="/images/info-908889_1280.png" class="img-fluid zoom-block" alt="Info Graphics">
+                        </a>
                     </div>
                     <p class="">
                         <i class="fa fa-2x fa-clone float-center p-2 m-2" aria-hidden="true" onclick="copy_url('https://ifave.com/category/{{$topic_to_share}}/{{ $question_to_share }}')"></i> <i class="fa fa-2x fa-share float-center p-2 m-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url('https://ifave.com/category/{{$topic_to_share}}/{{ $question_to_share }}')"></i> <i class="fa fa-2x fa-code float-center p-2 m-2" aria-hidden="true" onclick="generate_embeded_code('https://ifave.com/category/{{$topic_to_share}}/{{ $question_to_share }}', '{{ $question }}')"></i>
@@ -417,7 +420,9 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button class="btn btn-primary" id="downloadButton">Download</button>
+                <a href="/generate-info-graphics/{{$topic_to_share}}/{{$question_to_share}}" class="btn btn-primary">
+                    Download
+                </a>
             </div>
         </div>
     </div>
@@ -492,7 +497,9 @@
 
         const chartContainer = document.getElementById('chart-container');
         const canvas = document.getElementById('myChart');
-        html2canvas(chartContainer).then(function(canvas) {
+        html2canvas(chartContainer, {
+            scale: 2
+        }).then(function(canvas) {
             chart.options.plugins.title.text = ''; // Reset the chart title
             const dataURL = canvas.toDataURL('image/jpeg', 1.0); // Set image format (JPEG) and quality
             const link = document.createElement('a');
