@@ -33,10 +33,10 @@
 
         // Heading (h4)
         newContext.font = 'bold 44px Arial'; // Set font size and style
-        newContext.fillText('Top Singers in The World', padding, padding + 20);
+        newContext.fillText('{{$question_name}} in {{$topic_name}}', padding, padding + 20);
 
         // Paragraph (p)
-        newContext.font = '20px Arial'; // Reset font size and style
+        newContext.font = '24px Arial'; // Reset font size and style
         newContext.fillText('as voted by iFave visitors', padding + 15, padding + 60);
 
         // Line break
