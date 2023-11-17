@@ -112,8 +112,10 @@
                 $(this).removeAttr('style');
             });
             if (screenWidth <= 768) {
+                let width_iframe = screenWidth - 50;
                 $('.half-thoughts iframe').removeAttr('height');
                 $('.half-thoughts iframe').removeAttr('width');
+                $('.half-thoughts iframe').width(width_iframe);
             }
             if (currentIndex >= content.length) {
                 $(this).hide(); // hide "Read More" button when all content is displayed
