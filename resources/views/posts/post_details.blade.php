@@ -158,7 +158,7 @@
                         <h6>CONNECT & FOLLOW</h6>
                     </div>
                     <div class="card-body text-center">
-                        <a id="" class="btn  m-2" href="https://www.facebook.com/people/Ifavecom/61553178323176/"><i class="fa fa-facebook-square" aria-hidden="true"></i></a><a id="" class="btn m-2" href=""><i class="fa fa-linkedin-square" aria-hidden="true"></i></a><a href="https://www.linkedin.com/company/ifave-com/" class="btn m-2"></a>
+                        <a id="" class="btn  m-2" href="https://www.facebook.com/people/Ifavecom/61553178323176/"><i class="fa fa-facebook-square" aria-hidden="true"></i></a><a id="" class="btn m-2" href="https://www.linkedin.com/company/ifave-com/"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a>
                     </div>
                 </div>
                 <div class="card mt-5">

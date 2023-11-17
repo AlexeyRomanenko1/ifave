@@ -82,7 +82,7 @@
                         <i class="fa fa-2x fa-clone float-center p-2 m-2" aria-hidden="true" onclick="copy_url('https://ifave.com/category/{{$topic_to_share}}/{{ $question_to_share }}')"></i> <i class="fa fa-2x fa-share float-center p-2 m-2" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#sharemodal" onclick="share_url('https://ifave.com/category/{{$topic_to_share}}/{{ $question_to_share }}')"></i> <i class="fa fa-2x fa-code float-center p-2 m-2" aria-hidden="true" onclick="generate_embeded_code('https://ifave.com/category/{{$topic_to_share}}/{{ $question_to_share }}', '{{ $question }}')"></i>
                     </p>
                     @if($user_status==1 || $user_status==2)
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#thoughts_modal">Thoughts</button>
+                    <!-- <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#thoughts_modal">Thoughts</button> -->
                     @endif
                 </div>
                 <div class="col-md-4">
@@ -300,6 +300,21 @@
         <div class="pagination justify-content-center">
             {{ $all_posts->links('pagination::bootstrap-5') }}
         </div>
+        @if($user_status==1 || $user_status==2)
+        <form id="submit_thoughts">
+            <h4>Thoughts</h4>
+            @csrf
+            <div class="modal-body">
+                <input type="hidden" name="question_id" value="{{$question_id}}">
+                <textarea class="form-control" name="thoughts" id="thoughts" rows="3" data-upload-url="{{ route('upload_content_image') }}">{!! $thoughts !!}</textarea>
+                <small id="content_error" class="text-danger d-none">This fied is required</small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+        </form>
+        @endif
     </div>
 </div>
 <!-- Modal -->
@@ -367,18 +382,7 @@
                 <h5 class="modal-title" id="exampleModalLabel">Thoughts</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="submit_thoughts">
-                @csrf
-                <div class="modal-body">
-                    <input type="hidden" name="question_id" value="{{$question_id}}">
-                    <textarea class="form-control" name="thoughts" id="thoughts" rows="3" data-upload-url="{{ route('upload_content_image') }}">{!! $thoughts !!}</textarea>
-                    <small id="content_error" class="text-danger d-none">This fied is required</small>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                </div>
-            </form>
+
         </div>
     </div>
 </div>

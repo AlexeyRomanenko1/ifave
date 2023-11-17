@@ -30,42 +30,97 @@
             _token: $('meta[name="csrf-token"]').attr('content') // Pass the CSRF token if required
         }
     })
+    // let screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    // if ($('.hidden-cotnent').length) {
+    //     if (screenWidth <= 768) {
+    //         // deviceSize = 'mobile';
+    //         $('.for-mobile-screen').removeClass('d-none')
+    //         let str = $('.hidden-cotnent').html();
+    //         if (str.length > 450) {
+    //             str = str.slice(0, 1000);
+    //         }
+    //         console.log(str)
+    //         var el = document.implementation.createHTMLDocument().createElement('div');
+    //         el.innerHTML = str;
+    //         str = el.innerHTML;
+    //         $('.half-thoughts-mobile-screen').html(str);
+    //     } else {
+    //         // deviceSize = 'desktop';
+    //         $('.for-full-screen').removeClass('d-none')
+    //         //    var str = "This <small>is <i>ONE</small> Messed up string</i><strong>.";
+    //         let str = $('.hidden-cotnent').html();
+    //         if (str.length > 1000) {
+    //             str = str.slice(0, 1000);
+    //         }
+    //         console.log(str)
+    //         var el = document.implementation.createHTMLDocument().createElement('div');
+    //         el.innerHTML = str;
+    //         str = el.innerHTML;
+    //         $('.half-thoughts-full-screen').html(str);
+    //         let start_content=0;
+    //         let end_Content=2000;
+    //         read_more_function(str,start_content,end_Content);
+    //     }
+    // }
     let screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
     if ($('.hidden-cotnent').length) {
+        let str = $('.hidden-cotnent').html();
+
         if (screenWidth <= 768) {
-            // deviceSize = 'mobile';
-            $('.for-mobile-screen').removeClass('d-none')
-            let str = $('.hidden-cotnent').html();
-            if (str.length > 450) {
-                str = str.slice(0, 1000);
-            }
-            console.log(str)
-            var el = document.implementation.createHTMLDocument().createElement('div');
-            el.innerHTML = str;
-            str = el.innerHTML;
-            $('.half-thoughts-mobile-screen').html(str);
+            $('.for-mobile-screen').removeClass('d-none');
+            showPartialContent(str, 250, '.half-thoughts-mobile-screen');
         } else {
-            // deviceSize = 'desktop';
-            $('.for-full-screen').removeClass('d-none')
-            //    var str = "This <small>is <i>ONE</small> Messed up string</i><strong>.";
-            let str = $('.hidden-cotnent').html();
-            if (str.length > 1000) {
-                str = str.slice(0, 2000);
-            }
-            //console.log(str)
-            var el = document.implementation.createHTMLDocument().createElement('div');
-            el.innerHTML = str;
-            str = el.innerHTML;
-            $('.half-thoughts-full-screen').html(str);
+            $('.for-full-screen').removeClass('d-none');
+            showPartialContent(str, 2000, '.half-thoughts-full-screen');
         }
     }
+
+    function showPartialContent(content, chunkSize, targetSelector) {
+        let $target = $(targetSelector);
+        let currentIndex = 0;
+
+        function updateContent() {
+            // let nextChunk = content.substr(currentIndex, chunkSize);
+            let nextChunk = content.slice(0, chunkSize);
+           // console.log(nextChunk)
+            var el = document.implementation.createHTMLDocument().createElement('div');
+            el.innerHTML = nextChunk;
+            nextChunk = el.innerHTML;
+            $target.empty();
+            $target.append(nextChunk);
+           // console.log(el)
+            currentIndex += 2000;
+            chunkSize +=2000;
+        }
+
+        function handleReadMoreClick() {
+            updateContent();
+            // console.log(el)
+            if (currentIndex >= content.length) {
+                $(this).hide(); // hide "Read More" button when all content is displayed
+            }
+        }
+
+        updateContent();
+        $(targetSelector).next('.read-more-thoughts').on('click', handleReadMoreClick);
+    }
+
     if (screenWidth < 998) {
         $('.info-large-screen').hide();
         $('.info-small-screen').removeClass();
     }
 })()
 
-
+// $('.read-more-thoughts').on('click', function (e) {
+//     e.preventDefault();
+//     $(this).hide();
+//     let halfCommentElement = $(this).closest('.thoughts-content').find('.half-comment');
+//     // $(this).siblings('.full-comment').show();
+//     let fullCommentElement = $(this).closest('.thoughts-content').find('.full-comment');
+//     halfCommentElement.hide();
+//     fullCommentElement.show();
+// });
 $('#submit_thoughts').on('submit', function (e) {
     e.preventDefault();
     let error_count = 0;
