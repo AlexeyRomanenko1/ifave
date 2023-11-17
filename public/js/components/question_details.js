@@ -1,4 +1,9 @@
 (function () {
+    // Add the img-fluid class to all <img> tags within the #content div
+       
+        // $('#blog_content iframe').addClass('embed-responsive embed-responsive-4by3');
+       
+       
     let url = $('#to_share_link').val();
     let text = "Checkout my comment on ifave";
     $("#facebook_share_comment").attr("href", "https://www.facebook.com/sharer/sharer.php?u=" + encodeURI(url));
@@ -29,6 +34,8 @@
         imageUploadParams: {
             _token: $('meta[name="csrf-token"]').attr('content') // Pass the CSRF token if required
         }
+
+        
     })
     // let screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     // if ($('.hidden-cotnent').length) {
@@ -70,6 +77,8 @@
         if (screenWidth <= 768) {
             $('.for-mobile-screen').removeClass('d-none');
             showPartialContent(str, 250, '.half-thoughts-mobile-screen');
+            $('.half-thoughts iframe').removeAttr('height');
+            $('.half-thoughts iframe').removeAttr('width');
         } else {
             $('.for-full-screen').removeClass('d-none');
             showPartialContent(str, 2000, '.half-thoughts-full-screen');
@@ -97,6 +106,15 @@
         function handleReadMoreClick() {
             updateContent();
             // console.log(el)
+            $('.half-thoughts img').addClass('img-fluid');
+            $('.half-thoughts span:has(img)').each(function() {
+                // Remove the 'style' attribute from the <span> element
+                $(this).removeAttr('style');
+            });
+            if (screenWidth <= 768) {
+                $('.half-thoughts iframe').removeAttr('height');
+                $('.half-thoughts iframe').removeAttr('width');
+            }
             if (currentIndex >= content.length) {
                 $(this).hide(); // hide "Read More" button when all content is displayed
             }

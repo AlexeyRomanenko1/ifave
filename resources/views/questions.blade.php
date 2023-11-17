@@ -125,12 +125,10 @@
         </div>
         <div class="thoughts-content for-full-screen d-none">
             <div class="half-comment half-thoughts half-thoughts-full-screen"> </div><span class="read-more-thoughts">... Read More</span>
-            <span class="full-comment" style="display: none;">{!! $thoughts !!}</span>
         </div>
 
         <div class="thoughts-content for-mobile-screen d-none">
             <div class="half-comment half-thoughts half-thoughts-mobile-screen"></div> <span class="read-more-thoughts">... Read More</span>
-            <span class="full-comment" style="display: none;">{!! $thoughts !!}</span>
         </div>
     </div>
     @endif
