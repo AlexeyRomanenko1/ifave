@@ -1,4 +1,23 @@
 $(document).ready(function () {
+    //load questions
+    let to_search = '';
+    let id = $('#topic_id').val();
+    let topicName = $('#topicName').val();
+    $.ajax({
+        type: 'GET',
+        url: '/searchQuestions',
+        data: { task: 'searchQuestions', search: to_search, id: id, topicName: topicName },
+        success: function (data) {
+            // console.log(data)
+            //  var result = JSON.parse(data);
+            $('#onpageload-loader').addClass('d-none');
+            $('#display_questions').html(data.searchResults);
+            $('#pagination_links').html(data.paginationLinks);
+        },
+        error: function (error) {
+            console.log(error)
+        }
+    })
     $.ajax({
         type: 'GET',
         url: '/indexonloadRequest',
@@ -41,25 +60,7 @@ $(document).ready(function () {
         error: function (e) {
             console.log(e);
         }
-        
+
     });
-    //load questions
-    let to_search = '';
-    let id = $('#topic_id').val();
-    let topicName = $('#topicName').val();
-    $.ajax({
-        type: 'GET',
-        url: '/searchQuestions',
-        data: { task: 'searchQuestions', search: to_search, id: id, topicName: topicName },
-        success: function (data) {
-            // console.log(data)
-            //  var result = JSON.parse(data);
-            $('#onpageload-loader').addClass('d-none');
-            $('#display_questions').html(data.searchResults);
-            $('#pagination_links').html(data.paginationLinks);
-        },
-        error: function (error) {
-            console.log(error)
-        }
-    })
+
 })

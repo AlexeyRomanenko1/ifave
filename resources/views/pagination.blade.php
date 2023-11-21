@@ -25,8 +25,11 @@
             <p><b>Best comments in this location</b></p>
             <ol>
                 @foreach($comments as $comment)
-                <li>{{$comment->name}} ({{$comment->upvotes}} upvotes)</li>
-                @endforeach
+                @if($comment->upvotes < 0) @php $comment->upvotes=0;
+                    @endphp
+                    @endif
+                    <li><a href="/comments/{{ str_replace(' ', '-', $comment->name)}}">{{$comment->name}} ({{$comment->upvotes}} upvotes)</a></li>
+                    @endforeach
             </ol>
             @if(count($comments) >=5)
             <div class="text-center"><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#top_comments_modal" onclick="top_comments_modal({{$topic_id}})">Show me more</button></div>
@@ -53,7 +56,7 @@
         <div class="container mt-3 p-2 m-2">
             <div class="row">
                 <div class="col-md-3">
-                    <img src="/images/posts/{{$post->featured_image}}" class="zoom-block img-fluid" alt="">
+                    <img src="/images/posts/{{$post->featured_image}}" class="zoom-block img-fluid" alt="" loading="lazy">
                 </div>
                 <div class="col-md-9">
                     <h4 class="mt-2"><a href="/blog/{{$post->slug}}">{{ substr(strip_tags($post->title), 0, 100)}}</a></h4>
@@ -62,7 +65,7 @@
                     @elseif($col_md==12)
                     {!! substr(strip_tags($post->blog_content), 0, 700) !!}... <br><br>
                     @endif
-                    
+
                 </div>
             </div>
         </div>
@@ -89,7 +92,7 @@ $col_md=6;
     <div class="container mt-3 p-2 m-2">
         <div class="row">
             <div class="col-md-3">
-                <img src="/images/posts/{{$post->featured_image}}" class="zoom-block img-fluid" alt="">
+                <img src="/images/posts/{{$post->featured_image}}" class="zoom-block img-fluid" alt="" loading="lazy">
             </div>
             <div class="col-md-9">
                 <h4 class="mt-2"><a href="/blog/{{$post->slug}}">{{ substr(strip_tags($post->title), 0, 100)}}</a></h4>
@@ -98,8 +101,8 @@ $col_md=6;
                 @elseif($col_md==12)
                 {!! substr(strip_tags($post->blog_content), 0, 700) !!}... <br><br>
                 @endif
-               
-                
+
+
             </div>
         </div>
     </div>
@@ -123,9 +126,9 @@ $col_md=6;
             <div class="suggestions p-1"></div>
             <div class="text-center">
                 @if (file_exists(public_path('images/question_images/ifave_images/'.$question_image)))
-                <img onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' src="/images/question_images/ifave_images/{{$question_image}}" class="img-fluid zoom-block" height="325px" width="325px" alt="...">
+                <img onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' src="/images/question_images/ifave_images/{{$question_image}}" class="img-fluid zoom-block" height="325px" width="325px" alt="..." loading="lazy">
                 @else
-                <img onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' src="/images/question_images/ifave.jpg" class="img-fluid zoom-block" height="325px" width="325px" alt="...">
+                <img onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' src="/images/question_images/ifave.jpg" class="img-fluid zoom-block" height="325px" width="325px" alt="..." loading="lazy">
                 @endif
             </div>
             @if(!$exists)
