@@ -34,14 +34,14 @@ class indexController extends Controller
             $subQuery = UsersAnswer::select('question_id')
                 ->where('user_ip_address', $userId)
                 ->get();
-          
+
             $get_this_user_votes = DB::table('user_answers')->select('questions.question', 'questions_answer.answers')
                 ->join('questions', 'user_answers.question_id', 'questions.id')
                 ->join('questions_answer', 'user_answers.answer_id', 'questions_answer.id')
                 ->where('user_answers.user_ip_address', $userId)
                 ->get();
 
-            
+
             $get_last_three_locations = DB::table('recent_locations')
                 ->where('user_id', $userId)
                 ->orderBy('id', 'desc')
@@ -76,7 +76,8 @@ class indexController extends Controller
             ->where('topics.topic_name', '=', $topicName)
             ->groupBy('questions.id', 'questions.question', 'questions.question_category')
             ->orderBy('total_votes', 'DESC')
-            ->paginate($perPage, ['*'], 'page', $page);
+            ->limit(5)
+            ->get();
 
 
         $get_topic_details = Topics::select('*')->where('topic_name', $topicName)->get();
@@ -84,25 +85,25 @@ class indexController extends Controller
             $topic_id = $get_topic_detail['id'];
         }
 
-        $comments = DB::table('comments')
-            ->select('users.name', DB::raw('SUM(comments.upvotes  - comments.downvotes) as upvotes'))
-            ->join('users', 'comments.comment_by', '=', 'users.id')
-            ->join('questions', 'comments.question_id', '=', 'questions.id')
-            ->where('questions.topic_id', '=', $topic_id)
-            ->orderByDesc('upvotes')
-            ->limit(5)
-            ->groupBy('users.name')
-            ->get();
+        // $comments = DB::table('comments')
+        //     ->select('users.name', DB::raw('SUM(comments.upvotes  - comments.downvotes) as upvotes'))
+        //     ->join('users', 'comments.comment_by', '=', 'users.id')
+        //     ->join('questions', 'comments.question_id', '=', 'questions.id')
+        //     ->where('questions.topic_id', '=', $topic_id)
+        //     ->orderByDesc('upvotes')
+        //     ->limit(5)
+        //     ->groupBy('users.name')
+        //     ->get();
 
         //query to get posts data 
-        $posts = DB::table('posts')
-            ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
-            ->join('users', 'posts.user_id', 'users.id')
-            ->where('posts.topic_id', $topic_id)
-            ->where('posts.status', 1)
-            ->orderByDesc('posts.vote_count')
-            ->limit(4)
-            ->get();
+        // $posts = DB::table('posts')
+        //     ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
+        //     ->join('users', 'posts.user_id', 'users.id')
+        //     ->where('posts.topic_id', $topic_id)
+        //     ->where('posts.status', 1)
+        //     ->orderByDesc('posts.vote_count')
+        //     ->limit(4)
+        //     ->get();
 
         $keywords = 'ifave,' . $topicName;
         $meta_description = 'Rank and compare the best of everything in ' . $topicName . '. Save and share your faves among :';
@@ -114,7 +115,7 @@ class indexController extends Controller
         $meta_description = substr($meta_description, 0, -1);
         $page_title = 'iFave - ' . $topicName;
 
-        return view('index', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts', 'keywords', 'topicName', 'meta_description', 'page_title', 'get_last_three_locations'));
+        return view('index', compact( 'subQuery', 'topic_id', 'keywords', 'topicName', 'meta_description', 'page_title', 'get_last_three_locations'));
     }
     public function indexonloadRequest(Request $request)
     {
@@ -144,12 +145,16 @@ class indexController extends Controller
                 $topic_id = $get_topic_detail['id'];
             }
             $questions_slider = Questions::select('*')->where('topic_id', $topic_id)->get();
-            $personality_potrait=DB::table('personality_potrait')->select('personality')->where('user_id',$userId)->orderBy('id','desc')->limit(1)->get();
-            $personality='';
-            foreach($personality_potrait as $user_personality){
-                $personality=$user_personality->personality;
+            if (isset($userId)) {
+                $personality_potrait = DB::table('personality_potrait')->select('personality')->where('user_id', $userId)->orderBy('id', 'desc')->limit(1)->get();
+                $personality = '';
+                foreach ($personality_potrait as $user_personality) {
+                    $personality = $user_personality->personality;
+                }
+            } else {
+                $personality = '';
             }
-            return json_encode(['success' => 1, 'topic_name' => $topicName, 'questions_slider' => $questions_slider, 'myfaves' => $get_this_user_votes, 'topic_id' => $topic_id,'personality'=>$personality]);
+            return json_encode(['success' => 1, 'topic_name' => $topicName, 'questions_slider' => $questions_slider, 'myfaves' => $get_this_user_votes, 'topic_id' => $topic_id, 'personality' => $personality]);
         }
         // return response()->json(['sucess' => 'hello']);
     }
@@ -624,8 +629,8 @@ class indexController extends Controller
         }
         $top_answers = substr($top_answers, 0, -10);
         $top_answers_votes = substr($top_answers_votes, 0, -1);
-        
-        return view('questions', compact('header_info', 'question_answers', 'get_user_answers', 'get_comments', 'posts', 'keywords', 'meta_description', 'page_title', 'user_status', 'question_id', 'thoughts', 'replies', 'all_posts', 'top_answers','top_answers_votes','location'));
+
+        return view('questions', compact('header_info', 'question_answers', 'get_user_answers', 'get_comments', 'posts', 'keywords', 'meta_description', 'page_title', 'user_status', 'question_id', 'thoughts', 'replies', 'all_posts', 'top_answers', 'top_answers_votes', 'location'));
     }
     public function delete_vote(Request $request)
     {
