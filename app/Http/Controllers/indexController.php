@@ -61,24 +61,37 @@ class indexController extends Controller
                 ->limit(3)
                 ->get();
         }
-        $questions = DB::table('questions')
-            ->select(
-                'questions.id AS question_id',
-                'questions.question',
-                'questions.question_category',
-                DB::raw("SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, ' (Faves: ', vote_count, ')') ORDER BY vote_count DESC SEPARATOR '}'), '}', 3) AS top_answers"),
-                DB::raw("SUM(COALESCE(questions_answer.vote_count, 0)) AS total_votes")
-            )
-            ->join('topics', 'questions.topic_id', '=', 'topics.id')
-            ->leftJoin('questions_answer', function ($join) {
-                $join->on('questions.question_category', '=', 'questions_answer.questions_category');
-            })
-            ->where('topics.topic_name', '=', $topicName)
-            ->groupBy('questions.id', 'questions.question', 'questions.question_category')
-            ->orderBy('total_votes', 'DESC')
-            ->limit(5)
-            ->get();
-
+        // $questions = DB::table('questions')
+        //     ->select(
+        //         'questions.id AS question_id',
+        //         'questions.question',
+        //         'questions.question_category',
+        //         DB::raw("SUM(COALESCE(questions_answer.vote_count, 0)) AS total_votes")
+        //     )
+        //     ->join('topics', 'questions.topic_id', '=', 'topics.id')
+        //     ->leftJoin('questions_answer', function ($join) {
+        //         $join->on('questions.question_category', '=', 'questions_answer.questions_category');
+        //     })
+        //     ->where('topics.topic_name', '=', $topicName)
+        //     ->groupBy('questions.id', 'questions.question', 'questions.question_category')
+        //     ->orderBy('total_votes', 'DESC')
+        //     ->limit(5)
+        //     ->get();
+        // $questions = Questions::select([
+        //     'questions.id AS question_id',
+        //     'questions.question',
+        //     'questions.question_category',
+        //     DB::raw('SUM(questions_answer.vote_count) AS total_votes')
+        // ])
+        //     ->join('topics', 'questions.topic_id', '=', 'topics.id')
+        //     ->leftJoin('questions_answer', function ($join) {
+        //         $join->on('questions.question_category', '=', 'questions_answer.questions_category');
+        //     })
+        //     ->where('topics.topic_name', '=', $topicName)
+        //     ->groupBy('questions.id', 'questions.question', 'questions.question_category')
+        //     ->orderByDesc('total_votes')
+        //     ->limit(5)
+        //     ->get();
 
         $get_topic_details = Topics::select('*')->where('topic_name', $topicName)->get();
         foreach ($get_topic_details as $get_topic_detail) {
@@ -105,17 +118,18 @@ class indexController extends Controller
         //     ->limit(4)
         //     ->get();
 
-        $keywords = 'ifave,' . $topicName;
-        $meta_description = 'Rank and compare the best of everything in ' . $topicName . '. Save and share your faves among :';
-        foreach ($questions as $index => $description) {
-            if ($index <= 5) {
-                $meta_description .= $index + 1 . '. ' . $description->question . ' ';
-            }
-        }
-        $meta_description = substr($meta_description, 0, -1);
+        // $keywords = 'ifave,' . $topicName;
+        // $meta_description = 'Rank and compare the best of everything in ' . $topicName . '. Save and share your faves among :';
+        // foreach ($questions as $index => $description) {
+        //     if ($index <= 5) {
+        //         $meta_description .= $index + 1 . '. ' . $description->question . ' ';
+        //     }
+        // }
+        // $meta_description = substr($meta_description, 0, -1);
         $page_title = 'iFave - ' . $topicName;
-
-        return view('index', compact( 'subQuery', 'topic_id', 'keywords', 'topicName', 'meta_description', 'page_title', 'get_last_three_locations'));
+        $meta_description = '';
+        $keywords = '';
+        return view('index', compact('subQuery', 'topic_id', 'topicName', 'page_title', 'get_last_three_locations','meta_description','keywords'));
     }
     public function indexonloadRequest(Request $request)
     {
@@ -154,7 +168,30 @@ class indexController extends Controller
             } else {
                 $personality = '';
             }
-            return json_encode(['success' => 1, 'topic_name' => $topicName, 'questions_slider' => $questions_slider, 'myfaves' => $get_this_user_votes, 'topic_id' => $topic_id, 'personality' => $personality]);
+            $questions = Questions::select([
+                'questions.id AS question_id',
+                'questions.question',
+                'questions.question_category',
+                DB::raw('SUM(questions_answer.vote_count) AS total_votes')
+            ])
+                ->join('topics', 'questions.topic_id', '=', 'topics.id')
+                ->leftJoin('questions_answer', function ($join) {
+                    $join->on('questions.question_category', '=', 'questions_answer.questions_category');
+                })
+                ->where('topics.topic_name', '=', $topicName)
+                ->groupBy('questions.id', 'questions.question', 'questions.question_category')
+                ->orderByDesc('total_votes')
+                ->limit(5)
+                ->get();
+            $keywords = 'ifave,' . $topicName;
+            $meta_description = 'Rank and compare the best of everything in ' . $topicName . '. Save and share your faves among :';
+            foreach ($questions as $index => $description) {
+                if ($index <= 5) {
+                    $meta_description .= $index + 1 . '. ' . $description->question . ' ';
+                }
+            }
+            $meta_description = substr($meta_description, 0, -1);
+            return json_encode(['success' => 1, 'keywords' => $keywords, 'meta_description' => $meta_description, 'topic_name' => $topicName, 'questions_slider' => $questions_slider, 'myfaves' => $get_this_user_votes, 'topic_id' => $topic_id, 'personality' => $personality]);
         }
         // return response()->json(['sucess' => 'hello']);
     }

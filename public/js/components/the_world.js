@@ -56,6 +56,8 @@ $(document).ready(function () {
             // }
             // $('#scrollContainer').empty();
             // $('#scrollContainer').html(questions_slider);
+            $('meta[name=description]').attr('content', obj.meta_description);
+            $('meta[name=keywords]').attr('content',obj.keywords);
         },
         error: function (e) {
             console.log(e);
