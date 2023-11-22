@@ -56,7 +56,7 @@
         <div class="container mt-3 p-2 m-2">
             <div class="row">
                 <div class="col-md-3">
-                    <img src="/images/posts/{{$post->featured_image}}" class="zoom-block img-fluid" alt="" loading="lazy">
+                    <img src="/images/posts/{{$post->featured_image}}" width="191" height="191" class="zoom-block img-fluid" alt="">
                 </div>
                 <div class="col-md-9">
                     <h4 class="mt-2"><a href="/blog/{{$post->slug}}">{{ substr(strip_tags($post->title), 0, 100)}}</a></h4>
@@ -92,7 +92,7 @@ $col_md=6;
     <div class="container mt-3 p-2 m-2">
         <div class="row">
             <div class="col-md-3">
-                <img src="/images/posts/{{$post->featured_image}}" class="zoom-block img-fluid" alt="" loading="lazy">
+                <img src="/images/posts/{{$post->featured_image}}" width="191" height="191" class="zoom-block img-fluid" alt="">
             </div>
             <div class="col-md-9">
                 <h4 class="mt-2"><a href="/blog/{{$post->slug}}">{{ substr(strip_tags($post->title), 0, 100)}}</a></h4>
