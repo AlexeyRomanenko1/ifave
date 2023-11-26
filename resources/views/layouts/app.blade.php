@@ -11,9 +11,12 @@
     <meta name="description" content="{{$meta_description}}" />
     @endif
 
+    @if(request()->route() && (request()->route()->getName() == 'questions_details') && isset($location) && $location == 'The World')
+    <link rel="canonical" href="https://ifave.com/category/{{$cononical_location}}/{{$cononical_category}}">
+    @endif
     @if (request()->route() && (request()->route()->getName() == 'questions_details') && isset($location) && $location != 'The World')
-    <meta name="robots" content="noindex">
 
+    <meta name="robots" content="noindex">
     @endif
     <meta property="og:title" content="Ifave - Explore Surveys and Blogs on ifave.com" />
     <meta property="og:description" content="Engage in surveys, vote on answers, and explore insightful blogs on ifave.com. Join a dynamic online community of opinions and ideas." />
