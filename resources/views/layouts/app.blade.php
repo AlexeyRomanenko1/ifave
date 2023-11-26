@@ -20,8 +20,8 @@
     @endif
     <meta property="og:title" content="Ifave - Explore Surveys and Blogs on ifave.com" />
     <meta property="og:description" content="Engage in surveys, vote on answers, and explore insightful blogs on ifave.com. Join a dynamic online community of opinions and ideas." />
-    <meta property="og:url" content="https://www.ifave.com" />
-    <meta property="og:image" content="https://www.ifave.com/images/question_images/IFAVE_PNG.png" />
+    <meta property="og:url" content="https://ifave.com" />
+    <meta property="og:image" content="https://ifave.com/images/question_images/IFAVE_PNG.png" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @if(isset($page_title))
     <title>{{$page_title}}</title>
