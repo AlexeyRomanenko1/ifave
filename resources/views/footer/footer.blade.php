@@ -14,11 +14,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 @if(Route::currentRouteName()== '/')
+<script src="{{ asset('js/components/index.js')}}"></script>
 <script src="{{ asset('js/components/the_world.js')}}"></script>
 @endif
-@if(Route::currentRouteName()!='topic_name')
-<script src="{{ asset('js/components/index.js')}}"></script>
-@else
+@if(Route::currentRouteName() =='topic_name' )
 <script src="{{ asset('js/components/topics.js')}}"></script>
 @endif
 

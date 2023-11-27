@@ -342,6 +342,7 @@ function downvote_count(x, y) {
         }
     });
 }
+
 $('.skip').on('click', function () {
     location.reload(true)
 })

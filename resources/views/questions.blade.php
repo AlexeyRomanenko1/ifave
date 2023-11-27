@@ -373,7 +373,7 @@
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="thoughts_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="thoughts_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -383,7 +383,7 @@
 
         </div>
     </div>
-</div>
+</div> -->
 <div class="modal fade" id="sharecommentmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -491,23 +491,5 @@
         bodyColor: 'black',
     };
 
-    // Add event listener to download the chart as an image in JPG format
-    const downloadButton = document.getElementById('downloadButton');
-    downloadButton.addEventListener('click', () => {
-        const chartTitle = document.getElementById('chart-heading').innerText;
-        chart.options.plugins.title.text = chartTitle; // Set the chart title
 
-        const chartContainer = document.getElementById('chart-container');
-        const canvas = document.getElementById('myChart');
-        html2canvas(chartContainer, {
-            scale: 2
-        }).then(function(canvas) {
-            chart.options.plugins.title.text = ''; // Reset the chart title
-            const dataURL = canvas.toDataURL('image/jpeg', 1.0); // Set image format (JPEG) and quality
-            const link = document.createElement('a');
-            link.href = dataURL;
-            link.download = 'iFave-{{$topic_to_share}}-{{$question_category}}-infographic.jpg'; // Use the JPG file extension
-            link.click();
-        });
-    });
 </script>

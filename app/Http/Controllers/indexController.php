@@ -129,7 +129,7 @@ class indexController extends Controller
         $page_title = 'iFave - ' . $topicName;
         $meta_description = '';
         $keywords = '';
-        return view('index', compact('subQuery', 'topic_id', 'topicName', 'page_title', 'get_last_three_locations','meta_description','keywords'));
+        return view('index', compact('subQuery', 'topic_id', 'topicName', 'page_title', 'get_last_three_locations', 'meta_description', 'keywords'));
     }
     public function indexonloadRequest(Request $request)
     {
@@ -544,8 +544,8 @@ class indexController extends Controller
     }
     public function questions_details(Request $request, $location, $category)
     {
-        $cononical_location=$location;
-        $cononical_category=$category;
+        $cononical_location = $location;
+        $cononical_category = $category;
         if (Auth::check()) {
             // User is logged in
             $clientIP = Auth::id();
@@ -671,8 +671,8 @@ class indexController extends Controller
 
         // $cononical_location=$location;
         // $cononical_category=$category;
-
-        return view('questions', compact('header_info', 'question_answers', 'get_user_answers', 'get_comments', 'posts', 'keywords', 'meta_description', 'page_title', 'user_status', 'question_id', 'thoughts', 'replies', 'all_posts', 'top_answers', 'top_answers_votes', 'location','cononical_location','cononical_category'));
+        // return $top_answers_votes;
+        return view('questions', compact('header_info', 'question_answers', 'get_user_answers', 'get_comments', 'posts', 'keywords', 'meta_description', 'page_title', 'user_status', 'question_id', 'thoughts', 'replies', 'all_posts', 'top_answers', 'top_answers_votes', 'location', 'cononical_location', 'cononical_category'));
     }
     public function delete_vote(Request $request)
     {
