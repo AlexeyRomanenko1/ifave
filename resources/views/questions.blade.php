@@ -122,11 +122,9 @@
             </div>
         </div>
     </div>
-    @if($thoughts !=='' || $thoughts !='' || $thoughts != NULL)
     <div id="onLoadThoughts">
        
     </div>
-    @endif
     @if(count($posts) > 0)
     @if(count($posts) == 1)
     @php
