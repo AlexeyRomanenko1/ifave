@@ -41,16 +41,16 @@
         data: { location: $('#onload_location').val(), category: $('#onload_category').val(), question_id: $('#onload_question_id').val() },
         success: function (data) {
             var result = JSON.parse(data);
-            let html ='';
-            if (result.thoughts !== '' || result.thoughts != '' || result.thoughts != NULL) {
-                html +=' <div class="container mb-4 mt-2"><div class="d-none hidden-cotnent">'+result.thoughts+'</div><div class="thoughts-content for-full-screen d-none"><div class="half-comment half-thoughts half-thoughts-full-screen"> </div><span class="read-more-thoughts">... Read More</span></div><div class="thoughts-content for-mobile-screen d-none"><div class="half-comment half-thoughts half-thoughts-mobile-screen"></div> <span class="read-more-thoughts">... Read More</span></div></div>';
+            let html = '';
+            if (result.thoughts !== '' || result.thoughts != '') {
+                html += ' <div class="container mb-4 mt-2"><div class="d-none hidden-cotnent">' + result.thoughts + '</div><div class="thoughts-content for-full-screen d-none"><div class="half-comment half-thoughts half-thoughts-full-screen"> </div><span class="read-more-thoughts">... Read More</span></div><div class="thoughts-content for-mobile-screen d-none"><div class="half-comment half-thoughts half-thoughts-mobile-screen"></div> <span class="read-more-thoughts">... Read More</span></div></div>';
             }
             $('#onLoadThoughts').empty();
             $('#onLoadThoughts').html(html);
             //console.log(screenWidth)
             if ($('.hidden-cotnent').length) {
                 let str = $('.hidden-cotnent').html();
-        
+
                 if (screenWidth <= 768) {
                     $('.for-mobile-screen').removeClass('d-none');
                     showPartialContent(str, 2500, '.half-thoughts-mobile-screen');
@@ -66,7 +66,7 @@
             console.log(error)
         }
     })
-   
+
     function showPartialContent(content, chunkSize, targetSelector) {
         let $target = $(targetSelector);
         let currentIndex = 0;
@@ -113,6 +113,15 @@
         $('.info-small-screen').removeClass();
     }
 })()
+
+// $(window).scroll(function () {
+//     var rect = $('questions_comments')[0].getBoundingClientRect();
+//     if (rect.top >= 0 && rect.top <= window.innerHeight) {
+//         console.log('The Div is in the viewport!');
+//     } else {
+//         console.log('The Div is not in the viewport!')
+//     }
+// })
 
 // $('.read-more-thoughts').on('click', function (e) {
 //     e.preventDefault();
@@ -405,3 +414,23 @@ $('.read-more').on('click', function (e) {
     halfCommentElement.hide();
     fullCommentElement.show();
 });
+
+function add_vote(x) {
+    $.ajax({
+        type: 'POST',
+        url: '/entervote',
+        data: { '_token': $('meta[name="csrf-token"]').attr('content'), answer_id: x },
+        success: function (data) {
+            // $("#msg").html(data.msg);
+            // console.log(data)
+            let obj = JSON.parse(data);
+            if (obj.success == 1) {
+                toastr.success(obj.data);
+                $('#staticBackdrop').addClass('show');
+                $('#staticBackdrop').fadeIn();
+            } else {
+                toastr.warning(obj.data)
+            }
+        }
+    });
+}

@@ -163,7 +163,7 @@
     <div class="text-center"><a href="/blog">Show More Blogs</a></div>
     @endif
     @endif
-    <div class="container">
+    <div class="container" id="questions_comments">
         <div class="text-center">
             <h4>Comments</h4>
             <small><b>Please upvote detailed, well argumented and well presented comments and downvote irrelevant ones.</b></small>

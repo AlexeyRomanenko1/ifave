@@ -116,13 +116,13 @@ class QuestionsDetailController extends Controller
         $all_posts = DB::table('posts')->select('*')->where('question_id', $question_id)->where('status', 1)->whereNotIn('id', $excludedPostIds)->orderBy('created_at', 'DESC')->paginate($perPage, ['*'], 'page', $page);
 
 
-        // $thoughts_details = DB::table('question_thoughts')->where('question_id', $question_id)->pluck('thoughts');
-        // //$thoughts=$thoughts_details[0];
-        // if (count($thoughts_details) > 0) {
-        //     $thoughts = $thoughts_details[0];
-        // } else {
-        //     $thoughts = '';
-        // }
+        $thoughts_details = DB::table('question_thoughts')->where('question_id', $question_id)->pluck('thoughts');
+        //$thoughts=$thoughts_details[0];
+        if (count($thoughts_details) > 0) {
+            $thoughts = $thoughts_details[0];
+        } else {
+            $thoughts = '';
+        }
 
         // top 5 answers 
         $top_answers_query = DB::table('questions_answer')->select('questions_answer.vote_count', 'questions_answer.answers')->join('questions', 'questions.question_category', 'questions_answer.questions_category')->where('questions.id', $question_id)->orderby('questions_answer.vote_count', 'DESC')->limit(10)->get();
@@ -136,11 +136,11 @@ class QuestionsDetailController extends Controller
         $top_answers = substr($top_answers, 0, -10);
         $top_answers_votes = substr($top_answers_votes, 0, -1);
         // return 0;
-        return view('questions', compact('header_info', 'question_answers', 'get_user_answers', 'get_comments', 'posts', 'keywords', 'meta_description', 'page_title', 'user_status', 'question_id', 'replies', 'all_posts', 'top_answers', 'top_answers_votes', 'location', 'cononical_location', 'cononical_category'));
+        return view('questions', compact('header_info', 'question_answers','thoughts', 'get_user_answers', 'get_comments', 'posts', 'keywords', 'meta_description', 'page_title', 'user_status', 'question_id', 'replies', 'all_posts', 'top_answers', 'top_answers_votes', 'location', 'cononical_location', 'cononical_category'));
     }
     public function onLoadPageDetails(Request $request)
     {
-        $question_id=$request->question_id;
+        $question_id = $request->question_id;
         $get_comments = DB::table('comments')
             ->select('comments.*', 'users.id as user_id', 'users.name')
             ->selectRaw('(upvotes - downvotes) as difference')
@@ -184,8 +184,8 @@ class QuestionsDetailController extends Controller
             $thoughts = '';
         }
         return json_encode([
-            'success'=>1,
-            'thoughts'=>$thoughts
+            'success' => 1,
+            'thoughts' => $thoughts
         ]);
     }
     public function getClientIP(Request $request)
