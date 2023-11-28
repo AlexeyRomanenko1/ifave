@@ -4,6 +4,7 @@
 // use Spatie\Sitemap\Tags\Url;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\indexController;
+use App\Http\Controllers\QuestionsDetailController;
 use Illuminate\Support\Facades\Auth;
 // use Illuminate\Support\Facades\DB;
 /*
@@ -71,7 +72,10 @@ Route::get('/search_blog_cat', [App\Http\Controllers\BlogController::class, 'sea
 //Route::get('/search_blog_cat/{q}', [App\Http\Controllers\BlogController::class, 'search_blog_cat_q'])->name('search_blog_cat_q');
 Route::post('/get_categories_onchange', [App\Http\Controllers\BlogController::class, 'get_categories_onchange'])->name('get_categories_onchange');
 Route::get('/location/{topic_name}', [indexController::class, 'topic_name'])->name('topic_name');
-Route::get('category/{location}/{category}', [indexController::class, 'questions_details'])->name('questions_details');
+// Route::get('category/{location}/{category}', [indexController::class, 'questions_details'])->name('questions_details');
+Route::get('category/{location}/{category}', [QuestionsDetailController::class, 'questions_details'])->name('questions_details');
+Route::get('onLoadPageDetails', [QuestionsDetailController::class, 'onLoadPageDetails'])->name('onLoadPageDetails');
+
 Route::get('/test', [App\Http\Controllers\BlogController::class, 'test_controller'])->name('test_controller');
 Route::get('/generate-infographics',[App\Http\Controllers\BlogController::class, 'generateInfographics'])->name('generate.infographics');
 Route::get('/personality-potrait',[App\Http\Controllers\GptController::class, 'create_personality_potrait'])->name('personality-potrait');

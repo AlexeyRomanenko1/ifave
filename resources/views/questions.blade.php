@@ -1,4 +1,6 @@
 @include('layouts.app')
+<input type="hidden" id="onload_question_id" value="{{$question_id}}">
+
 <div class="container">
     <div class="text-center">
         @foreach($header_info as $details)
@@ -22,6 +24,8 @@
         <a href="/location/{{str_replace(' ','-',$details['topic_name'])}}">Go back to best in {{ $details["topic_name"] }}</a>
         <h4 class="mt-2 p-2">{{ $details["topic_name"] }}</h4>
         @endif
+        <input type="hidden" id="onload_location" value="{{$details['topic_name']}}">
+        <input type="hidden" id="onload_category" value="{{$details['question']}}">
         @if (file_exists(public_path('images/question_images/ifave_images/'.$question_image)))
         <img src="/images/question_images/ifave_images/{{$question_image}}" class="img-fluid zoom-block" height="325px" width="325px" alt="...">
         @else
@@ -119,17 +123,8 @@
         </div>
     </div>
     @if($thoughts !=='' || $thoughts !='' || $thoughts != NULL)
-    <div class="container mb-4 mt-2">
-        <div class="d-none hidden-cotnent">
-            {!! $thoughts !!}
-        </div>
-        <div class="thoughts-content for-full-screen d-none">
-            <div class="half-comment half-thoughts half-thoughts-full-screen"> </div><span class="read-more-thoughts">... Read More</span>
-        </div>
-
-        <div class="thoughts-content for-mobile-screen d-none">
-            <div class="half-comment half-thoughts half-thoughts-mobile-screen"></div> <span class="read-more-thoughts">... Read More</span>
-        </div>
+    <div id="onLoadThoughts">
+       
     </div>
     @endif
     @if(count($posts) > 0)
@@ -490,6 +485,4 @@
         titleColor: 'black',
         bodyColor: 'black',
     };
-
-
 </script>

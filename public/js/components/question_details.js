@@ -3,7 +3,7 @@
 
     // $('#blog_content iframe').addClass('embed-responsive embed-responsive-4by3');
 
-
+    let screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     let url = $('#to_share_link').val();
     let text = "Checkout my comment on ifave";
     $("#facebook_share_comment").attr("href", "https://www.facebook.com/sharer/sharer.php?u=" + encodeURI(url));
@@ -34,57 +34,39 @@
         imageUploadParams: {
             _token: $('meta[name="csrf-token"]').attr('content') // Pass the CSRF token if required
         }
-
-
     })
-    // let screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    // if ($('.hidden-cotnent').length) {
-    //     if (screenWidth <= 768) {
-    //         // deviceSize = 'mobile';
-    //         $('.for-mobile-screen').removeClass('d-none')
-    //         let str = $('.hidden-cotnent').html();
-    //         if (str.length > 450) {
-    //             str = str.slice(0, 1000);
-    //         }
-    //         console.log(str)
-    //         var el = document.implementation.createHTMLDocument().createElement('div');
-    //         el.innerHTML = str;
-    //         str = el.innerHTML;
-    //         $('.half-thoughts-mobile-screen').html(str);
-    //     } else {
-    //         // deviceSize = 'desktop';
-    //         $('.for-full-screen').removeClass('d-none')
-    //         //    var str = "This <small>is <i>ONE</small> Messed up string</i><strong>.";
-    //         let str = $('.hidden-cotnent').html();
-    //         if (str.length > 1000) {
-    //             str = str.slice(0, 1000);
-    //         }
-    //         console.log(str)
-    //         var el = document.implementation.createHTMLDocument().createElement('div');
-    //         el.innerHTML = str;
-    //         str = el.innerHTML;
-    //         $('.half-thoughts-full-screen').html(str);
-    //         let start_content=0;
-    //         let end_Content=2000;
-    //         read_more_function(str,start_content,end_Content);
-    //     }
-    // }
-    let screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-
-    if ($('.hidden-cotnent').length) {
-        let str = $('.hidden-cotnent').html();
-
-        if (screenWidth <= 768) {
-            $('.for-mobile-screen').removeClass('d-none');
-            showPartialContent(str, 2500, '.half-thoughts-mobile-screen');
-            $('.half-thoughts iframe').removeAttr('height');
-            $('.half-thoughts iframe').removeAttr('width');
-        } else {
-            $('.for-full-screen').removeClass('d-none');
-            showPartialContent(str, 9000, '.half-thoughts-full-screen');
+    $.ajax({
+        type: 'GET',
+        url: '/onLoadPageDetails',
+        data: { location: $('#onload_location').val(), category: $('#onload_category').val(), question_id: $('#onload_question_id').val() },
+        success: function (data) {
+            var result = JSON.parse(data);
+            let html ='';
+            if (result.thoughts !== '' || result.thoughts != '' || result.thoughts != NULL) {
+                html +=' <div class="container mb-4 mt-2"><div class="d-none hidden-cotnent">'+result.thoughts+'</div><div class="thoughts-content for-full-screen d-none"><div class="half-comment half-thoughts half-thoughts-full-screen"> </div><span class="read-more-thoughts">... Read More</span></div><div class="thoughts-content for-mobile-screen d-none"><div class="half-comment half-thoughts half-thoughts-mobile-screen"></div> <span class="read-more-thoughts">... Read More</span></div></div>';
+            }
+            $('#onLoadThoughts').empty();
+            $('#onLoadThoughts').html(html);
+            //console.log(screenWidth)
+            if ($('.hidden-cotnent').length) {
+                let str = $('.hidden-cotnent').html();
+        
+                if (screenWidth <= 768) {
+                    $('.for-mobile-screen').removeClass('d-none');
+                    showPartialContent(str, 2500, '.half-thoughts-mobile-screen');
+                    $('.half-thoughts iframe').removeAttr('height');
+                    $('.half-thoughts iframe').removeAttr('width');
+                } else {
+                    $('.for-full-screen').removeClass('d-none');
+                    showPartialContent(str, 9000, '.half-thoughts-full-screen');
+                }
+            }
+        },
+        error: function (error) {
+            console.log(error)
         }
-    }
-
+    })
+   
     function showPartialContent(content, chunkSize, targetSelector) {
         let $target = $(targetSelector);
         let currentIndex = 0;
@@ -413,3 +395,13 @@ function downvote_count(x, y) {
 $('.skip').on('click', function () {
     location.reload(true)
 })
+
+$('.read-more').on('click', function (e) {
+    e.preventDefault();
+    $(this).hide();
+    var halfCommentElement = $(this).closest('.comment-content').find('.half-comment');
+    // $(this).siblings('.full-comment').show();
+    var fullCommentElement = $(this).closest('.comment-content').find('.full-comment');
+    halfCommentElement.hide();
+    fullCommentElement.show();
+});
