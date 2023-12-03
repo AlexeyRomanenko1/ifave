@@ -53,12 +53,12 @@
 
                 if (screenWidth <= 768) {
                     $('.for-mobile-screen').removeClass('d-none');
-                    showPartialContent(str, 2500, '.half-thoughts-mobile-screen');
+                    showPartialContent(str, 9000, '.half-thoughts-mobile-screen');
                     $('.half-thoughts iframe').removeAttr('height');
                     $('.half-thoughts iframe').removeAttr('width');
                 } else {
                     $('.for-full-screen').removeClass('d-none');
-                    showPartialContent(str, 9000, '.half-thoughts-full-screen');
+                    showPartialContent(str, 20000, '.half-thoughts-full-screen');
                 }
             }
         },
@@ -81,8 +81,8 @@
             $target.empty();
             $target.append(nextChunk);
             // console.log(el)
-            currentIndex += 4500;
-            chunkSize += 4500;
+            currentIndex += 12000;
+            chunkSize += 12000;
         }
 
         function handleReadMoreClick() {
