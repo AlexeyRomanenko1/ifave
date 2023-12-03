@@ -18,26 +18,24 @@
         @endphp
         <input type="hidden" id="hidden_question_id" value="{{ $details['question_category'] }}">
         @if($details["topic_name"] == 'The World')
-        <a href="/">Go back to best in {{ $details["topic_name"] }}</a>
-        <h4 class="mt-2 p-2">{{ $details["topic_name"] }}</h4>
+        <a class="mb-2" href="/">Go back to best in {{ $details["topic_name"] }}</a> <br>
+        <!-- <h1 class="mt-2 p-2">{{ $details["question"] }} in {{ $details["topic_name"] }}</h1> -->
         @else
-        <a href="/location/{{str_replace(' ','-',$details['topic_name'])}}">Go back to best in {{ $details["topic_name"] }}</a>
-        <h4 class="mt-2 p-2">{{ $details["topic_name"] }}</h4>
+        <a class="mb-2" href="/location/{{str_replace(' ','-',$details['topic_name'])}}">Go back to best in {{ $details["topic_name"] }}</a><br>
+        <!-- <h1 class="mt-2 p-2">{{ $details["topic_name"] }}</h1> -->
         @endif
         <input type="hidden" id="onload_location" value="{{$details['topic_name']}}">
         <input type="hidden" id="onload_category" value="{{$details['question']}}">
         @if (file_exists(public_path('images/question_images/ifave_images/'.$question_image)))
-        <img src="/images/question_images/ifave_images/{{$question_image}}" class="img-fluid zoom-block" height="325px" width="325px" alt="...">
+        <img src="/images/question_images/ifave_images/{{$question_image}}" class="img-fluid zoom-block mt-3" height="325px" width="325px" alt="...">
         @else
-        <img src="/images/question_images/ifave.jpg" class="img-fluid zoom-block" height="325px" width="325px" alt="...">
+        <img src="/images/question_images/ifave.jpg" class="img-fluid zoom-block mt-3" height="325px" width="325px" alt="...">
         @endif
-        <h3 class="p-2">
-            {{ $details["question"] }}
-        </h3>
+        <h1 class="mt-2 p-2">{{ $details["question"] }} in {{ $details["topic_name"] }}</h1>
         @endforeach
         <input type="hidden" id="to_share_link" value="https://ifave.com/category/{{$topic_to_share}}/{{ $question_to_share }}">
     </div>
-    <div class="row height d-flex justify-content-center align-items-center">
+    <div class="row height d-flex justify-content-center align-items-center mt-4">
         <div class="col-md-8">
             <div class="search">
                 <i class="fa fa-search"></i>

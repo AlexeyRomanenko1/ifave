@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use GrahamCampbell\ResultType\Success;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\File;
 use PDO;
 use ZipArchive;
@@ -132,7 +133,7 @@ class BlogController extends Controller
     public function show_blogs(Request $request)
     {
         //query to get posts data 
-        $perPage = 52; // Number of items per page
+        $perPage = 31; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
         $posts = DB::table('posts')
             ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'posts.alt_text', 'users.name', 'posts.created_at', 'posts.slug', 'posts.user_id', 'posts.id')
@@ -142,34 +143,21 @@ class BlogController extends Controller
             ->paginate($perPage, ['*'], 'page', $page);
 
         // popular categories
+        // DB::table('questions',function(Blueprint $table){
+        //     $table->index('question_category');
+        //     $table->index('topic_id');
+        // });
+        // DB::table('questions_answer',function(Blueprint $table){
+        //     $table->index('questions_category');
+        // });
         $popular_questions = DB::table('questions')
-            ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
             ->join('topics', 'questions.topic_id', '=', 'topics.id')
+            ->where('topics.topic_name', '=', 'The World')
             ->select('questions.question', 'topics.topic_name')
-            ->inRandomOrder()  // This line randomizes the order of the records
+            ->inRandomOrder()
             ->limit(5)
             ->get();
-        // $bloggers = [];
-        // $bloggers_rating = DB::table('users as u')
-        //     ->join('posts as p', 'u.id', '=', 'p.user_id')
-        //     ->select('u.name as username', 'u.id as user_id', 'u.image', 'u.bio', 'u.location', DB::raw('SUM(p.vote_count) as rating'))
-        //     ->groupBy('u.id', 'u.name', 'u.image', 'u.bio', 'u.location')
-        //     ->orderByDesc('rating')
-        //     ->get();
-        // foreach ($bloggers_rating as $blogger) {
-        //     $this_user_rating = $blogger->rating;
-        //     $comments = DB::table('comments')
-        //         ->select('users.name', DB::raw('SUM(comments.upvotes) as upvotes'))
-        //         ->join('users', 'comments.comment_by', '=', 'users.id')
-        //         ->join('questions', 'comments.question_id', '=', 'questions.id')
-        //         ->where('comments.comment_by', $blogger->user_id)
-        //         ->orderByDesc('upvotes')
-        //         ->groupBy('users.name')
-        //         ->get();
-        //     foreach ($comments as $comment_rating) {
-        //         $total_rating = $comment_rating->upvotes + $this_user_rating;
-        //     }
-        // }
+
         $bloggers = [];
         $bloggers_rating = DB::table('users as u')
             ->join('posts as p', 'u.id', '=', 'p.user_id')
@@ -293,11 +281,10 @@ class BlogController extends Controller
         //     ->get();
 
         $popular_questions = DB::table('questions')
-            ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
             ->join('topics', 'questions.topic_id', '=', 'topics.id')
+            ->where('topics.topic_name', '=', 'The World')
             ->select('questions.question', 'topics.topic_name')
-            ->inRandomOrder()  // This line randomizes the order of the records
-            ->where('questions.topic_id', '=', $this_post_location)
+            ->inRandomOrder()
             ->limit(5)
             ->get();
 
@@ -525,10 +512,10 @@ class BlogController extends Controller
         });
 
         $popular_questions = DB::table('questions')
-            ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
             ->join('topics', 'questions.topic_id', '=', 'topics.id')
+            ->where('topics.topic_name', '=', 'The World')
             ->select('questions.question', 'topics.topic_name')
-            ->inRandomOrder()  // This line randomizes the order of the records
+            ->inRandomOrder()
             ->limit(5)
             ->get();
 
@@ -620,10 +607,10 @@ class BlogController extends Controller
         }
 
         $popular_questions = DB::table('questions')
-            ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
             ->join('topics', 'questions.topic_id', '=', 'topics.id')
+            ->where('topics.topic_name', '=', 'The World')
             ->select('questions.question', 'topics.topic_name')
-            ->inRandomOrder()  // This line randomizes the order of the records
+            ->inRandomOrder()
             ->limit(5)
             ->get();
 
@@ -692,10 +679,10 @@ class BlogController extends Controller
         }
 
         $popular_questions = DB::table('questions')
-            ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
             ->join('topics', 'questions.topic_id', '=', 'topics.id')
+            ->where('topics.topic_name', '=', 'The World')
             ->select('questions.question', 'topics.topic_name')
-            ->inRandomOrder()  // This line randomizes the order of the records
+            ->inRandomOrder()
             ->limit(5)
             ->get();
 
@@ -757,10 +744,10 @@ class BlogController extends Controller
                 ->paginate($perPage, ['*'], 'page', $page);
         }
         $popular_questions = DB::table('questions')
-            ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
             ->join('topics', 'questions.topic_id', '=', 'topics.id')
+            ->where('topics.topic_name', '=', 'The World')
             ->select('questions.question', 'topics.topic_name')
-            ->inRandomOrder()  // This line randomizes the order of the records
+            ->inRandomOrder()
             ->limit(5)
             ->get();
         return view('posts.pagination', compact('posts', 'popular_questions'));
@@ -969,9 +956,6 @@ class BlogController extends Controller
     }
     public function test_controller(Request $request)
     {
-
-
-     
     }
     public function isURLComment($comment)
     {
