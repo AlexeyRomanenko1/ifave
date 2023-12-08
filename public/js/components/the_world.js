@@ -58,6 +58,7 @@ $(document).ready(function () {
             // $('#scrollContainer').html(questions_slider);
             $('meta[name=description]').attr('content', obj.meta_description);
             $('meta[name=keywords]').attr('content',obj.keywords);
+            $("#meta-property").attr('content', obj.meta_description);
         },
         error: function (e) {
             console.log(e);

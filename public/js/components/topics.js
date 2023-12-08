@@ -7,7 +7,24 @@ $('.read-more').on('click', function (e) {
     $(this).siblings('.full-comment').show();
 });
 $(document).ready(function () {
-
+    let to_search = '';
+    let id = $('#topic_id').val();
+    let topicName = $('#topicName').val();
+    $.ajax({
+        type: 'GET',
+        url: '/searchQuestions',
+        data: { task: 'searchQuestions', search: to_search, id: id, topicName: topicName },
+        success: function (data) {
+            // console.log(data)
+            //  var result = JSON.parse(data);
+            $('#onpageload-loader').addClass('d-none');
+            $('#display_questions').html(data.searchResults);
+            $('#pagination_links').html(data.paginationLinks);
+        },
+        error: function (error) {
+            console.log(error)
+        }
+    })
     $.ajax({
         type: 'GET',
         url: '/indexonloadRequest',
@@ -17,7 +34,7 @@ $(document).ready(function () {
             // console.group(user_selected_answers);
             let html = '';
             // let questions_slider = '';
-            if(obj.personality != '' || obj.personality != null){
+            if (obj.personality != '' || obj.personality != null) {
                 $('.personality_headding').html('My personality portrait based on my faves');
                 $('.personality_content').html(obj.personality)
             }
@@ -415,16 +432,16 @@ $('#search_categories').on('keyup', function () {
                 for (let j = 0; j < obj.data.length; j++) {
                     html += '<p><b>' + obj.data[j]['question_category'] + '</b></p>'
                     let questions = obj.data[j]['questions'].split('break_statement');
-                    html+='<div class="container"><ul>';
+                    html += '<div class="container"><ul>';
                     for (var i = 0; i < questions.length; i++) {
                         // Trim any leading/trailing spaces from each value
                         let trimmedValue = questions[i].trim();
 
                         // Perform any desired operations on each value here
                         // For demonstration purposes, we'll just log each value to the console
-                      html+='<li> <h6><a href="/category/' + $('#topicName').val().replace(/ /g, "-") + '/' + trimmedValue.replace(/ /g, "-") + '">' + trimmedValue + '</a></h6></li>';
+                        html += '<li> <h6><a href="/category/' + $('#topicName').val().replace(/ /g, "-") + '/' + trimmedValue.replace(/ /g, "-") + '">' + trimmedValue + '</a></h6></li>';
                     }
-                    html+='</ul></div>';
+                    html += '</ul></div>';
                     // html += '<div class="col-md-6"><ul><li> <h6><a href="category/' + $('#topicName').val().replace(/ /g, "-") + '/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
                 }
             }
@@ -451,16 +468,16 @@ $('#open_search_category_modal').on('click', function () {
                 for (let j = 0; j < obj.data.length; j++) {
                     html += '<p><b>' + obj.data[j]['question_category'] + '</b></p>'
                     let questions = obj.data[j]['questions'].split('break_statement');
-                    html+='<div class="container"><ul>';
+                    html += '<div class="container"><ul>';
                     for (var i = 0; i < questions.length; i++) {
                         // Trim any leading/trailing spaces from each value
                         let trimmedValue = questions[i].trim();
 
                         // Perform any desired operations on each value here
                         // For demonstration purposes, we'll just log each value to the console
-                      html+='<li> <h6><a href="/category/' + $('#topicName').val().replace(/ /g, "-") + '/' + trimmedValue.replace(/ /g, "-") + '">' + trimmedValue + '</a></h6></li>';
+                        html += '<li> <h6><a href="/category/' + $('#topicName').val().replace(/ /g, "-") + '/' + trimmedValue.replace(/ /g, "-") + '">' + trimmedValue + '</a></h6></li>';
                     }
-                    html+='</ul></div>';
+                    html += '</ul></div>';
                     // html += '<div class="col-md-6"><ul><li> <h6><a href="category/' + $('#topicName').val().replace(/ /g, "-") + '/' + obj.data[j]['question'].replace(/ /g, "-") + '">' + obj.data[j]['question'] + '</a></h6></li></ul></div>';
                 }
             }

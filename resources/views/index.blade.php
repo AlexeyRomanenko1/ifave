@@ -3,13 +3,13 @@
 <input type="hidden" value="{{str_replace(' ','-',$topicName)}}" name="topicName" id="topicName">
 <div class="container mt-5">
     <div class="text-center">
-        <a href="" data-bs-toggle="modal" data-bs-target="#topics_modal">
-            <h3 class="mb-3 organic-margin"> Select location</h3>
+        <a rel="nofollow" data-bs-toggle="modal" data-bs-target="#topics_modal">
+            <h3 class="mb-3 organic-margin text-decoration-underline link-primary"> Select location</h3>
         </a>
         @if(count($get_last_three_locations) > 0)
         <div class="mb-3">
             @foreach($get_last_three_locations as $recent_links)
-            <a class="mt-2 mb-2" href="/location/{{$recent_links->location_link}}">{{$recent_links->location}}</a>&nbsp;
+            <a class="mt-2 mb-2 link-secondary" rel="nofollow" href="/location/{{$recent_links->location_link}}">{{$recent_links->location}}</a>&nbsp;
             @endforeach
         </div>
         @endif
@@ -23,7 +23,7 @@
                             </td>
                             @auth
                             <td>
-                                <p><a href="" class="fs-6" data-bs-toggle="modal" data-bs-target="#myfavetrack">All my faves</a></p>
+                                <p><a rel="nofollow" class="fs-6 link-secondary" data-bs-toggle="modal" data-bs-target="#myfavetrack">All my faves</a></p>
                             </td>
                             @else
                             <td>
@@ -45,7 +45,7 @@
         </div>
     </div> -->
     <div class="container text-center mb-5">
-        <h3><a a href="" data-bs-toggle="modal" id="open_search_category_modal" data-bs-target="#all_categories">All categories</a></h3>
+        <h3><a a rel="nofollow" class="text-decoration-underline link-primary" data-bs-toggle="modal" id="open_search_category_modal" data-bs-target="#all_categories">All categories</a></h3>
     </div>
     <div class="row height d-flex justify-content-center align-items-center">
         <div class="col-md-8">

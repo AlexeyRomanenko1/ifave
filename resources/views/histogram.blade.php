@@ -1,3 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="robots" content="noindex">
+</head>
+
+<body>
+
+
 <div>
     {!! $chart->container() !!}
 </div>
@@ -125,3 +135,6 @@
     }, 1000);
     // })
 </script>
+</body>
+
+</html>

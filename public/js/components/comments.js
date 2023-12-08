@@ -8,7 +8,7 @@ function top_comments_modal_body_for_comments(){
             let html = '<ol>';
             let obj = JSON.parse(data);
             for (let j = 0; j < obj.data.length; j++) {
-                html += '<li><a href="/comments/'+ obj.data[j]['name'].replace(/ /g, '-') +'">' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</a></li>';
+                html += '<li><a class="link-secondary" ref="nofollow" href="/comments/'+ obj.data[j]['name'].replace(/ /g, '-') +'">' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</a></li>';
             }
             html += '</ol>';
             $('#top_comments_modal_body_for_comments').empty();
@@ -30,7 +30,7 @@ $('#search_users_comments_on_comments_page').on('keyup', function (e) {
             let html = '<ol>';
             let obj = JSON.parse(data);
             for (let j = 0; j < obj.data.length; j++) {
-                html += '<li><a href="/comments/'+ obj.data[j]['name'].replace(/ /g, '-') +'">' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</a></li>';
+                html += '<li><a class="link-secondary" ref="nofollow" href="/comments/'+ obj.data[j]['name'].replace(/ /g, '-') +'">' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</a></li>';
             }
             html += '</ol>';
             $('#top_comments_modal_body_for_comments').empty();

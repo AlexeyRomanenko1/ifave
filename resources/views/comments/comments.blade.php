@@ -18,7 +18,7 @@
                         @if($comment->upvotes < 0) @php $comment->upvotes=0;
                             @endphp
                             @endif
-                            <li><a href="/comments/{{ str_replace(' ', '-', $comment->name)}}">{{$comment->name}} ({{$comment->upvotes}} upvotes)</a></li>
+                            <li><a rel="nofollow" class="link-secondary" href="/comments/{{ str_replace(' ', '-', $comment->name)}}">{{$comment->name}} ({{$comment->upvotes}} upvotes)</a></li>
                             @endforeach
                     </ol>
                     @if(count($comments) >= 5)

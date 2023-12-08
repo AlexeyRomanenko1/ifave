@@ -386,7 +386,7 @@ function top_comments_modal(x) {
                 if (obj.data[j]['upvotes'] < 0) {
                     obj.data[j]['upvotes'] = 0;
                 }
-                html += '<li><a href="/comments/' + obj.data[j]['name'].replace(/ /g, '-') + '">' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</a></li>';
+                html += '<li><a "nofollow" class="link-secondary" href="/comments/' + obj.data[j]['name'].replace(/ /g, '-') + '">' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</a></li>';
             }
             html += '</ol>';
             $('#top_comments_modal_body').empty();
@@ -412,7 +412,7 @@ $('#search_users_comments').on('keyup', function (e) {
                 if (obj.data[j]['upvotes'] < 0) {
                     obj.data[j]['upvotes'] = 0;
                 }
-                html += '<li><a href="/comments/' + obj.data[j]['name'].replace(/ /g, '-') + '">' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</a></li>';
+                html += '<li><a "nofollow" class="link-secondary" href="/comments/' + obj.data[j]['name'].replace(/ /g, '-') + '">' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</a></li>';
             }
             html += '</ol>';
             $('#top_comments_modal_body').empty();
@@ -438,7 +438,7 @@ function top_comments_modal_body_for_comments() {
                 if (obj.data[j]['upvotes'] < 0) {
                     obj.data[j]['upvotes'] = 0;
                 }
-                html += '<li><a href="/comments/' + obj.data[j]['name'].replace(/ /g, '-') + '">' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</a></li>';
+                html += '<li><a rel="nofollow" class="link-secondary" href="/comments/' + obj.data[j]['name'].replace(/ /g, '-') + '">' + obj.data[j]['name'] + ' (' + obj.data[j]['upvotes'] + ' upvotes)</a></li>';
             }
             html += '</ol>';
             $('#top_comments_modal_body_for_comments').empty();

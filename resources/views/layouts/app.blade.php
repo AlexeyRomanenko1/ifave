@@ -9,6 +9,12 @@
     @if(isset($keywords))
     <meta name="keywords" content="{{$keywords}}">
     <meta name="description" content="{{$meta_description}}" />
+    <meta property="og:title" content="Ifave - Explore Surveys and Blogs on ifave.com" />
+    <meta id="meta-property" property="og:description" content="{{$meta_description}}" />
+    <!-- <meta property="og:description" content="Engage in surveys, vote on answers, and explore insightful blogs on ifave.com. Join a dynamic online community of opinions and ideas." /> -->
+    @else
+    <meta property="keywords" content="Ifave - Explore Surveys and Blogs on ifave.com" />
+    <meta property="description" content="Engage in surveys, vote on answers, and explore insightful blogs on ifave.com. Join a dynamic online community of opinions and ideas." />
     @endif
 
     @if(request()->route() && (request()->route()->getName() == 'questions_details') && isset($location) && $location == 'The World')
@@ -18,8 +24,17 @@
 
     <meta name="robots" content="noindex">
     @endif
-    <meta property="og:title" content="Ifave - Explore Surveys and Blogs on ifave.com" />
-    <meta property="og:description" content="Engage in surveys, vote on answers, and explore insightful blogs on ifave.com. Join a dynamic online community of opinions and ideas." />
+    @if (request()->route() && (request()->route()->getName() == 'Blog') || request()->route() && (request()->route()->getName() == 'blogger_location_filter') || request()->route() && (request()->route()->getName() == 'filter_blog'))
+    <link rel="canonical" href="https://ifave.com/blog/">
+    @endif
+    @if (request()->route() && (request()->route()->getName() == 'comments_route'))
+    <meta name="robots" content="noindex">
+    @endif
+    @if (request()->route() && (request()->route()->getName() == 'topic_name') && isset($topicName) && $topicName != 'The World')
+    <meta name="robots" content="noindex">
+    @elseif(request()->route() && (request()->route()->getName() == 'topic_name') && isset($topicName) && $topicName == 'The World')
+    <link rel="canonical" href="https://ifave.com/">
+    @endif
     <meta property="og:url" content="https://ifave.com" />
     <meta property="og:image" content="https://ifave.com/images/question_images/IFAVE_PNG.png" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -165,26 +180,26 @@
                         @guest
                         @if (Route::has('login'))
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                            <a rel="nofollow" class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                         </li>
                         @endif
 
                         @if (Route::has('register'))
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                            <a rel="nofollow" class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                         </li>
                         @endif
                         @else
                         <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            <a rel="nofollow" id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 {{ Auth::user()->name }}
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="/update-profile">
+                                <a rel="nofollow" class="dropdown-item" href="/update-profile">
                                     Update Profile
                                 </a>
-                                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                <a rel="nofollow" class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                     {{ __('Logout') }}
                                 </a>

@@ -11,28 +11,28 @@ $(document).on('ready', function () {
                     page: params.page
                 };
             },
-            processResults: function(data, params) {
+            processResults: function (data, params) {
                 // console.log(data)
                 var options = [];
-                
+
                 // Assuming data.items is an array of objects with "id" and "text" properties
                 if (data) {
-                    options = data.map(function(item) {
+                    options = data.map(function (item) {
                         return {
-                            id: item.id+'-'+item.topic_name,
+                            id: item.id + '-' + item.topic_name,
                             text: item.topic_name
                         };
                     });
                 }
-            
+
                 return {
                     results: options
                 };
             },
-            
+
             cache: true,
             error: function (error) {
-               // console.error(error);
+                // console.error(error);
             }
         },
         placeholder: 'Search...',
@@ -184,4 +184,5 @@ function blogger_bio(x, y) {
     $('.blogger-bio-title').empty();
     $('.blogger-bio-title').html(y + " Bio");
 }
+
 

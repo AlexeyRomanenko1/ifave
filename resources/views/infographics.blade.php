@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+    <meta name="robots" content="noindex">
     <title>Infographics</title>
     <style>
         #chart-container {
@@ -16,6 +18,7 @@
         }
     </style>
 </head>
+
 <body>
     <div id="chart-container">
         <canvas id="myChart"></canvas>
@@ -78,7 +81,7 @@
 
             const chartContainer = document.getElementById('chart-container');
             const canvas = document.getElementById('myChart');
-            html2canvas(chartContainer).then(function (canvas) {
+            html2canvas(chartContainer).then(function(canvas) {
                 chart.options.plugins.title.text = ''; // Reset the chart title
                 const dataURL = canvas.toDataURL('image/jpeg', 1.0); // Set image format (JPEG) and quality
                 const link = document.createElement('a');
@@ -89,4 +92,5 @@
         });
     </script>
 </body>
+
 </html>

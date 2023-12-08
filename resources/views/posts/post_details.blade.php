@@ -5,7 +5,7 @@
         <div class="col-md-8">
             @foreach($posts as $post)
             <div class="text-center">
-            <a href="/category/{{ $post_location_link }}/{{ $post_category }}">Go to ranking of {{ str_replace('-',' ',$post_category) }} in {{ str_replace('-',' ',$post_location_link) }}</a> <br><br>
+            <a class="link-primary" href="/category/{{ $post_location_link }}/{{ $post_category }}">Go to ranking of {{ str_replace('-',' ',$post_category) }} in {{ str_replace('-',' ',$post_location_link) }}</a> <br><br>
             </div>
             <input type="hidden" id="post_id" value="{{$post->id}}">
             <input type="hidden" id="post_vote_count" value="{{$post->vote_count}}">
@@ -44,13 +44,13 @@
                 </div>
             </div>
             <div class="mt-3">
-                <a href="/category/{{ $post_location_link }}/{{ $post_category }}">Go to ranking of {{ str_replace('-',' ',$post_category) }} in {{ str_replace('-',' ',$post_location_link) }}</a> <br><br>
+                <a class="link-secondary" href="/category/{{ $post_location_link }}/{{ $post_category }}">Go to ranking of {{ str_replace('-',' ',$post_category) }} in {{ str_replace('-',' ',$post_location_link) }}</a> <br><br>
             </div>
             <hr>
             <div class="mt-2">
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-4"><small><b>Author:</b> <a href="/blogger/{{str_replace(' ','-',$post->name)}}">{{$post->name}}</a></small></div>
+                        <div class="col-md-4"><small><b>Author:</b> <a class="link-secondary" href="/blogger/{{str_replace(' ','-',$post->name)}}">{{$post->name}}</a></small></div>
                         <div class="col-md-4"><small class="float-end"><b>Date:</b> {{ date('d-m-Y', strtotime($post->created_at)) }}</small></div>
                         <div class="col-md-4"><small class="float-end"><b>Views:</b> {{ number_format($post->views_count, 0, '.', ',')}}</small></div>
                     </div>
@@ -79,7 +79,7 @@
                     <div>
                     </div>
                 </div>
-                <a href="#" class="reply-btn" data-comment-id="{{ $user_comment->id }}">Reply</a>
+                <a href="#" rel="nofollow" class="reply-btn" data-comment-id="{{ $user_comment->id }}">Reply</a>
                 <form method="POST" action="{{ route('postscomments.storeReplyPost') }}" class="reply-form reply-form-{{ $user_comment->id }} mt-3" style="display: none;">
                     @csrf
                     <input type="hidden" name="blog_id" value="{{$post->id}}">
@@ -148,7 +148,7 @@
                     <div class="card-body">
                         <ul class="list-group list-group-flush">
                             @foreach($popular_questions as $popular_question)
-                            <li class="list-group-item"><a href="/category/{{str_replace(' ','-',$popular_question->topic_name)}}/{{str_replace(' ','-',$popular_question->question)}}">{{$popular_question->question}}</a></li>
+                            <li class="list-group-item"><a class="link-secondary" href="/category/{{str_replace(' ','-',$popular_question->topic_name)}}/{{str_replace(' ','-',$popular_question->question)}}">{{$popular_question->question}}</a></li>
                             @endforeach
                         </ul>
                     </div>
@@ -158,7 +158,7 @@
                         <h6>CONNECT & FOLLOW</h6>
                     </div>
                     <div class="card-body text-center">
-                        <a id="" class="btn  m-2" href="https://www.facebook.com/people/Ifavecom/61553178323176/"><i class="fa fa-facebook-square" aria-hidden="true"></i></a><a id="" class="btn m-2" href="https://www.linkedin.com/company/ifave-com/"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a>
+                        <a id="" rel="nofollow" class="btn  m-2" href="https://www.facebook.com/people/Ifavecom/61553178323176/"><i class="fa fa-facebook-square" aria-hidden="true"></i></a><a id="" rel="nofollow" class="btn m-2" href="https://www.linkedin.com/company/ifave-com/"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a>
                     </div>
                 </div>
                 <div class="card mt-5">
@@ -187,7 +187,7 @@
                                 <img src="/images/posts/{{$lates_post->featured_image}}" class="mt-2" height="80px" width="80px">
                             </div>
                             <div class="col-md-8">
-                                <h4 class="mt-2"><a href="/blog/{{$lates_post->slug}}">{{$lates_post->title}}</a></h4>
+                                <h4 class="mt-2"><a class="link-secondary" href="/blog/{{$lates_post->slug}}">{{$lates_post->title}}</a></h4>
                                 {!! substr(strip_tags($lates_post->blog_content), 0, 100) !!}... <br><br>
                             </div>
                         </div>

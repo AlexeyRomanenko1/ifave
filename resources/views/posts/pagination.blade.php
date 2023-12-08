@@ -9,12 +9,12 @@
                 <img src="/images/posts/{{$post->featured_image}}" class="zoom-block img-fluid" alt="{{$post->title}}">
                 @endif
             </div>
-            <h4 class="mt-2"><a href="/blog/{{$post->slug}}">{{substr(strip_tags($post->title), 0, 100) }}</a></h4>
+            <h4 class="mt-2"><a class="link-secondary" href="/blog/{{$post->slug}}">{{substr(strip_tags($post->title), 0, 100) }}</a></h4>
             {!! substr(strip_tags($post->blog_content), 0, 150) !!}... <br><br>
             @if(auth()->check())
             @if( auth()->user()->id == $post->user_id)
             <div class="mt-3">
-                <a href="/edit/blog/{{str_replace(' ','-',$post->name)}}/{{$post->slug}}/{{$post->id}}" class="btn btn-success">Edit Blog</a>
+                <a ref="nofollow" href="/edit/blog/{{str_replace(' ','-',$post->name)}}/{{$post->slug}}/{{$post->id}}" class="btn btn-success">Edit Blog</a>
             </div>
             @endif
             @endif
@@ -29,7 +29,7 @@
             <div class="card-body">
                 <ul class="list-group list-group-flush">
                     @foreach($popular_questions as $popular_question)
-                    <li class="list-group-item"><a href="/category/{{str_replace(' ','-',$popular_question->topic_name)}}/{{str_replace(' ','-',$popular_question->question)}}">{{$popular_question->question}}</a></li>
+                    <li class="list-group-item"><a class="link-secondary" href="/category/{{str_replace(' ','-',$popular_question->topic_name)}}/{{str_replace(' ','-',$popular_question->question)}}">{{$popular_question->question}}</a></li>
                     @endforeach
                 </ul>
             </div>

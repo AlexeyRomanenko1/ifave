@@ -184,13 +184,14 @@ class indexController extends Controller
                 ->limit(5)
                 ->get();
             $keywords = 'ifave,' . $topicName;
-            $meta_description = 'Rank and compare the best of everything in ' . $topicName . '. Save and share your faves among :';
-            foreach ($questions as $index => $description) {
-                if ($index <= 5) {
-                    $meta_description .= $index + 1 . '. ' . $description->question . ' ';
-                }
-            }
-            $meta_description = substr($meta_description, 0, -1);
+            // $meta_description = 'Rank and compare the best of everything in ' . $topicName . '. Save and share your faves among :';
+            // foreach ($questions as $index => $description) {
+            //     if ($index <= 5) {
+            //         $meta_description .= $index + 1 . '. ' . $description->question . ' ';
+            //     }
+            // }
+            // $meta_description = substr($meta_description, 0, -1);
+            $meta_description = 'Engage in surveys, vote on answers, and explore insightful blogs on ifave.com. Join a dynamic online community of opinions and ideas.';
             return json_encode(['success' => 1, 'keywords' => $keywords, 'meta_description' => $meta_description, 'topic_name' => $topicName, 'questions_slider' => $questions_slider, 'myfaves' => $get_this_user_votes, 'topic_id' => $topic_id, 'personality' => $personality]);
         }
         // return response()->json(['sucess' => 'hello']);
@@ -1181,20 +1182,6 @@ class indexController extends Controller
             }
         }
 
-        // $questions = Questions::select(
-        //     'questions.id AS question_id',
-        //     'questions.question',
-        //     'questions.question_category',
-        //     DB::raw('SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT CONCAT(answers, " ( Faves: ", vote_count, ")") ORDER BY vote_count DESC SEPARATOR "}"), "}", 3) AS top_answers'),
-        //     DB::raw('SUM(vote_count) AS total_votes')
-        // )
-        //     ->join('questions_answer', 'questions.question_category', '=', 'questions_answer.questions_category')
-        //     ->join('topics', 'questions.topic_id', '=', 'topics.id')
-        //     ->where('topics.topic_name', $topicName)
-        //     ->groupBy('questions.id', 'questions.question', 'questions.question_category')
-        //     ->orderBy('total_votes', 'desc') // Sort by total_votes in descending order
-        //     ->paginate($perPage, ['*'], 'page', $page);
-
         $questions = DB::table('questions')
             ->select(
                 'questions.id AS question_id',
@@ -1211,29 +1198,30 @@ class indexController extends Controller
             ->groupBy('questions.id', 'questions.question', 'questions.question_category')
             ->orderBy('total_votes', 'DESC')
             ->paginate($perPage, ['*'], 'page', $page);
+
         $get_topic_details = Topics::select('*')->where('topic_name', $topicName)->get();
         foreach ($get_topic_details as $get_topic_detail) {
             $topic_id = $get_topic_detail['id'];
         }
 
-        $comments = DB::table('comments')
-            ->select('users.name', DB::raw('SUM(comments.upvotes  - comments.downvotes) as upvotes'))
-            ->join('users', 'comments.comment_by', '=', 'users.id')
-            ->join('questions', 'comments.question_id', '=', 'questions.id')
-            ->where('questions.topic_id', '=', $topic_id)
-            ->orderByDesc('upvotes')
-            ->limit(5)
-            ->groupBy('users.name')
-            ->get();
+        // $comments = DB::table('comments')
+        //     ->select('users.name', DB::raw('SUM(comments.upvotes  - comments.downvotes) as upvotes'))
+        //     ->join('users', 'comments.comment_by', '=', 'users.id')
+        //     ->join('questions', 'comments.question_id', '=', 'questions.id')
+        //     ->where('questions.topic_id', '=', $topic_id)
+        //     ->orderByDesc('upvotes')
+        //     ->limit(5)
+        //     ->groupBy('users.name')
+        //     ->get();
 
-        $posts = DB::table('posts')
-            ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
-            ->join('users', 'posts.user_id', 'users.id')
-            ->where('posts.topic_id', $topic_id)
-            ->where('posts.status', 1)
-            ->orderByDesc('posts.vote_count')
-            ->limit(4)
-            ->get();
+        // $posts = DB::table('posts')
+        //     ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
+        //     ->join('users', 'posts.user_id', 'users.id')
+        //     ->where('posts.topic_id', $topic_id)
+        //     ->where('posts.status', 1)
+        //     ->orderByDesc('posts.vote_count')
+        //     ->limit(4)
+        //     ->get();
         $keywords = 'ifave,' . $topicName;
         $meta_description = 'Rank and compare the best of everything in ' . $topicName . '. Save and share your faves among :';
         foreach ($questions as $index => $description) {
@@ -1243,7 +1231,7 @@ class indexController extends Controller
         }
         $meta_description = substr($meta_description, 0, -1);
         $page_title = 'iFave - ' . $topicName;
-        return view("topics", compact('header_info', 'get_topic', 'questions', 'comments', 'subQuery', 'topic_id', 'posts', 'keywords', 'topicName', 'meta_description', 'page_title', 'get_last_three_locations'));
+        return view("topics", compact('header_info', 'get_topic', 'subQuery', 'topic_id', 'keywords', 'topicName', 'meta_description', 'page_title', 'get_last_three_locations'));
     }
 
     public function comments_route(Request $request, $name)

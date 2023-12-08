@@ -45,3 +45,12 @@ $('.reply-btn').click(function (e) {
     const commentId = $(this).data('comment-id');
     $(`.reply-form-${commentId}`).toggle();
 });
+$('.read-more').on('click', function (e) {
+    e.preventDefault();
+    $(this).hide();
+    var halfCommentElement = $(this).closest('.comment-content').find('.half-comment');
+    // $(this).siblings('.full-comment').show();
+    var fullCommentElement = $(this).closest('.comment-content').find('.full-comment');
+    halfCommentElement.hide();
+    fullCommentElement.show();
+});

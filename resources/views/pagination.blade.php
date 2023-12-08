@@ -28,7 +28,7 @@
                 @if($comment->upvotes < 0) @php $comment->upvotes=0;
                     @endphp
                     @endif
-                    <li><a href="/comments/{{ str_replace(' ', '-', $comment->name)}}">{{$comment->name}} ({{$comment->upvotes}} upvotes)</a></li>
+                    <li><a rel="nofollow" class="link-secondary" href="/comments/{{ str_replace(' ', '-', $comment->name)}}">{{$comment->name}} ({{$comment->upvotes}} upvotes)</a></li>
                     @endforeach
             </ol>
             @if(count($comments) >=5)
@@ -59,7 +59,7 @@
                     <img src="/images/posts/{{$post->featured_image}}" width="191" height="191" class="zoom-block img-fluid" alt="">
                 </div>
                 <div class="col-md-9">
-                    <h4 class="mt-2"><a href="/blog/{{$post->slug}}">{{ substr(strip_tags($post->title), 0, 100)}}</a></h4>
+                    <h4 class="mt-2"><a class="link-secondary" href="/blog/{{$post->slug}}">{{ substr(strip_tags($post->title), 0, 100)}}</a></h4>
                     @if($col_md==6)
                     {!! substr(strip_tags($post->blog_content), 0, 150) !!}... <br><br>
                     @elseif($col_md==12)
@@ -95,7 +95,7 @@ $col_md=6;
                 <img src="/images/posts/{{$post->featured_image}}" width="191" height="191" class="zoom-block img-fluid" alt="">
             </div>
             <div class="col-md-9">
-                <h4 class="mt-2"><a href="/blog/{{$post->slug}}">{{ substr(strip_tags($post->title), 0, 100)}}</a></h4>
+                <h4 class="mt-2"><a class="link-secondary" href="/blog/{{$post->slug}}">{{ substr(strip_tags($post->title), 0, 100)}}</a></h4>
                 @if($col_md==6)
                 {!! substr(strip_tags($post->blog_content), 0, 150) !!}... <br><br>
                 @elseif($col_md==12)
