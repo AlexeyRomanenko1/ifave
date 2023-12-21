@@ -132,13 +132,27 @@
     <link href="{{ asset('css/comments.css') }}" rel="stylesheet">
     @endif
 </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z3Q2V0LDTH"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+
+
+    gtag('config', 'G-Z3Q2V0LDTH');
+</script>
 
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light back-blue shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-dark back-blue shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    <h3 class="calb"><b class="light-purple">iFave</b><small class="small-calb fst-italic"> .com</small></h3>
+                   <img src="/images/ifave_log/ifave-logo.png" alt="iFave Main Logo" height="40px" width="150px">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -154,7 +168,7 @@
                             <a href="{{ url('/') }}" class="nav-link">The World</a>
                         </li>
                         <li class="nav-item">
-                            <a href="" class="nav-link" data-bs-toggle="modal" data-bs-target="#topics_modal">All Locations</a>
+                            <a href="" rel="nofollow" class="nav-link" data-bs-toggle="modal" data-bs-target="#topics_modal">All Locations</a>
                         </li>
                         <!-- <li class="nav-item">
                             <a href="" class="nav-link">About</a>

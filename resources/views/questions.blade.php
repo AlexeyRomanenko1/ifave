@@ -21,15 +21,15 @@
         <a class="mb-2 link-primary" href="/" >Go back to best in {{ $details["topic_name"] }}</a> <br>
         <!-- <h1 class="mt-2 p-2">{{ $details["question"] }} in {{ $details["topic_name"] }}</h1> -->
         @else
-        <a class="mb-2 link-primary" rel="nofllow" href="/location/{{str_replace(' ','-',$details['topic_name'])}}">Go back to best in {{ $details["topic_name"] }}</a><br>
+        <a class="mb-2 link-primary" rel="nofollow" href="/location/{{str_replace(' ','-',$details['topic_name'])}}">Go back to best in {{ $details["topic_name"] }}</a><br>
         <!-- <h1 class="mt-2 p-2">{{ $details["topic_name"] }}</h1> -->
         @endif
         <input type="hidden" id="onload_location" value="{{$details['topic_name']}}">
         <input type="hidden" id="onload_category" value="{{$details['question']}}">
         @if (file_exists(public_path('images/question_images/ifave_images/'.$question_image)))
-        <img src="/images/question_images/ifave_images/{{$question_image}}" class="img-fluid zoom-block mt-3" height="325px" width="325px" alt="...">
+        <img src="/images/question_images/ifave_images/{{$question_image}}" class="img-fluid zoom-block mt-3" height="325px" width="325px" alt="{{$details['topic_name']}}">
         @else
-        <img src="/images/question_images/ifave.jpg" class="img-fluid zoom-block mt-3" height="325px" width="325px" alt="...">
+        <img src="/images/question_images/ifave.jpg" class="img-fluid zoom-block mt-3" height="325px" width="325px" alt="{{$details['topic_name']}}">
         @endif
         <h1 class="mt-2 p-2">{{ $details["question"] }} in {{ $details["topic_name"] }}</h1>
         @endforeach
@@ -76,7 +76,7 @@
                         <button type="button" class="btn p-0 info-large-screen" data-bs-toggle="modal" data-bs-target="#infographics">
                             <img src="/images/info-908889_1280.png" class="img-fluid zoom-block" alt="Info Graphics">
                         </button>
-                        <a rel="nofllow" href="/generate-info-graphics/{{$topic_to_share}}/{{$question_to_share}}" class="info-small-screen d-none">
+                        <a rel="nofollow" href="/generate-info-graphics/{{$topic_to_share}}/{{$question_to_share}}" class="info-small-screen d-none">
                             <img src="/images/info-908889_1280.png" class="img-fluid zoom-block" alt="Info Graphics">
                         </a>
                     </div>
@@ -140,7 +140,7 @@
                 <div class="container mt-3 p-2 m-2">
                     <div class="row">
                         <div class="col-md-3">
-                            <img src="/images/posts/{{$post->featured_image}}" class="zoom-block img-fluid" alt="">
+                            <img src="/images/posts/{{$post->featured_image}}" class="zoom-block img-fluid" alt="{{$post->alt_text}}">
                         </div>
                         <div class="col-md-9">
                             <h4 class="mt-2"><a class="link-secondary" href="/blog/{{$post->slug}}">{{substr(strip_tags($post->title), 0, 100) }}</a></h4>
@@ -192,7 +192,7 @@
 
                 </div>
             </div>
-            <a rel="nofllow" href="#" class="reply-btn" data-comment-id="{{ $user_comment->id }}">Reply</a>
+            <a rel="nofollow" href="#" class="reply-btn" data-comment-id="{{ $user_comment->id }}">Reply</a>
             <form method="POST" action="{{ route('comments.storeReply') }}" class="reply-form reply-form-{{ $user_comment->id }} mt-3" style="display: none;">
                 @csrf
                 @foreach($header_info as $header)
@@ -278,7 +278,7 @@
             <div class="col-md-3">
                 <div class="p-3">
                     <div class="h-75">
-                        <img src="/images/posts/{{$all_post->featured_image}}" class="zoom-block img-fluid" alt="">
+                        <img src="/images/posts/{{$all_post->featured_image}}" class="zoom-block img-fluid" alt="{{$all_post->alt_text}}">
                     </div>
                     <h4 class="mt-2"><a class="link-secondary" href="/blog/{{$all_post->slug}}">{{substr(strip_tags($all_post->title), 0, 100) }}</a></h4>
                     {!! substr(strip_tags($all_post->blog_content), 0, 150) !!}... <br><br>
@@ -413,7 +413,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <a rel="nofllow" href="/generate-info-graphics/{{$topic_to_share}}/{{$question_to_share}}" class="btn btn-primary">
+                <a rel="nofollow" href="/generate-info-graphics/{{$topic_to_share}}/{{$question_to_share}}" class="btn btn-primary">
                     Download
                 </a>
             </div>

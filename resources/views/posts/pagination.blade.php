@@ -9,7 +9,7 @@
                 <img src="/images/posts/{{$post->featured_image}}" class="zoom-block img-fluid" alt="{{$post->title}}">
                 @endif
             </div>
-            <h4 class="mt-2"><a class="link-secondary" href="/blog/{{$post->slug}}">{{substr(strip_tags($post->title), 0, 100) }}</a></h4>
+            <h1 class="mt-4 ifave-h4"><a class="link-secondary" href="/blog/{{$post->slug}}">{{substr(strip_tags($post->title), 0, 100) }}</a></h1>
             {!! substr(strip_tags($post->blog_content), 0, 150) !!}... <br><br>
             @if(auth()->check())
             @if( auth()->user()->id == $post->user_id)

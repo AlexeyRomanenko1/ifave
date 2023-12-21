@@ -61,9 +61,9 @@
                 @foreach($bloggers as $blogger)
                 <div class="p-2 m-2 text-center">
                     @if($blogger['image'] !=='' && $blogger['image'] !== null)
-                    <img onclick="blogger_route('{{$blogger['username']}}')" src="/images/user_images/{{$blogger['image']}}">
+                    <img onclick="blogger_route('{{$blogger['username']}}')" src="/images/user_images/{{$blogger['image']}}" alt="{{$blogger['username']}}">
                     @else
-                    <img onclick="blogger_route('{{$blogger['username']}}')" src="/images/user_images/default_profile_picture.jpg">
+                    <img onclick="blogger_route('{{$blogger['username']}}')" src="/images/user_images/default_profile_picture.jpg" alt="{{$blogger['username']}}">
                     @endif
                     <p onclick="blogger_route('{{$blogger['username']}}')" class="lh-1 m-0-p">{{$blogger['username']}}</p>
                     @if($blogger['location'] !='' || $blogger['location']!= null)
@@ -90,7 +90,7 @@
                         <img src="/images/posts/{{$post->featured_image}}" class="zoom-block img-fluid" alt="{{$post->title}}">
                         @endif
                     </div>
-                    <h4 class="mt-2"><a class="link-secondary" class="link-secondary" href="/blog/{{$post->slug}}">{{substr(strip_tags($post->title), 0, 100) }}</a></h4>
+                    <h1 class="mt-4 ifave-h4"><a class="link-secondary" class="link-secondary" href="/blog/{{$post->slug}}">{{substr(strip_tags($post->title), 0, 100) }}</a></h1>
                     {!! substr(strip_tags($post->blog_content), 0, 150) !!}... <br><br>
                     @if(auth()->check())
                     @if( auth()->user()->id == $post->user_id)

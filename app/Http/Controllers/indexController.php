@@ -419,7 +419,7 @@ class indexController extends Controller
                 ->get();
             //query to get posts data 
             $posts = DB::table('posts')
-                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug','posts.alt_text')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
                 ->where('posts.status', 1)
@@ -473,7 +473,7 @@ class indexController extends Controller
                 ->groupBy('users.name')
                 ->get();
             $posts = DB::table('posts')
-                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug','posts.alt_text')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
                 ->where('posts.status', 1)

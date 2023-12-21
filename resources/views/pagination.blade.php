@@ -56,7 +56,7 @@
         <div class="container mt-3 p-2 m-2">
             <div class="row">
                 <div class="col-md-3">
-                    <img src="/images/posts/{{$post->featured_image}}" width="191" height="191" class="zoom-block img-fluid" alt="">
+                    <img src="/images/posts/{{$post->featured_image}}" width="191" height="191" class="zoom-block img-fluid" alt="{{$post->alt_text}}">
                 </div>
                 <div class="col-md-9">
                     <h4 class="mt-2"><a class="link-secondary" href="/blog/{{$post->slug}}">{{ substr(strip_tags($post->title), 0, 100)}}</a></h4>
@@ -92,7 +92,7 @@ $col_md=6;
     <div class="container mt-3 p-2 m-2">
         <div class="row">
             <div class="col-md-3">
-                <img src="/images/posts/{{$post->featured_image}}" width="191" height="191" class="zoom-block img-fluid" alt="">
+                <img src="/images/posts/{{$post->featured_image}}" width="191" height="191" class="zoom-block img-fluid" alt="{{$post->alt_text}}">
             </div>
             <div class="col-md-9">
                 <h4 class="mt-2"><a class="link-secondary" href="/blog/{{$post->slug}}">{{ substr(strip_tags($post->title), 0, 100)}}</a></h4>
@@ -126,9 +126,9 @@ $col_md=6;
             <div class="suggestions p-1"></div>
             <div class="text-center">
                 @if (file_exists(public_path('images/question_images/ifave_images/'.$question_image)))
-                <img onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' src="/images/question_images/ifave_images/{{$question_image}}" class="img-fluid zoom-block" height="325px" width="325px" alt="..." loading="lazy">
+                <img onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' src="/images/question_images/ifave_images/{{$question_image}}" class="img-fluid zoom-block" height="325px" width="325px" alt="{{$question->question}}" loading="lazy">
                 @else
-                <img onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' src="/images/question_images/ifave.jpg" class="img-fluid zoom-block" height="325px" width="325px" alt="..." loading="lazy">
+                <img onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")' src="/images/question_images/ifave.jpg" class="img-fluid zoom-block" height="325px" width="325px" alt="{{$question->question}}" loading="lazy">
                 @endif
             </div>
             @if(!$exists)

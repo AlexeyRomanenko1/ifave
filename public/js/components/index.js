@@ -473,7 +473,7 @@ function scrollLeftcont() {
 
 function generate_embeded_code(url, questionName) {
     // Customize the embedded code template with the question link and name
-    var embeddedCode = '<a href="' + url + '"><img src="https://ifave.com/images/question_images/user_images/IFAVE_PNG.png" height="30px" width="30px">' + questionName + '</a>';
+    var embeddedCode = '<a href="' + url + '"><img src="https://ifave.com/images/question_images/user_images/IFAVE_PNG.png" height="30px" width="30px" alt="iFave Logo">' + questionName + '</a>';
     navigator.clipboard.writeText(embeddedCode);
     toastr.success('Embed code copied! This embed code is a link back to the category on iFave that you can place on your website. By doing so you can invite your website visitors to upvote your entry on iFave or just share it. Links to quality content enrich your website and offer added value to your users.')
     // Display or use the generated embed code as needed

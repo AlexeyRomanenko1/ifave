@@ -4,7 +4,7 @@
 <div class="container mt-5">
     <div class="text-center">
         <a rel="nofollow" data-bs-toggle="modal" data-bs-target="#topics_modal">
-            <h3 class="mb-3 organic-margin text-decoration-underline link-primary"> Select location</h3>
+            <p class="mb-3 ifave-h3 organic-margin text-decoration-underline link-primary"> Select location</p>
         </a>
         @if(count($get_last_three_locations) > 0)
         <div class="mb-3">
@@ -35,7 +35,7 @@
                 </div>
             </div>
         </div>
-        <h3 class="mb-3" id="display_topic_name"></h3>
+        <h1 class="mb-3 ifave-h1" id="display_topic_name"></h1>
     </div>
     <!-- <div class="container position-relative mb-4 mt-5">
         <i onclick="scrollRight()" class="fa fa-4x fa-angle-double-right position-absolute right-scroll-btn" aria-hidden="true"></i>
@@ -45,7 +45,7 @@
         </div>
     </div> -->
     <div class="container text-center mb-5">
-        <h3><a a rel="nofollow" class="text-decoration-underline link-primary" data-bs-toggle="modal" id="open_search_category_modal" data-bs-target="#all_categories">All categories</a></h3>
+        <p class="ifave-h3"><a class="text-decoration-underline link-primary" data-bs-toggle="modal" id="open_search_category_modal" data-bs-target="#all_categories">All categories</a></p>
     </div>
     <div class="row height d-flex justify-content-center align-items-center">
         <div class="col-md-8">

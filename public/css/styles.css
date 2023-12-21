@@ -382,6 +382,27 @@ button#imageManager-1 {
 .link-secondary:hover{
     color: #5909a4;
 }
+/* ifave headdings tags */
+.ifave-h1{
+    font-size: 2.2rem;
+    font-weight: bold;
+}
+.ifave-h2{
+
+}
+.ifave-h3{
+    font-size: 1.8rem;
+    /* font-weight: bold; */
+}
+.ifave-h4{
+    font-size: 1.6rem;
+}
+.ifave-h5{
+    font-size: 1.4rem;
+}
+.ifave-h6{
+    font-size: 1.2rem;
+}
 
 /* Style the Select2 dropdown */
 .select2-container--default .select2-selection--single {}
@@ -438,6 +459,10 @@ button#imageManager-1 {
     font-size: 16px;
     font-weight: bold;
     margin-top: 10px;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: #fff !important;
 }
 
 @media screen and (max-width: 1200px) {
@@ -534,8 +559,8 @@ button#imageManager-1 {
 
     .fav_tracks {
         width: auto;
-        right: 147px;
-        bottom: 5px !important;
+        right: 64px;
+        bottom: -6px !important;
     }
 }
 
