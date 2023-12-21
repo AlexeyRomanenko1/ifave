@@ -295,11 +295,13 @@ class BlogController extends Controller
         $meta_description = Purifier::clean($meta_description[0]);
         // Extract the plain text content
         $meta_description = strip_tags($meta_description);
-        $meta_description =  Str::limit($meta_description, 160, '...');
+        $meta_description =  Str::limit($meta_description, 250, '...');
+        // Remove new lines (blank lines)
+        $meta_description = str_replace(array("\r", "\n", "\r\n"), ' ', $meta_description);
         $latest_posts = DB::table('posts')->select('*')->where('status', 1)->orderByDesc('created_at')->limit(5)->get();
         $blog_title = DB::table('posts')->where('slug', $slug)->pluck('title');
         $page_title = 'iFave Blog - ' . $blog_title[0];
-        return view('posts.post_details', compact('posts', 'post_category', 'post_location_link', 'latest_posts', 'get_comments', 'replies', 'keywords', 'meta_description', 'page_title', 'popular_questions'));
+        return view('posts.post_details', compact('posts', 'post_category', 'post_location_link', 'latest_posts', 'get_comments', 'replies', 'keywords', 'meta_description', 'page_title', 'popular_questions', 'slug'));
     }
     public function upvote_post(Request $request)
     {

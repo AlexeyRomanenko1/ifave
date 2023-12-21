@@ -24,11 +24,17 @@
 
     <meta name="robots" content="noindex">
     @endif
-    @if (request()->route() && (request()->route()->getName() == 'Blog') || request()->route() && (request()->route()->getName() == 'blogger_location_filter') || request()->route() && (request()->route()->getName() == 'filter_blog'))
+    @if (request()->route() && (request()->route()->getName() == '/'))
+    <link rel="canonical" href="https://ifave.com">
+    @endif
+    @if (request()->route() && (request()->route()->getName() == 'blog') || request()->route() && (request()->route()->getName() == 'blogger_location_filter') || request()->route() && (request()->route()->getName() == 'filter_blog'))
     <link rel="canonical" href="https://ifave.com/blog/">
     @endif
     @if (request()->route() && (request()->route()->getName() == 'comments_route'))
     <meta name="robots" content="noindex">
+    @endif
+    @if (request()->route() && (request()->route()->getName() == 'blog_details'))
+    <link rel="canonical" href="https://ifave.com/{{$slug}}">
     @endif
     @if (request()->route() && (request()->route()->getName() == 'topic_name') && isset($topicName) && $topicName != 'The World')
     <meta name="robots" content="noindex">
@@ -152,7 +158,7 @@
         <nav class="navbar navbar-expand-md navbar-dark back-blue shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                   <img src="/images/ifave_log/ifave-logo.png" alt="iFave Main Logo" height="40px" width="150px">
+                    <img src="/images/ifave_log/ifave-logo.png" alt="iFave Main Logo" height="40px" width="150px">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
