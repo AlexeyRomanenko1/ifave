@@ -15,7 +15,7 @@
         @endif
         <div class="container position-relative fav_tracks_parent">
             <div class="position-absolute fav_tracks">
-                <div class="container mt-5">
+                <div class="container">
                     <table class="table table-bordered rounded shadow border-blue user_faves_track">
                         <thead>
                             <td>

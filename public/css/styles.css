@@ -410,7 +410,7 @@ button#imageManager-1 {
 }
 
 .pointer {
-    cursor: pointer;
+    cursor: pointer !important;
 }
 
 /* Style the Select2 dropdown */

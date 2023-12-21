@@ -56,6 +56,11 @@
                     showPartialContent(str, 9000, '.half-thoughts-mobile-screen');
                     $('.half-thoughts iframe').removeAttr('height');
                     $('.half-thoughts iframe').removeAttr('width');
+                    $('.half-thoughts img').addClass('img-fluid');
+                    $('.half-thoughts span:has(img)').each(function () {
+                        // Remove the 'style' attribute from the <span> element
+                        $(this).removeAttr('style');
+                    });
                 } else {
                     $('.for-full-screen').removeClass('d-none');
                     showPartialContent(str, 20000, '.half-thoughts-full-screen');

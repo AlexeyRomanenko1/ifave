@@ -11,7 +11,7 @@
             <input type="hidden" id="post_vote_count" value="{{$post->vote_count}}">
             <input type="hidden" id="post_down_votes" value="{{$post->down_votes}}">
             <div class="d-flex justify-content-between align-items-center">
-                <h2>{{$post->title}}</h2>
+                <h1 class="ifave-h1">{{$post->title}}</h1>
                 <div class="d-flex">
                     <div class="text-center mx-3">
                         <i class="fa fa-2x fa-thumbs-up text-success post-thumbs-up" aria-hidden="true"></i>
