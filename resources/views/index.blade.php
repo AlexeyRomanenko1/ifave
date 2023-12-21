@@ -4,7 +4,7 @@
 <div class="container mt-5">
     <div class="text-center">
         <a rel="nofollow" data-bs-toggle="modal" data-bs-target="#topics_modal">
-            <p class="mb-3 ifave-h3 organic-margin text-decoration-underline link-primary"> Select location</p>
+            <p class="mb-3 pointer ifave-h3 organic-margin text-decoration-underline link-primary"> Select location</p>
         </a>
         @if(count($get_last_three_locations) > 0)
         <div class="mb-3">
@@ -23,7 +23,7 @@
                             </td>
                             @auth
                             <td>
-                                <p><a rel="nofollow" class="fs-6 link-secondary" data-bs-toggle="modal" data-bs-target="#myfavetrack">All my faves</a></p>
+                                <p><a rel="nofollow" class="fs-6 link-secondary pointer" data-bs-toggle="modal" data-bs-target="#myfavetrack">All my faves</a></p>
                             </td>
                             @else
                             <td>
@@ -45,7 +45,7 @@
         </div>
     </div> -->
     <div class="container text-center mb-5">
-        <p class="ifave-h3"><a class="text-decoration-underline link-primary" data-bs-toggle="modal" id="open_search_category_modal" data-bs-target="#all_categories">All categories</a></p>
+        <p class="ifave-h3"><a class="text-decoration-underline link-primary pointer" data-bs-toggle="modal" id="open_search_category_modal" data-bs-target="#all_categories">All categories</a></p>
     </div>
     <div class="row height d-flex justify-content-center align-items-center">
         <div class="col-md-8">

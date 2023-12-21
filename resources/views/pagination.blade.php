@@ -119,7 +119,7 @@ $col_md=6;
                 $question->question=substr($question->question, 0, 40) . '...';
                 @endphp
                 @endif
-                <div class="text-center" onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")'>
+                <div class="text-center pointer" onclick='redirect_url("category/{{$TopicName}}/{{$questionName}}")'>
                     <h3 class="underline">{{ $question->question }} <small class="fs-6 fw-normal fst-italic"> ({{ $question->total_votes }} faves)</small></h3>
                 </div>
             </div>

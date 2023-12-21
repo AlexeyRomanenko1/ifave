@@ -409,6 +409,10 @@ button#imageManager-1 {
     font-size: 1.2rem;
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 /* Style the Select2 dropdown */
 .select2-container--default .select2-selection--single {}
 
