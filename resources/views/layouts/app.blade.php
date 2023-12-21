@@ -149,7 +149,7 @@
 
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-dark back-blue shadow-sm fixed-top">
+        <nav class="navbar navbar-expand-md navbar-dark back-blue shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                    <img src="/images/ifave_log/ifave-logo.png" alt="iFave Main Logo" height="40px" width="150px">

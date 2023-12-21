@@ -1176,8 +1176,8 @@ class indexController extends Controller
             if ($link_exsistance == 0) {
                 $recent_location = DB::table('recent_locations')->insert([
                     'user_id' => $userIpAddress,
-                    'location' => $request->topic_name,
-                    'location_link' => $header_info
+                    'location' => $header_info,
+                    'location_link' => $request->topic_name
                 ]);
             }
         }
