@@ -379,28 +379,33 @@ button#imageManager-1 {
     color: #000;
 }
 
-.link-secondary:hover{
+.link-secondary:hover {
     color: #5909a4;
 }
-/* ifave headdings tags */
-.ifave-h1{
-    font-size: 2.2rem;
-    font-weight: bold;
-}
-.ifave-h2{
 
+/* ifave headdings tags */
+.ifave-h1 {
+    font-size: 2.2rem;
 }
-.ifave-h3{
+
+.ifave-h2 {
+    font-size: 2.0rem;
+}
+
+.ifave-h3 {
     font-size: 1.8rem;
     /* font-weight: bold; */
 }
-.ifave-h4{
+
+.ifave-h4 {
     font-size: 1.6rem;
 }
-.ifave-h5{
+
+.ifave-h5 {
     font-size: 1.4rem;
 }
-.ifave-h6{
+
+.ifave-h6 {
     font-size: 1.2rem;
 }
 
