@@ -33,7 +33,7 @@
     @if (request()->route() && (request()->route()->getName() == 'comments_route'))
     <meta name="robots" content="noindex">
     @endif
-    @if (request()->route() && (request()->route()->getName() == 'blog_details'))
+    @if (request()->route() && (request()->route()->getName() == 'blog_details') && isset($slug))
     <link rel="canonical" href="https://ifave.com/{{$slug}}">
     @endif
     @if (request()->route() && (request()->route()->getName() == 'topic_name') && isset($topicName) && $topicName != 'The World')

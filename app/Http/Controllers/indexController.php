@@ -126,7 +126,8 @@ class indexController extends Controller
         //     }
         // }
         // $meta_description = substr($meta_description, 0, -1);
-        $page_title = 'iFave - ' . $topicName;
+        // $page_title = 'iFave - ' . $topicName;
+        $page_title = 'iFave.com: Explore the Best in ' . $topicName . ' – Uncover Unmatched Favorites!';
         $meta_description = '';
         $keywords = '';
         return view('index', compact('subQuery', 'topic_id', 'topicName', 'page_title', 'get_last_three_locations', 'meta_description', 'keywords'));
@@ -419,7 +420,7 @@ class indexController extends Controller
                 ->get();
             //query to get posts data 
             $posts = DB::table('posts')
-                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug','posts.alt_text')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug', 'posts.alt_text')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
                 ->where('posts.status', 1)
@@ -473,7 +474,7 @@ class indexController extends Controller
                 ->groupBy('users.name')
                 ->get();
             $posts = DB::table('posts')
-                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug','posts.alt_text')
+                ->select('posts.title', 'posts.blog_content', 'posts.featured_image', 'users.name', 'posts.created_at', 'posts.slug', 'posts.alt_text')
                 ->join('users', 'posts.user_id', 'users.id')
                 ->where('posts.topic_id', $topic_id)
                 ->where('posts.status', 1)
@@ -602,7 +603,9 @@ class indexController extends Controller
                 $meta_description .= $index + 1 . '. ' . $description->answers . ' ';
             }
         }
-        $page_title = 'iFave - ' . $category;
+        // $page_title = 'iFave - ' . $category;
+        $page_title = $category . ' in ' . $location . ': Explore Literary Excellence at ifave.com';
+        // return $page_title;
         $meta_description = substr($meta_description, 0, -1);
         // $get_comments = DB::table('comments')->select('*')
         //     ->selectRaw('(upvotes - downvotes) as difference')
@@ -1114,6 +1117,12 @@ class indexController extends Controller
     public function topic_name(Request $request)
     {
         $header_info = str_replace('-', ' ', $request->topic_name);
+
+        //check if information is correct 
+        $CountLocation = DB::table('topics')->select('*')->where('topic_name', $header_info)->count();
+        if ($CountLocation == 0) {
+            return indexController::not_found($request);
+        }
         $get_topic = DB::table('topics')->select('*')->where('topic_name', $header_info)->first();
         $topicName = str_replace('-', ' ', $request->topic_name);
         $perPage = 20; // Number of items per page
@@ -1230,7 +1239,8 @@ class indexController extends Controller
             }
         }
         $meta_description = substr($meta_description, 0, -1);
-        $page_title = 'iFave - ' . $topicName;
+        // $page_title = 'iFave - ' . $topicName;
+        $page_title = 'iFave.com: Explore the Best in ' . $topicName . ' – Uncover Unmatched Favorites!';
         return view("topics", compact('header_info', 'get_topic', 'subQuery', 'topic_id', 'keywords', 'topicName', 'meta_description', 'page_title', 'get_last_three_locations'));
     }
 
@@ -1344,6 +1354,7 @@ class indexController extends Controller
     }
     public function not_found(Request $request)
     {
+        // return $request;
         $topicName = "The World";
         $perPage = 20; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
@@ -1434,8 +1445,8 @@ class indexController extends Controller
             }
         }
         $meta_description = substr($meta_description, 0, -1);
-        $page_title = 'iFave - ' . $topicName;
-
+        // $page_title = 'iFave - ' . $topicName;
+        $page_title = 'iFave.com: Explore the Best in ' . $topicName . ' – Uncover Unmatched Favorites!';
         return view('errors.404', compact('questions', 'subQuery', 'comments', 'topic_id', 'posts', 'keywords', 'topicName', 'meta_description', 'page_title', 'get_last_three_locations'));
     }
     public function comments_list_by_username_all(Request $request)

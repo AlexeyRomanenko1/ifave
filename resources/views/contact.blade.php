@@ -42,6 +42,7 @@
             </form>
         </div>
         <div class="col-md-4">
+            <div class="mt-5" id="map" style="height: 400px;"></div>
             <div class="card mt-5">
                 <div class="card-header text-center">
                     <h6>POPULAR CATEGORIES</h6>
@@ -61,7 +62,19 @@
 
 @include('footer.footer')
 <script>
+    function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+            center: {
+                lat: -34.397,
+                lng: 150.644
+            },
+            zoom: 8
+        });
+    }
     $('#message').on('keyup', function() {
         $('.comment-warn').html($(this).val().length + '/500')
     })
+</script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap">
 </script>

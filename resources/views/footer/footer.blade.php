@@ -1,12 +1,31 @@
 <!-- Optional JavaScript; choose one of the two! -->
 
 <!-- Option 1: Bootstrap Bundle with Popper -->
-<footer class="footer text-center">
+<!-- <footer class="footer text-center">
    <p class="p-5 m-2"></p>
    <div class="container text-center">
       <p>&copy; {{ date('Y') }} iFave<sup>&reg;</sup> All rights reserved.</p>
    </div>
-</footer>
+</footer> -->
+<div class="container mt-5">
+   <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+      <p>&copy; {{ date('Y') }} iFave<sup>&reg;</sup> All rights reserved.</p>
+      <ul class="nav col-md-4 justify-content-center list-unstyled d-flex">
+         <li class="ms-3"><a class="" rel="nofollow" target="_blank" href="https://www.facebook.com/people/Ifavecom/61553178323176/"><i class="fa fa-facebook-square text-black-50" aria-hidden="true"></i></a></li>
+         <li class="ms-3"><a class="" rel="nofollow" target="_blank" href="https://www.linkedin.com/company/ifave-com/"><i class="fa fa-linkedin-square text-black-50" aria-hidden="true"></i></a></li>
+         <!-- <li class="ms-3"><a class="" href="#"><svg class="bi" width="24" height="24">
+                  <use xlink:href="#facebook"></use>
+               </svg></a></li> -->
+      </ul>
+      <ul class="nav col-md-4 justify-content-end">
+         <li class="nav-item"><a href="/" class="nav-link px-2 text-black-50 text-decoration-none">The World</a></li>
+         <li class="nav-item"><a rel="nofollow" href="#" class="nav-link px-2 text-black-50 text-decoration-none" data-bs-toggle="modal" data-bs-target="#topics_modal">All Location</a></li>
+         <li class="nav-item"><a href="/blog" class="nav-link px-2 text-black-50 text-decoration-none">Blog</a></li>
+         <li class="nav-item"><a href="/about-us" class="nav-link px-2 text-black-50 text-decoration-none">About Us</a></li>
+         <li class="nav-item"><a href="/contact-us" class="nav-link px-2 text-black-50 text-decoration-none">Contact</a></li>
+      </ul>
+   </footer>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
 <!-- jquery cdn -->

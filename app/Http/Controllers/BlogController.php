@@ -18,7 +18,7 @@ use ZipArchive;
 use Mews\Purifier\Facades\Purifier;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
-
+use App\Http\Controllers\IndexController;
 class BlogController extends Controller
 {
     //
@@ -38,7 +38,7 @@ class BlogController extends Controller
         $topics = DB::table('topics')->select('*')->get();
         $keywords = 'ifave, ifave blogging, blogging';
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
-        $page_title = 'iFave - Blogs';
+        $page_title = 'iFave Blogs: Unleashing Insights and Inspiration – Dive into Engaging Content!';
         $user_type = DB::table('users')->where('id', $clientIP)->pluck('user_type');
         $user_type = $user_type[0];
         return view('blogs.create-blog', compact('topics', 'keywords', 'meta_description', 'page_title', 'user_type'));
@@ -199,12 +199,18 @@ class BlogController extends Controller
 
         $keywords = 'ifave, ifave blogs, bloggers';
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
-        $page_title = 'iFave - Blogs';
+        $page_title = 'iFave Blogs: Unleashing Insights and Inspiration – Dive into Engaging Content!';
         $topics = DB::table('topics')->select('*')->limit(200)->get();
         return view('posts.blog', compact('posts', 'bloggers', 'topics', 'keywords', 'meta_description', 'page_title', 'popular_questions'));
     }
     public function blog_details(Request $request, $slug)
     {
+        $PostCount=DB::table('posts')->select('*')->where('slug',$slug)->count();
+   
+        if($PostCount == 0){
+            $indexController = new IndexController(); // Instantiate the IndexController
+            return $indexController->not_found($request); // Call the notFound method
+        }
         if (Auth::check()) {
             // User is logged in
             $clientIP = Auth::id();
@@ -212,6 +218,7 @@ class BlogController extends Controller
             // User is not logged in
             $clientIP = $this->getClientIP($request);
         }
+        // check if infromation is correct 
         $check_if_viewed = DB::table('post_views')->select('*')->where('post_id', $slug)->where('viewed_by', $clientIP)->count();
         if ($check_if_viewed == 0) {
             $insert_view = DB::table('post_views')->insert([
@@ -441,6 +448,15 @@ class BlogController extends Controller
     {
         $topic = str_replace('-', " ", $topic_slug);
         $question = str_replace('-', " ", $question_slug);
+        $CountTopic=DB::table('topics')->select('*')->where('topic_name',$topic)->count();
+        $QuestionCount=1;
+        if($question !='All Categories'){
+            $QuestionCount=DB::table('questions')->select('*')->where('question',$question)->count();
+        }
+        if($CountTopic == 0 || $QuestionCount==0){
+            $indexController = new IndexController(); // Instantiate the IndexController
+            return $indexController->not_found($request); // Call the notFound method
+        }
         $topic_id = DB::table('topics')
             ->where('topic_name', $topic)
             ->pluck('id');
@@ -523,7 +539,7 @@ class BlogController extends Controller
 
         $keywords = 'ifave, ifave blogging, blogging';
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
-        $page_title = 'iFave - Blogs - ' . $topic . ' - ' . $question;
+        $page_title = 'iFave Blogs: Unleashing Insights and Inspiration – Dive into Engaging Content!';
         $topics = DB::table('topics')->select('*')->limit(200)->get();
         return view('posts.blog', compact('posts', 'bloggers', 'popular_questions', 'topics', 'topic_slug', 'question_slug', 'categories', 'page_title', 'keywords', 'meta_description', 'topic_id'));
     }
@@ -533,6 +549,17 @@ class BlogController extends Controller
         $name = str_replace('-', " ", $user_name);
         $topic = str_replace('-', " ", $topic_slug);
         $question = str_replace('-', " ", $question_slug);
+        // check if information is correct 
+        $CountTopic=DB::table('topics')->select('*')->where('topic_name',$topic)->count();
+        $CountName = DB::table('users')->select('*')->where('name',$name)->count();
+        $QuestionCount=1;
+        if($question !='All Categories'){
+            $QuestionCount=DB::table('questions')->select('*')->where('question',$question)->count();
+        }
+        if($CountName==0 || $CountTopic == 0 || $QuestionCount==0){
+            $indexController = new IndexController(); // Instantiate the IndexController
+            return $indexController->not_found($request); // Call the notFound method
+        }
         $topic_id = DB::table('topics')
             ->where('topic_name', $topic)
             ->pluck('id');
@@ -622,13 +649,22 @@ class BlogController extends Controller
         });
         $keywords = 'ifave, ifave blogging, blogging';
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
-        $page_title = 'iFave - Blogger ' . $name . ' - ' . $topic . ' - ' . $question;
+        $page_title = 'iFave Blogs: Unleashing Insights and Inspiration – Dive into Engaging Content!';
         $topics = DB::table('topics')->select('*')->limit(200)->get();
         return view('posts.blog', compact('posts', 'bloggers', 'popular_questions', 'topics', 'topic_slug', 'question_slug', 'name', 'categories', 'keywords', 'meta_description', 'page_title', 'topic_id'));
     }
     public function blogger_filter(Request $request, $user_name)
     {
         $name = str_replace('-', " ", $user_name);
+        // check if information is correct 
+        $CountUser=DB::table('users')
+        ->select('*')
+        ->where('name', $name)
+        ->count();
+        if($CountUser ==0){
+            $indexController = new IndexController(); // Instantiate the IndexController
+            return $indexController->not_found($request); // Call the notFound method
+        }
         $user_id = DB::table('users')
             ->where('name', $name)
             ->pluck('id');
@@ -694,7 +730,7 @@ class BlogController extends Controller
         });
         $keywords = 'ifave, ifave blogging, blogging';
         $meta_description = 'Dive into a world of rankings, user-driven insights, blogs and articles on trending topics. Understand what the world likes and dislikes with our Top 10 lists on a huge variety of topics. Join our community to discover, compare, and share the best of everything.';
-        $page_title = 'iFave - Blogger - ' . $name;
+        $page_title = 'iFave Blogs: Unleashing Insights and Inspiration – Dive into Engaging Content!';
         $topics = DB::table('topics')->select('*')->limit(200)->get();
         return view('posts.blog', compact('posts', 'bloggers', 'popular_questions', 'topics', 'name', 'keywords', 'meta_description', 'page_title'));
     }
