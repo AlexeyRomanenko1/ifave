@@ -18,7 +18,7 @@
         @endphp
         <input type="hidden" id="hidden_question_id" value="{{ $details['question_category'] }}">
         @if($details["topic_name"] == 'The World')
-        <a class="mb-2 link-primary" href="/" >Go back to best in {{ $details["topic_name"] }}</a> <br>
+        <a class="mb-2 link-primary" href="/">Go back to best in {{ $details["topic_name"] }}</a> <br>
         <!-- <h1 class="mt-2 p-2">{{ $details["question"] }} in {{ $details["topic_name"] }}</h1> -->
         @else
         <a class="mb-2 link-primary" rel="nofollow" href="/location/{{str_replace(' ','-',$details['topic_name'])}}">Go back to best in {{ $details["topic_name"] }}</a><br>
@@ -121,7 +121,7 @@
         </div>
     </div>
     <div id="onLoadThoughts">
-       
+
     </div>
     @if(count($posts) > 0)
     @if(count($posts) == 1)
@@ -273,21 +273,8 @@
 
     </div>
     <div class="container mt-3">
-        <div class="row">
-            @foreach($all_posts as $all_post)
-            <div class="col-md-3">
-                <div class="p-3">
-                    <div class="h-75">
-                        <img src="/images/posts/{{$all_post->featured_image}}" class="zoom-block img-fluid" alt="{{$all_post->alt_text}}">
-                    </div>
-                    <h4 class="mt-2"><a class="link-secondary" href="/blog/{{$all_post->slug}}">{{substr(strip_tags($all_post->title), 0, 100) }}</a></h4>
-                    {!! substr(strip_tags($all_post->blog_content), 0, 150) !!}... <br><br>
-                </div>
-            </div>
-            @endforeach
-        </div>
-        <div class="pagination justify-content-center">
-            {{ $all_posts->links('pagination::bootstrap-5') }}
+        <div id="PostsPagination">
+           
         </div>
         @if($user_status==1 || $user_status==2)
         <form id="submit_thoughts">
@@ -385,7 +372,7 @@
             <div class="modal-body ">
                 <p>Looks like you have left a thorough and detailed comment. Thanks you!</p>
                 <div class="text-center">
-                    <a rel="nofollow" id="facebook_share_comment" class="btn  m-2" href=""><i class="fa fa-facebook-square" aria-hidden="true"></i></a><a rel="nofollow"id="twitter_share_comment" class="btn m-2" href=""><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
+                    <a rel="nofollow" id="facebook_share_comment" class="btn  m-2" href=""><i class="fa fa-facebook-square" aria-hidden="true"></i></a><a rel="nofollow" id="twitter_share_comment" class="btn m-2" href=""><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
                 </div>
             </div>
             <div class="modal-footer">

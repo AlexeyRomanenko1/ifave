@@ -18,7 +18,8 @@ use ZipArchive;
 use Mews\Purifier\Facades\Purifier;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
-use App\Http\Controllers\IndexController;
+use App\Http\Controllers\indexController;
+
 class BlogController extends Controller
 {
     //
@@ -205,10 +206,10 @@ class BlogController extends Controller
     }
     public function blog_details(Request $request, $slug)
     {
-        $PostCount=DB::table('posts')->select('*')->where('slug',$slug)->count();
-   
-        if($PostCount == 0){
-            $indexController = new IndexController(); // Instantiate the IndexController
+        $PostCount = DB::table('posts')->select('*')->where('slug', $slug)->count();
+
+        if ($PostCount == 0) {
+            $indexController = new indexController(); // Instantiate the IndexController
             return $indexController->not_found($request); // Call the notFound method
         }
         if (Auth::check()) {
@@ -307,7 +308,7 @@ class BlogController extends Controller
         $meta_description = str_replace(array("\r", "\n", "\r\n"), ' ', $meta_description);
         $latest_posts = DB::table('posts')->select('*')->where('status', 1)->orderByDesc('created_at')->limit(5)->get();
         $blog_title = DB::table('posts')->where('slug', $slug)->pluck('title');
-        $page_title = 'iFave Blog - ' . $blog_title[0];
+        $page_title = 'iFave Blog - ' . str_replace('-', ' ', $slug);
         return view('posts.post_details', compact('posts', 'post_category', 'post_location_link', 'latest_posts', 'get_comments', 'replies', 'keywords', 'meta_description', 'page_title', 'popular_questions', 'slug'));
     }
     public function upvote_post(Request $request)
@@ -448,13 +449,13 @@ class BlogController extends Controller
     {
         $topic = str_replace('-', " ", $topic_slug);
         $question = str_replace('-', " ", $question_slug);
-        $CountTopic=DB::table('topics')->select('*')->where('topic_name',$topic)->count();
-        $QuestionCount=1;
-        if($question !='All Categories'){
-            $QuestionCount=DB::table('questions')->select('*')->where('question',$question)->count();
+        $CountTopic = DB::table('topics')->select('*')->where('topic_name', $topic)->count();
+        $QuestionCount = 1;
+        if ($question != 'All Categories') {
+            $QuestionCount = DB::table('questions')->select('*')->where('question', $question)->count();
         }
-        if($CountTopic == 0 || $QuestionCount==0){
-            $indexController = new IndexController(); // Instantiate the IndexController
+        if ($CountTopic == 0 || $QuestionCount == 0) {
+            $indexController = new indexController(); // Instantiate the IndexController
             return $indexController->not_found($request); // Call the notFound method
         }
         $topic_id = DB::table('topics')
@@ -550,14 +551,14 @@ class BlogController extends Controller
         $topic = str_replace('-', " ", $topic_slug);
         $question = str_replace('-', " ", $question_slug);
         // check if information is correct 
-        $CountTopic=DB::table('topics')->select('*')->where('topic_name',$topic)->count();
-        $CountName = DB::table('users')->select('*')->where('name',$name)->count();
-        $QuestionCount=1;
-        if($question !='All Categories'){
-            $QuestionCount=DB::table('questions')->select('*')->where('question',$question)->count();
+        $CountTopic = DB::table('topics')->select('*')->where('topic_name', $topic)->count();
+        $CountName = DB::table('users')->select('*')->where('name', $name)->count();
+        $QuestionCount = 1;
+        if ($question != 'All Categories') {
+            $QuestionCount = DB::table('questions')->select('*')->where('question', $question)->count();
         }
-        if($CountName==0 || $CountTopic == 0 || $QuestionCount==0){
-            $indexController = new IndexController(); // Instantiate the IndexController
+        if ($CountName == 0 || $CountTopic == 0 || $QuestionCount == 0) {
+            $indexController = new indexController(); // Instantiate the IndexController
             return $indexController->not_found($request); // Call the notFound method
         }
         $topic_id = DB::table('topics')
@@ -657,12 +658,12 @@ class BlogController extends Controller
     {
         $name = str_replace('-', " ", $user_name);
         // check if information is correct 
-        $CountUser=DB::table('users')
-        ->select('*')
-        ->where('name', $name)
-        ->count();
-        if($CountUser ==0){
-            $indexController = new IndexController(); // Instantiate the IndexController
+        $CountUser = DB::table('users')
+            ->select('*')
+            ->where('name', $name)
+            ->count();
+        if ($CountUser == 0) {
+            $indexController = new indexController(); // Instantiate the IndexController
             return $indexController->not_found($request); // Call the notFound method
         }
         $user_id = DB::table('users')

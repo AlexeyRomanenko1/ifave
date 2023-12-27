@@ -41,6 +41,8 @@
         data: { location: $('#onload_location').val(), category: $('#onload_category').val(), question_id: $('#onload_question_id').val() },
         success: function (data) {
             var result = JSON.parse(data);
+            $('#PostsPagination').empty();
+            $('#PostsPagination').html(result.searchResults);
             let html = '';
             if (result.thoughts !== '' || result.thoughts != '') {
                 html += ' <div class="container mb-4 mt-2"><div class="d-none hidden-cotnent">' + result.thoughts + '</div><div class="thoughts-content for-full-screen d-none"><div class="half-comment half-thoughts half-thoughts-full-screen"> </div><span class="read-more-thoughts">... Read More</span></div><div class="thoughts-content for-mobile-screen d-none"><div class="half-comment half-thoughts half-thoughts-mobile-screen"></div> <span class="read-more-thoughts">... Read More</span></div></div>';
@@ -439,3 +441,28 @@ function add_vote(x) {
         }
     });
 }
+
+// Add a new event handler for pagination link clicks
+$(document).on('click', '#pagination_links a', function (e) {
+    e.preventDefault(); // Prevent the default behavior of the link click
+
+    // Extract the href attribute from the clicked pagination link
+    var pageUrl = $(this).attr('href');
+    console.log(pageUrl)
+    // Send an AJAX request to the extracted URL
+    $.ajax({
+        type: 'GET',
+        url: pageUrl, // Use the pagination link URL
+        data: { task: 'searchQuestions', question_id: $('#onload_question_id').val()},
+        success: function (data) {
+            // Update the search results and pagination links
+            let obj= JSON.parse(data);
+            $('#PostsPagination').empty();
+            $('#PostsPagination').html(obj.searchResults);
+            // $("html, body").animate({ scrollTop: 0 }, "slow");
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+});

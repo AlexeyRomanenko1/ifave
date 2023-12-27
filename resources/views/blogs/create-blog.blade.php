@@ -53,7 +53,7 @@
         @if($user_type==1 || $user_type==2)
         <div class="mb-3">
             <label for="slug" class="form-label">Slug <b class="text-danger">*</b></label>
-            <input type="text" class="form-control" id="slug" name="slug" maxlength="100" value="{{ old('slug') }}" required>
+            <input type="text" class="form-control" id="slug" name="slug" maxlength="65" value="{{ old('slug') }}" required>
         </div>
         @endif
         @if(isset($topic) && isset($question))

@@ -11,7 +11,7 @@ use App\Charts\InfographicsChart as charts;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\IndexController;
+use App\Http\Controllers\indexController;
 use Carbon\Carbon;
 
 class QuestionsDetailController extends Controller
@@ -43,12 +43,12 @@ class QuestionsDetailController extends Controller
         $location = str_replace('-', ' ', $location);
         $category = str_replace('&#039;', "'", $category);
         // check if information is correct 
-        $CountLocation = DB::table('topics')->select('*')->where('topic_name', $location)->count();
-        $CountCategory = DB::table('questions')->select('*')->where('question', $category)->count();
-        if($CountLocation == 0 || $CountCategory == 0){
-            $indexController = new IndexController(); // Instantiate the IndexController
-            return $indexController->not_found($request); // Call the notFound method
-        }
+        // $CountLocation = DB::table('topics')->select('*')->where('topic_name', $location)->count();
+        // $CountCategory = DB::table('questions')->select('*')->where('question', $category)->count();
+        // if($CountLocation == 0 || $CountCategory == 0){
+        //     $indexController = new indexController(); // Instantiate the IndexController
+        //     return $indexController->not_found($request); // Call the notFound method
+        // }
         $topic_id = DB::table('topics')->where('topic_name', $location)->pluck('id');
         $topic_id = $topic_id[0];
         $question_id = DB::table('questions')->where('question', $category)->where('topic_id', $topic_id)->pluck('id');
@@ -112,17 +112,17 @@ class QuestionsDetailController extends Controller
             $posts = DB::table('posts')->select('*')->where('question_id', $question_id)->where('status', 1)->orderBy('created_at', 'DESC')->limit(2)->get();
         }
         // Update the last_displayed_at column for the selected posts
-        $excludedPostIds = [];
-        foreach ($posts as $post) {
-            DB::table('posts')
-                ->where('id', $post->id)
-                ->update(['last_displayed_at' => now()]);
-            $excludedPostIds[] = $post->id;
-        }
-        //  return $excludedPostIds;
-        $perPage = 12; // Number of items per page
-        $page = request()->get('page', 1); // Get the current page from the request
-        $all_posts = DB::table('posts')->select('*')->where('question_id', $question_id)->where('status', 1)->whereNotIn('id', $excludedPostIds)->orderBy('created_at', 'DESC')->paginate($perPage, ['*'], 'page', $page);
+        // $excludedPostIds = [];
+        // foreach ($posts as $post) {
+        //     DB::table('posts')
+        //         ->where('id', $post->id)
+        //         ->update(['last_displayed_at' => now()]);
+        //     $excludedPostIds[] = $post->id;
+        // }
+        // //  return $excludedPostIds;
+        // $perPage = 12; // Number of items per page
+        // $page = request()->get('page', 1); // Get the current page from the request
+        // $all_posts = DB::table('posts')->select('*')->where('question_id', $question_id)->where('status', 1)->whereNotIn('id', $excludedPostIds)->orderBy('created_at', 'DESC')->paginate($perPage, ['*'], 'page', $page);
 
 
         $thoughts_details = DB::table('question_thoughts')->where('question_id', $question_id)->pluck('thoughts');
@@ -145,7 +145,7 @@ class QuestionsDetailController extends Controller
         $top_answers = substr($top_answers, 0, -10);
         $top_answers_votes = substr($top_answers_votes, 0, -1);
         // return 0;
-        return view('questions', compact('header_info', 'question_answers', 'thoughts', 'get_user_answers', 'get_comments', 'posts', 'keywords', 'meta_description', 'page_title', 'user_status', 'question_id', 'replies', 'all_posts', 'top_answers', 'top_answers_votes', 'location', 'cononical_location', 'cononical_category'));
+        return view('questions', compact('header_info', 'question_answers', 'thoughts', 'get_user_answers', 'get_comments', 'posts', 'keywords', 'meta_description', 'page_title', 'user_status', 'question_id', 'replies', 'top_answers', 'top_answers_votes', 'location', 'cononical_location', 'cononical_category'));
     }
     public function onLoadPageDetails(Request $request)
     {
@@ -180,9 +180,9 @@ class QuestionsDetailController extends Controller
             $excludedPostIds[] = $post->id;
         }
         //  return $excludedPostIds;
-        $perPage = 12; // Number of items per page
-        $page = request()->get('page', 1); // Get the current page from the request
-        $all_posts = DB::table('posts')->select('*')->where('question_id', $question_id)->where('status', 1)->whereNotIn('id', $excludedPostIds)->orderBy('created_at', 'DESC')->paginate($perPage, ['*'], 'page', $page);
+        // $perPage = 12; // Number of items per page
+        // $page = request()->get('page', 1); // Get the current page from the request
+        // $all_posts = DB::table('posts')->select('*')->where('question_id', $question_id)->where('status', 1)->whereNotIn('id', $excludedPostIds)->orderBy('created_at', 'DESC')->paginate($perPage, ['*'], 'page', $page);
 
 
         $thoughts_details = DB::table('question_thoughts')->where('question_id', $question_id)->pluck('thoughts');
@@ -192,9 +192,15 @@ class QuestionsDetailController extends Controller
         } else {
             $thoughts = '';
         }
+        $perPage = 9; // Number of items per page
+        $page = request()->get('page', 1); // Get the current page from the request
+        $all_posts = DB::table('posts')->select('*')->where('question_id', $question_id)->where('status', 1)->whereNotIn('id', $excludedPostIds)->orderBy('created_at', 'DESC')->paginate($perPage, ['*'], 'page', $page);
+
         return json_encode([
             'success' => 1,
-            'thoughts' => $thoughts
+            'thoughts' => $thoughts,
+            'searchResults' => view('postspagination', compact('all_posts'))->render(),
+            'paginationLinks' => $all_posts->links('pagination::bootstrap-5')->render(),
         ]);
     }
     public function getClientIP(Request $request)

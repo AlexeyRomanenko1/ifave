@@ -46,7 +46,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @if(isset($page_title))
     <title>{{$page_title}}</title>
-    @else
+    @elseif(!isset($page_title) && request()->route() && (request()->route()->getName() == 'login'))
+    <title>Secure Login at iFave.com - Access Your Favorites with Confidence</title>
+    @elseif(!isset($page_title) && request()->route() && (request()->route()->getName() == 'register'))
+    <title>Join iFave.com - Register for Exclusive Access to Premium Content</title>
+    @else 
     <title>Questions Survey</title>
     @endif
     <!-- Fonts -->
