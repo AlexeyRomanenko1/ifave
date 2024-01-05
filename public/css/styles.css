@@ -413,6 +413,9 @@ button#imageManager-1 {
     cursor: pointer !important;
 }
 
+.w-400{
+    width: 400px !important;
+}
 /* Style the Select2 dropdown */
 .select2-container--default .select2-selection--single {}
 

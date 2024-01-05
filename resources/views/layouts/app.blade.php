@@ -177,9 +177,9 @@
                         <li class="nav-item">
                             <a href="{{ url('/') }}" class="nav-link">The World</a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a href="" rel="nofollow" class="nav-link" data-bs-toggle="modal" data-bs-target="#topics_modal">All Locations</a>
-                        </li>
+                        </li> -->
                         <!-- <li class="nav-item">
                             <a href="" class="nav-link">About</a>
                         </li> -->
@@ -238,7 +238,7 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <main class="py-1">
             @yield('content')
         </main>
     </div>

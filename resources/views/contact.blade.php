@@ -1,4 +1,6 @@
 @include('layouts.app')
+<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlTbRfzzdAVV7sApqO6_AEdqG6ElvsdxI&callback=console.debug&libraries=maps,marker&v=beta">
+</script>
 <div class="container">
     <div class="row">
         <div class="col-md-8">
@@ -42,7 +44,12 @@
             </form>
         </div>
         <div class="col-md-4">
-            <div class="mt-5" id="map" style="height: 400px;"></div>
+            <div class="mt-5" id="map" style="height: 400px;">
+                <gmp-map center="46.9009895324707,-71.12779235839844" zoom="14" map-id="DEMO_MAP_ID">
+                    <gmp-advanced-marker position="46.9009895324707,-71.12779235839844" title="My location">
+                    </gmp-advanced-marker>
+                </gmp-map>
+            </div>
             <div class="card mt-5">
                 <div class="card-header text-center">
                     <h6>POPULAR CATEGORIES</h6>
@@ -62,19 +69,7 @@
 
 @include('footer.footer')
 <script>
-    function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-            center: {
-                lat: -34.397,
-                lng: 150.644
-            },
-            zoom: 8
-        });
-    }
     $('#message').on('keyup', function() {
         $('.comment-warn').html($(this).val().length + '/500')
     })
-</script>
-
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap">
 </script>

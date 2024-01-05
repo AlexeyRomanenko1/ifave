@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\indexController;
 use Carbon\Carbon;
+use Symfony\Component\Console\Question\Question;
 
 class QuestionsDetailController extends Controller
 {
@@ -21,7 +22,17 @@ class QuestionsDetailController extends Controller
     {
         $cononical_location = $location;
         $cononical_category = $category;
-
+        // return $id;
+        $category = str_replace('-', ' ', $category);
+        $location = str_replace('-', ' ', $location);
+        $category = str_replace('&#039;', "'", $category);
+        // check if information is correct 
+        $CountLocation = Topics::where('topic_name', $location)->where('status', 1)->count();
+        $CountCategory = Questions::where('question', $category)->count();
+        if ($CountLocation == 0 || $CountCategory == 0) {
+            $indexController = new indexController(); // Instantiate the IndexController
+            return $indexController->not_found($request); // Call the notFound method
+        }
         if (Auth::check()) {
             // User is logged in
             $clientIP = Auth::id();
@@ -38,17 +49,27 @@ class QuestionsDetailController extends Controller
             $clientIP = $this->getClientIP($request);
             $user_status = 0;
         }
-        // return $id;
-        $category = str_replace('-', ' ', $category);
-        $location = str_replace('-', ' ', $location);
-        $category = str_replace('&#039;', "'", $category);
-        // check if information is correct 
-        // $CountLocation = DB::table('topics')->select('*')->where('topic_name', $location)->count();
-        // $CountCategory = DB::table('questions')->select('*')->where('question', $category)->count();
-        // if($CountLocation == 0 || $CountCategory == 0){
-        //     $indexController = new indexController(); // Instantiate the IndexController
-        //     return $indexController->not_found($request); // Call the notFound method
-        // }
+        $get_last_three_locations = DB::table('recent_categories')
+            ->where('user_id', $clientIP)
+            ->orderBy('id', 'desc')
+            ->offset(0)
+            ->limit(3)
+            ->get();
+        $link_exsistance = 0;
+        $categoryUrl=$category.' in '. $location;
+        $categoryHref=str_replace('-', ' ', $location).'/'.str_replace('-', ' ', $category);
+        foreach ($get_last_three_locations as $recent_location) {
+            if ($recent_location->location == $categoryUrl) {
+                $link_exsistance = 1;
+            }
+        }
+        if ($link_exsistance == 0) {
+            $recent_location = DB::table('recent_categories')->insert([
+                'user_id' => $clientIP,
+                'location' => $categoryUrl,
+                'location_link' => $categoryHref
+            ]);
+        }
         $topic_id = DB::table('topics')->where('topic_name', $location)->pluck('id');
         $topic_id = $topic_id[0];
         $question_id = DB::table('questions')->where('question', $category)->where('topic_id', $topic_id)->pluck('id');
@@ -192,7 +213,7 @@ class QuestionsDetailController extends Controller
         } else {
             $thoughts = '';
         }
-        $perPage = 9; // Number of items per page
+        $perPage = 12; // Number of items per page
         $page = request()->get('page', 1); // Get the current page from the request
         $all_posts = DB::table('posts')->select('*')->where('question_id', $question_id)->where('status', 1)->whereNotIn('id', $excludedPostIds)->orderBy('created_at', 'DESC')->paginate($perPage, ['*'], 'page', $page);
 

@@ -4,11 +4,11 @@
 <input type="hidden" value="{{$header_info}}" name="topic_name" id="topic_name">
 <input type="hidden" value="{{str_replace(' ','-',$topicName)}}" name="topicName" id="topicName">
 <!-- {{ Route::currentRouteName() }} -->
-<div class="container mt-5">
+<div class="container ">
     <div class="text-center">
-        <a rel="nofollow" data-bs-toggle="modal" data-bs-target="#topics_modal">
+        <!-- <a rel="nofollow" data-bs-toggle="modal" data-bs-target="#topics_modal">
             <p class="mb-3 ifave-h3 text-decoration-underline organic-margin link-primary pointer"> Select location</p>
-        </a>
+        </a> -->
         @if(count($get_last_three_locations) > 0)
         <div class="mb-3">
             @foreach($get_last_three_locations as $recent_links)
@@ -16,29 +16,27 @@
             @endforeach
         </div>
         @endif
-        <div class="container position-relative fav_tracks_parent">
-            <div class="position-absolute fav_tracks">
-                <div class="container">
-                    <table class="table table-bordered rounded shadow border-blue user_faves_track">
-                        <thead>
-                            <td>
-                                <p class="fs-6"><b>My faves</b></p>
-                            </td>
-                            @auth
-                            <td>
-                                <p><a rel="nofollow" class="fs-6 link-secondary pointer" data-bs-toggle="modal" data-bs-target="#myfavetrack">All my faves</a></p>
-                            </td>
-                            @else
-                            <td>
-                                <p class="fs-6">Login to keep track of your faves</p>
-                            </td>
-                            @endauth
-                        </thead>
-                    </table>
-                </div>
+        <h1 class="ifave-h1" id="display_topic_name"></h1>
+        <div class="fav_tracks align-center d-flex justify-content-center">
+            <div class="container w-400">
+                <table class="table table-bordered rounded shadow border-blue user_faves_track">
+                    <thead>
+                        <td>
+                            <p class="fs-6"><b>My faves</b></p>
+                        </td>
+                        @auth
+                        <td>
+                            <p><a rel="nofollow" class="fs-6 link-secondary pointer" data-bs-toggle="modal" data-bs-target="#myfavetrack">All my faves</a></p>
+                        </td>
+                        @else
+                        <td>
+                            <p class="fs-6">Login to keep track of your faves</p>
+                        </td>
+                        @endauth
+                    </thead>
+                </table>
             </div>
         </div>
-        <h1 class="mb-3 ifave-h1" id="display_topic_name"></h1>
     </div>
     <!-- <div class="container position-relative mb-4 mt-5">
         <i onclick="scrollRight()" class="fa fa-4x fa-angle-double-right position-absolute right-scroll-btn" aria-hidden="true"></i>
@@ -47,7 +45,7 @@
 
         </div>
     </div> -->
-    <div class="container text-center mb-5">
+    <div class="container text-center">
         <p class="ifave-h3"><a a rel="nofollow" class="link-primary pointer" data-bs-toggle="modal" id="open_search_category_modal" data-bs-target="#all_categories">All categories</a></p>
     </div>
     <div class="row height d-flex justify-content-center align-items-center">
@@ -66,7 +64,7 @@
     </div>
     <div class="container">
         <div class="">
-            <div class="row mt-5" id="display_questions">
+            <div class="row mt-1" id="display_questions">
 
                 <div class="text-center" id="onpageload-loader">
                     <div class="spinner-border" role="status">

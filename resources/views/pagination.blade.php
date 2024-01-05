@@ -1,4 +1,4 @@
-<div class="row mt-5" id="display_questions">
+<div class="row m-0">
     @php
 
     $jsonString = $subQuery;

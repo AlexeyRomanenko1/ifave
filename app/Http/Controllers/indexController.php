@@ -42,7 +42,7 @@ class indexController extends Controller
                 ->get();
 
 
-            $get_last_three_locations = DB::table('recent_locations')
+            $get_last_three_locations = DB::table('recent_categories')
                 ->where('user_id', $userId)
                 ->orderBy('id', 'desc')
                 ->offset(0)
@@ -54,7 +54,7 @@ class indexController extends Controller
                 ->where('user_ip_address', $userIpAddress)
                 ->get();
             $get_this_user_votes = '';
-            $get_last_three_locations = DB::table('recent_locations')
+            $get_last_three_locations = DB::table('recent_categories')
                 ->where('user_id', $userIpAddress)
                 ->orderBy('id', 'desc')
                 ->offset(0)
@@ -1119,7 +1119,7 @@ class indexController extends Controller
         $header_info = str_replace('-', ' ', $request->topic_name);
 
         //check if information is correct 
-        $CountLocation = DB::table('topics')->select('*')->where('topic_name', $header_info)->count();
+        $CountLocation = Topics::where('topic_name', $header_info)->where('status', 1)->count();
         if ($CountLocation == 0) {
             return indexController::not_found($request);
         }
@@ -1131,7 +1131,7 @@ class indexController extends Controller
         if (Auth::check()) {
             // User is logged in
             $userId = Auth::id();
-            $get_last_three_locations = DB::table('recent_locations')
+            $get_last_three_locations = DB::table('recent_categories')
                 ->where('user_id', $userId)
                 ->orderBy('id', 'desc')
                 ->offset(0)
@@ -1169,7 +1169,7 @@ class indexController extends Controller
                 ->where('user_ip_address', $userIpAddress)
                 ->get();
             $get_this_user_votes = '';
-            $get_last_three_locations = DB::table('recent_locations')
+            $get_last_three_locations = DB::table('recent_categories')
                 ->where('user_id', $userIpAddress)
                 ->orderBy('id', 'desc')
                 ->offset(0)
@@ -1375,7 +1375,7 @@ class indexController extends Controller
                 ->join('questions_answer', 'user_answers.answer_id', 'questions_answer.id')
                 ->where('user_answers.user_ip_address', $userId)
                 ->get();
-            $get_last_three_locations = DB::table('recent_locations')
+            $get_last_three_locations = DB::table('recent_categories')
                 ->where('user_id', $userId)
                 ->orderBy('id', 'desc')
                 ->offset(0)
@@ -1387,7 +1387,7 @@ class indexController extends Controller
                 ->where('user_ip_address', $userIpAddress)
                 ->get();
             $get_this_user_votes = '';
-            $get_last_three_locations = DB::table('recent_locations')
+            $get_last_three_locations = DB::table('recent_categories')
                 ->where('user_id', $userIpAddress)
                 ->orderBy('id', 'desc')
                 ->offset(0)
